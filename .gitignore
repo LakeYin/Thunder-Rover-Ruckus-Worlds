@@ -24,5 +24,7 @@ Thumbs.db
 .gradle
 build/
 
+# Uniform code style
+!.idea/codeStyles
 *ASUS_PC_01*
 
