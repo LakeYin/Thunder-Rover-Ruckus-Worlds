@@ -5,7 +5,6 @@ android {
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion 19
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     compileSdkVersion 23
@@ -16,6 +15,9 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
 
+    sourceSets {
+        main.java.srcDirs += 'src/main'
+    }
 }
 
 repositories {
