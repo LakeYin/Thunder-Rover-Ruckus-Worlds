@@ -5,7 +5,7 @@ Fork this repository to your team's organization and add your own code
 
 ## Getting Help
 Ask Lake Yin, Michael Peng, or Justin Zhu for help with any coding problems.
-/
+
 ### User Documentation and Tutorials
 Each TeamCode written by each team should be documented with the standard specified [here](documentation.md).
 
@@ -13,4 +13,3 @@ Each TeamCode written by each team should be documented with the standard specif
 
 ### Online User Forum
 The programming Discord can be found here:
-4
