@@ -21,11 +21,21 @@ android {
 }
 
 repositories {
+    flatDir {
+        dirs '../libs'
+    }
+
     mavenCentral()
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
+    compile project(':FtcRobotController')
+    compile (name: 'RobotCore-release', ext: 'aar')
+    compile (name: 'Hardware-release', ext: 'aar')
+    compile (name: 'FtcCommon-release', ext: 'aar')
+    compile (name:'Analytics-release', ext:'aar')
+    compile (name:'WirelessP2p-release', ext:'aar')
 
+    testCompile 'junit:junit:4.12'
 }
+
