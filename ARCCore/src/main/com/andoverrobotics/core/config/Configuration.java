@@ -206,7 +206,7 @@ public final class Configuration {
         break;
       default:
         throw new InvalidSchemaError(schemaInstance.getClass(),
-            new RuntimeException("Invalid type: " + typeName));
+            new UnsupportedOperationException("Invalid type: " + typeName));
     }
   }
 

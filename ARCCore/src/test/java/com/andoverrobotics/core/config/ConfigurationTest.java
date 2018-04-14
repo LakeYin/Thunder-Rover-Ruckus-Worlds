@@ -12,6 +12,21 @@ import org.junit.Test;
 
 public class ConfigurationTest {
 
+  private static final Map<String, String> schemaProvider = new HashMap<String, String>() {{
+    put("autonomousTrials", "4");
+    put("motorSpeed", "0.412");
+    put("useEncoders", "false");
+    put("useSensors", "true");
+    put("robotName", "ConfigTestBot");
+  }};
+  private static final String schemaDataFileContents =
+      "autonomousTrials=4\n" +
+          "motorSpeed=0.412\n" +
+          "useEncoders=false\n" +
+          "useSensors=true\n" +
+          "robotName=ConfigTestBot";
+  private static final Configuration config = Configuration.from(schemaProvider);
+
   // Must be static; otherwise, it will contain a "declared" field named "this",
   //   referring to ConfigurationTest.
   static class TestSchema {
@@ -29,21 +44,6 @@ public class ConfigurationTest {
     boolean useEncoders;
     float badType;
   }
-
-  private static final Map<String, String> schemaProvider = new HashMap<String, String>() {{
-    put("autonomousTrials", "4");
-    put("motorSpeed", "0.412");
-    put("useEncoders", "false");
-    put("useSensors", "true");
-    put("robotName", "ConfigTestBot");
-  }};
-  private static final String schemaDataFileContents =
-      "autonomousTrials=4\n" +
-          "motorSpeed=0.412\n" +
-          "useEncoders=false\n" +
-          "useSensors=true\n" +
-          "robotName=ConfigTestBot";
-  private static final Configuration config = Configuration.from(schemaProvider);
 
   @Test
   public void fromPropertiesReader_givenProperties_returnsCorrectly() throws IOException {
