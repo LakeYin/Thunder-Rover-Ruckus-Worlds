@@ -1,5 +1,7 @@
 package com.andoverrobotics.core.config;
 
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.Field;
@@ -36,6 +38,8 @@ import java.util.Properties;
  */
 public final class Configuration {
 
+  private static final String PROPERTIES_DIRECTORY = "/storage/self/primary/FIRST/config";
+
   private final Map<String, String> map;
 
   private Configuration(Map<String, String> map) {
@@ -43,14 +47,17 @@ public final class Configuration {
   }
 
   /**
-   * Creates a new instance of {@link Configuration} from the given String-to-String {@link Map}.
-   * @param map The map to apply to the new Configuration instance
-   * @return The new Configuration instance
+   * Reads a file with the given name from the standard directory for configuration file storage,
+   * parses it into {@link Properties} format, and returns a new instance of {@link Configuration}
+   * with the parsed mapping.
+   * @param fileName Name of the file to be read
+   * @return The Configuration instance whose entries have been read from the given file
+   * @throws IOException If the file with the given name cannot be read
    */
-  public static Configuration from(Map<String, String> map) {
-    return new Configuration(map);
+  public static Configuration fromPropertiesFile(String fileName)
+      throws IOException {
+    return fromProperties(new FileReader(new File(PROPERTIES_DIRECTORY, fileName)));
   }
-
   /**
    * Parses data from the given {@link Reader} in Java Properties format, and then creates a new
    * instance of {@link Configuration} from the parsed result.
@@ -65,6 +72,16 @@ public final class Configuration {
     props.load(file);
     // Java's sloppiness here. Properties was done in a rush and wasn't adapted to generics.
     return Configuration.from(new HashMap(props));
+  }
+
+  /**
+   * Creates a new instance of {@link Configuration} from the given String-to-String {@link Map}.
+   *
+   * @param map The map to apply to the new Configuration instance
+   * @return The new Configuration instance
+   */
+  public static Configuration from(Map<String, String> map) {
+    return new Configuration(map);
   }
 
   /**
