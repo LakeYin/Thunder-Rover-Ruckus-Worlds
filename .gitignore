@@ -28,3 +28,4 @@ build/
 !.idea/codeStyles
 *ASUS_PC_01*
 
+.flooignore
