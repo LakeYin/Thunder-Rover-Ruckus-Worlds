@@ -1,4 +1,4 @@
-package com.andoverrobotics.core;
+package com.andoverrobotics.core.drivetrain;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
