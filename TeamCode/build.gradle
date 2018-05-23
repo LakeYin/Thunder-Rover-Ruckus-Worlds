@@ -15,3 +15,6 @@ dependencies {
     compile project(':openCVLibrary320')
     compile project(':FtcRobotController')
 }
+android {
+    buildToolsVersion '26.0.2'
+}
