@@ -18,6 +18,18 @@ public class Coordinate {
     return Converter.radiansToDegrees(Math.atan2(y, x));
   }
 
+  public double getPolarDistance() {
+    return Math.hypot(x, y);
+  }
+
+  public double getX() {
+    return x;
+  }
+
+  public double getY() {
+    return y;
+  }
+
   public static Coordinate fromXY(double x, double y) {
     return new Coordinate(x, y);
   }

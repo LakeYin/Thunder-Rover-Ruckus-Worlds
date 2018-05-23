@@ -21,7 +21,9 @@ public class Converter {
     return millimeters / 25.4;
   }
 
-  public static int normalizedDegrees(int degrees) {
+  public static int normalizedDegrees(final int inputDegrees) {
+    int degrees = inputDegrees;
+
     while (degrees < 0)
       degrees += 360;
     while (degrees >= 360)
@@ -30,7 +32,9 @@ public class Converter {
     return degrees;
   }
 
-  public static double normalizedRadians(double radians) {
+  public static double normalizedRadians(final double inputRadians) {
+    double radians = inputRadians;
+
     while (radians < 0)
       radians += TAU;
     while (radians >= TAU)

@@ -4,7 +4,7 @@ package com.andoverrobotics.core.drivetrain;
  * Created by Lake Yin on 5/23/2018.
  */
 
-public interface MecanumDriveTrain extends DriveTrain {
+public interface OmniDriveTrain extends DriveTrain {
 
   // [-1, 1]
   void strafeRight(double distanceInInches);

@@ -24,7 +24,6 @@ public interface DriveTrain {
   void driveBackwards(double distanceInInches);
   void driveBackwards(double distanceInInches, double power);
 
-  // TODO radians <-> degrees
   // [0, 360]
   void rotateClockwise(int degrees);
   void rotateCounterClockwise(int degrees);
