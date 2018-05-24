@@ -1,14 +1,5 @@
 package com.andoverrobotics.core.drivetrain;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.Range;
-
-/**
- * Created by Lake Yin on 5/23/2018.
- */
-
 public interface DriveTrain {
 
   void setDefaultDrivePower(double power);
@@ -33,7 +24,7 @@ public interface DriveTrain {
   // [-1, 1]
   void setMovementPower(double power);
 
-  // [-1, 1]
+  // [-1, 1] positive is clockwise
   void setRotationPower(double power);
 
 }
