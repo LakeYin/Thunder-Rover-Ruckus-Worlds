@@ -1,39 +1,50 @@
 package com.andoverrobotics.core.drivetrain;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.Range;
-
 /**
  * Created by Lake Yin on 5/23/2018.
  */
 
-public interface DriveTrain {
+public abstract class DriveTrain {
+  protected double defaultPower;
 
-  void setDefaultDrivePower(double power);
-  double getDefaultDrivePower();
+  public final void setDefaultDrivePower(double power) {
+    defaultPower = power;
+  }
+  public final double getDefaultDrivePower() {
+    return defaultPower;
+  }
 
   // -- Autonomous Methods --
 
   // [0, 1]
-  void driveForwards(double distanceInInches);
-  void driveForwards(double distanceInInches, double power);
+  public final void driveForwards(double distanceInInches) {
+    driveForwards(distanceInInches, defaultPower);
+  }
+  public abstract void driveForwards(double distanceInInches, double power);
 
   // [0, 1]
-  void driveBackwards(double distanceInInches);
-  void driveBackwards(double distanceInInches, double power);
+  public final void driveBackwards(double distanceInInches) {
+    driveBackwards(distanceInInches, defaultPower);
+  }
+  public abstract void driveBackwards(double distanceInInches, double power);
 
   // [0, 360]
-  void rotateClockwise(int degrees);
-  void rotateCounterClockwise(int degrees);
+  public final void rotateClockwise(int degrees) {
+    rotateClockwise(degrees, defaultPower);
+  }
+  public abstract void rotateClockwise(int degrees, double power);
+
+  public final void rotateCounterClockwise(int degrees) {
+    rotateCounterClockwise(degrees, defaultPower);
+  }
+  public abstract void rotateCounterClockwise(int degrees, double power);
 
   // -- Teleop Methods --
 
   // [-1, 1]
-  void setMovementPower(double power);
+  public abstract void setMovementPower(double power);
 
   // [-1, 1]
-  void setRotationPower(double power);
+  public abstract void setRotationPower(double power);
 
 }
