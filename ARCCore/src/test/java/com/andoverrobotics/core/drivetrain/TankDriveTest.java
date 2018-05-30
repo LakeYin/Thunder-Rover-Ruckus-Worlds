@@ -68,8 +68,19 @@ public class TankDriveTest {
   }
 
   @Test
-  public void rotateClockwiseMajor() {
+  public void rotateClockwise() {
     driveTrain.rotateClockwise(270, 0.6);
+
+    verifyTargetPositionOffset(270 * 2, -270 * 2);
+    verifyPowersSet(0.6, -0.6);
+  }
+
+  @Test
+  public void rotateClockwiseNegativeDegree() {
+    driveTrain.rotateClockwise(-45, 0.4);
+
+    verifyTargetPositionOffset((360-45) * 2, (45-360) * 2);
+    verifyPowersSet(0.4, -0.4);
   }
 
   @Test
@@ -94,6 +105,14 @@ public class TankDriveTest {
 
     verifyTargetPositionOffset(-80 * 2, 80 * 2);
     verifyPowersSet(-0.3, 0.3);
+  }
+
+  @Test
+  public void rotateCounterClockwiseNegativeDegree() {
+    driveTrain.rotateCounterClockwise(-50, 0.5);
+
+    verifyTargetPositionOffset((50-360) * 2, (360-50) * 2);
+    verifyPowersSet(-0.5, 0.5);
   }
 
   @Test

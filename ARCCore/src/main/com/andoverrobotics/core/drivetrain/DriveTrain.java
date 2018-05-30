@@ -61,8 +61,7 @@ public abstract class DriveTrain {
   protected boolean opModeIsActive() {
     boolean isAutonomous = opMode instanceof LinearOpMode;
 
-    return !isAutonomous || (isAutonomous &&
-            ((LinearOpMode) opMode).opModeIsActive());
+    return !isAutonomous || ((LinearOpMode) opMode).opModeIsActive();
   }
 
   public void stop() {
