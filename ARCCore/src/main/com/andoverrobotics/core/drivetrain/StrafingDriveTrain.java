@@ -1,10 +1,16 @@
 package com.andoverrobotics.core.drivetrain;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+
 /**
  * Created by Lake Yin on 5/23/2018.
  */
 
-public abstract class OmniDriveTrain extends DriveTrain {
+public abstract class StrafingDriveTrain extends DriveTrain {
+
+  public StrafingDriveTrain(OpMode opMode) {
+    super(opMode);
+  }
 
   // [-1, 1]
   public final void strafeRight(double distanceInInches) {

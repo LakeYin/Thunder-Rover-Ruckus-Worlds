@@ -1,11 +1,23 @@
 package com.andoverrobotics.core.drivetrain;
 
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 /**
  * Created by Lake Yin on 5/23/2018.
  */
 
 public abstract class DriveTrain {
+  protected final OpMode opMode;
   protected double defaultPower;
+
+  public DriveTrain(OpMode opMode) {
+    this.opMode = opMode;
+  }
 
   public final void setDefaultDrivePower(double power) {
     defaultPower = power;
@@ -47,4 +59,10 @@ public abstract class DriveTrain {
   // [-1, 1] positive is clockwise
   public abstract void setRotationPower(double power);
 
+  protected boolean opModeIsActive() {
+    boolean isAutonomous = opMode instanceof LinearOpMode;
+
+    return !isAutonomous || (isAutonomous &&
+            ((LinearOpMode) opMode).opModeIsActive());
+  }
 }
