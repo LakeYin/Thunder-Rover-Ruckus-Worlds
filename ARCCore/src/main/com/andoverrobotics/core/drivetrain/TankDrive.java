@@ -1,10 +1,14 @@
 package com.andoverrobotics.core.drivetrain;
 
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
+
+import com.andoverrobotics.core.utilities.Converter;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class TankDrive extends DriveTrain {
 
@@ -14,7 +18,7 @@ public class TankDrive extends DriveTrain {
   private final int ticksPer360;
 
   public TankDrive(DcMotor motorL, DcMotor motorR, OpMode opMode,
-                   int ticksPerInch, int ticksPer360) {
+      int ticksPerInch, int ticksPer360) {
     super(opMode);
 
     this.motorL = motorL;
@@ -25,120 +29,109 @@ public class TankDrive extends DriveTrain {
 
   @Override
   public void driveForwards(double distanceInInches, double power) {
+    driveWithEncoder(Math.abs(distanceInInches), Math.abs(power));
+  }
+
+  private void driveWithEncoder(double displacementInInches, double power) {
     power = Range.clip(power, -1, 1);
     power = Math.abs(power);
 
-    motorL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-    motorR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    if (displacementInInches < 0) {
+      power *= -1;
+    }
 
-    // Setting variables
-    double robotTurn = distanceInInches * ticksPerInch ;
+    setMotorMode(STOP_AND_RESET_ENCODER);
+    setMotorMode(RUN_TO_POSITION);
 
-    motorL.setTargetPosition((int)(robotTurn));
-    motorR.setTargetPosition((int)(robotTurn));
+    double robotTurn = displacementInInches * ticksPerInch;
 
-    // Sets the motors' positions
+    motorL.setTargetPosition((int) (robotTurn));
+    motorR.setTargetPosition((int) (robotTurn));
+
     motorL.setPower(power);
     motorR.setPower(power);
 
-    // While loop for updating telemetry
-    while(motorL.isBusy() && motorR.isBusy() && opModeIsActive())
-    {
-      // Updates the position of the motors
-      double LPos = motorL.getCurrentPosition();
-      double RPos = motorR.getCurrentPosition();
-
-      // Adds telemetry of the drive motors
-      opMode.telemetry.addData("motorL Pos:", LPos);
-      opMode.telemetry.addData("motorR Pos:", RPos);
-
-      // Updates the telemetry
-      opMode.telemetry.update();
-
+    while (motorL.isBusy() && motorR.isBusy() && opModeIsActive()) {
+      reportMotorPositions();
     }
 
-    motorL.setPower(0);
-    motorR.setPower(0);
-
-    motorL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    motorR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    stop();
+    setMotorMode(RUN_USING_ENCODER);
   }
 
   @Override
   public void driveBackwards(double distanceInInches, double power) {
-    driveForwards(-distanceInInches, power);
+    driveWithEncoder(-Math.abs(distanceInInches), -Math.abs(power));
   }
 
   @Override
   public void rotateClockwise(int degrees, double power) {
     power = Range.clip(power, -1, 1);
     power = Math.abs(power);
+    degrees = Converter.normalizedDegrees(degrees);
 
-    motorL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-    motorR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-    // Setting variables
-    double robotTurn = degrees * ticksPer360 / 360.0;
-
-    motorL.setTargetPosition((int)(-robotTurn));
-    motorR.setTargetPosition((int)(robotTurn));
-
-    // Sets the motors' positions
-    motorL.setPower(power);
-    motorR.setPower(power);
-
-    // While loop for updating telemetry
-    while(motorL.isBusy() && motorR.isBusy() && opModeIsActive())
-    {
-      // Updates the position of the motors
-      double LPos = motorL.getCurrentPosition();
-      double RPos = motorR.getCurrentPosition();
-
-      // Adds telemetry of the drive motors
-      opMode.telemetry.addData("motorL Pos:", LPos);
-      opMode.telemetry.addData("motorR Pos:", RPos);
-
-      // Updates the telemetry
-      opMode.telemetry.update();
-
-    }
-
-    motorL.setPower(0);
-    motorR.setPower(0);
-
-    motorL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    motorR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    rotateWithEncoder(degrees, -degrees, power, -power);
   }
 
   @Override
   public void rotateCounterClockwise(int degrees, double power) {
-    rotateClockwise(-degrees, power);
+    power = Range.clip(power, -1, 1);
+    power = Math.abs(power);
+    degrees = Converter.normalizedDegrees(degrees);
+
+    rotateWithEncoder(-degrees, degrees, -power, power);
   }
 
-  // TeleOp methods
+  private void rotateWithEncoder(int leftDegrees, int rightDegrees,
+      double leftPower, double rightPower) {
+
+    setMotorMode(STOP_AND_RESET_ENCODER);
+    setMotorMode(RUN_TO_POSITION);
+
+    motorL.setTargetPosition((int) (leftDegrees / 360.0 * ticksPer360));
+    motorR.setTargetPosition((int) (rightDegrees / 360.0 * ticksPer360));
+
+    motorL.setPower(leftPower);
+    motorR.setPower(rightPower);
+
+    while (motorL.isBusy() && motorR.isBusy() && opModeIsActive()) {
+      reportMotorPositions();
+    }
+
+    stop();
+    setMotorMode(RUN_USING_ENCODER);
+  }
+
+  // -- TeleOp methods --
 
   @Override
   public void setMovementPower(double power) {
-    motorL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    motorR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    setMotorMode(RUN_WITHOUT_ENCODER);
 
     motorL.setPower(power);
     motorR.setPower(power);
-
-    motorL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    motorR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
   }
 
   @Override
   public void setRotationPower(double power) { //clockwise if power is positive
-    motorL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    motorR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    setMotorMode(RUN_WITHOUT_ENCODER);
 
     motorL.setPower(power);
     motorR.setPower(-power);
-
-    motorL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    motorR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
   }
 
+  @Override
+  protected DcMotor[] getMotors() {
+    return new DcMotor[]{motorL, motorR};
+  }
+
+  private void reportMotorPositions() {
+    double LPos = motorL.getCurrentPosition();
+    double RPos = motorR.getCurrentPosition();
+
+    opMode.telemetry.addData("motorL Pos:", LPos);
+    opMode.telemetry.addData("motorR Pos:", RPos);
+
+    opMode.telemetry.update();
+  }
 }

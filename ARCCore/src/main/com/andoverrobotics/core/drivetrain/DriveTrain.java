@@ -4,8 +4,7 @@ package com.andoverrobotics.core.drivetrain;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
+import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 
 /**
  * Created by Lake Yin on 5/23/2018.
@@ -64,5 +63,21 @@ public abstract class DriveTrain {
 
     return !isAutonomous || (isAutonomous &&
             ((LinearOpMode) opMode).opModeIsActive());
+  }
+
+  public void stop() {
+    for (DcMotor motor : getMotors()) {
+      motor.setPower(0);
+    }
+  }
+
+  // -- Internal methods
+
+  protected abstract DcMotor[] getMotors();
+
+  protected void setMotorMode(RunMode mode) {
+    for (DcMotor motor : getMotors()) {
+      motor.setMode(mode);
+    }
   }
 }

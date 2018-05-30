@@ -15,7 +15,7 @@ public class TankDriveTest {
   private final OpMode opMode = mock(OpMode.class);
   private final DcMotor motorL = mock(DcMotor.class),
       motorR = mock(DcMotor.class);
-  private DriveTrain driveTrain = new TankDrive(motorL, motorR, 50, 720);
+  private DriveTrain driveTrain = new TankDrive(motorL, motorR, opMode,50, 720);
 
   @Before
   public void setUp() {
@@ -28,33 +28,48 @@ public class TankDriveTest {
   @Test
   public void driveForwards() {
     driveTrain.driveForwards(5, 0.5);
-
-    verifyTargetPositionOffset(5 * 50, 5 * 50);
-    verifyPowersSet(0.5, 0.5);
+    verifyDrivenDisplacementWithPower(5, 0.5);
   }
 
   @Test
-  public void driveForwardsGivenNegative() {
+  public void driveForwardsWithNegativeDistance() {
     driveTrain.driveForwards(-5, 0.5);
+    verifyDrivenDisplacementWithPower(5, 0.5);
+  }
 
-    verifyTargetPositionOffset(-5 * 50, -5 * 50);
-    verifyPowersSet(-0.5, -0.5);
+  @Test
+  public void driveForwardsWithNegativePower() {
+    driveTrain.driveForwards(5, -0.5);
+    verifyDrivenDisplacementWithPower(5, 0.5);
+  }
+
+  @Test
+  public void driveForwardsWithNegativeDistanceAndPower() {
+    driveTrain.driveForwards(-5, -0.5);
+    verifyDrivenDisplacementWithPower(5, 0.5);
   }
 
   @Test
   public void driveBackwards() {
     driveTrain.driveBackwards(5, 0.7);
+    verifyDrivenDisplacementWithPower(-5, -0.7);
+  }
 
-    verifyTargetPositionOffset(-5 * 50, -5 * 50);
-    verifyPowersSet(-0.7, -0.7);
+  @Test
+  public void driveBackwardsWithNegativeDistance() {
+    driveTrain.driveBackwards(-5, 0.7);
+    verifyDrivenDisplacementWithPower(-5, -0.7);
+  }
+
+  @Test
+  public void driveBackwardsWithNegativePower() {
+    driveTrain.driveBackwards(5, -0.7);
+    verifyDrivenDisplacementWithPower(-5, -0.7);
   }
 
   @Test
   public void rotateClockwiseMajor() {
     driveTrain.rotateClockwise(270, 0.6);
-
-    verifyTargetPositionOffset(270 * 2, -270 * 2);
-    verifyPowersSet(0.6, -0.6);
   }
 
   @Test
@@ -103,6 +118,13 @@ public class TankDriveTest {
 
     driveTrain.setRotationPower(0.8);
     verifyPowersSet(0.8, -0.8);
+  }
+
+  // -- Start verification methods --
+
+  private void verifyDrivenDisplacementWithPower(int displacementInInches, double power) {
+    verifyTargetPositionOffset(displacementInInches * 50, displacementInInches * 50);
+    verifyPowersSet(power, power);
   }
 
   private void verifyPowersSet(double left, double right) {
