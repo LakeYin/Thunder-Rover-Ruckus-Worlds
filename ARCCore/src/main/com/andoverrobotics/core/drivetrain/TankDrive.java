@@ -2,7 +2,7 @@ package com.andoverrobotics.core.drivetrain;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-public class TankDrive implements DriveTrain {
+public class TankDrive extends DriveTrain {
 
   private DcMotor motorL;
   private DcMotor motorR;
@@ -15,39 +15,22 @@ public class TankDrive implements DriveTrain {
   }
 
   @Override
-  public void setDefaultDrivePower(double power) {
-    defaultPower = power;
-  }
-  @Override
-  public double getDefaultDrivePower() {
-    return defaultPower;
-  }
-
-  @Override
-  public void driveForwards(double distanceInInches) {
-    driveForwards(distanceInInches, defaultPower);
-  }
-  @Override
   public void driveForwards(double distanceInInches, double power) {
     // FIXME implement
   }
 
-  @Override
-  public void driveBackwards(double distanceInInches) {
-    driveBackwards(distanceInInches, defaultPower);
-  }
   @Override
   public void driveBackwards(double distanceInInches, double power) {
     // FIXME implement
   }
 
   @Override
-  public void rotateClockwise(int degrees) {
+  public void rotateClockwise(int degrees, double power) {
 
   }
 
   @Override
-  public void rotateCounterClockwise(int degrees) {
+  public void rotateCounterClockwise(int degrees, double power) {
 
   }
 
