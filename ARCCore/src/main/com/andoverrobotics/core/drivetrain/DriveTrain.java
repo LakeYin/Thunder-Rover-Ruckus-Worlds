@@ -44,7 +44,7 @@ public abstract class DriveTrain {
   // [-1, 1]
   public abstract void setMovementPower(double power);
 
-  // [-1, 1]
+  // [-1, 1] positive is clockwise
   public abstract void setRotationPower(double power);
 
 }

@@ -1,6 +1,6 @@
 package com.andoverrobotics.core.utilities;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
@@ -43,9 +43,9 @@ public class CoordinateTest {
     testee = coord;
   }
   private void givenEuclidean(double x, double y) {
-    testee = Coordinate.fromXY(x, y);
+    given(Coordinate.fromXY(x, y));
   }
   private void givenPolar(double distance, int degrees) {
-    testee = Coordinate.fromPolar(distance, degrees);
+    given(Coordinate.fromPolar(distance, degrees));
   }
 }
