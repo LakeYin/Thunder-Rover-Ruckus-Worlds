@@ -30,3 +30,4 @@ build/
 
 .flooignore
 .floo
+gradle/wrapper/gradle-wrapper.properties
