@@ -6,6 +6,7 @@ import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODE
 import com.andoverrobotics.core.utilities.Converter;
 import com.andoverrobotics.core.utilities.Coordinate;
 import com.andoverrobotics.core.utilities.IMotor;
+import com.andoverrobotics.core.utilities.MotorPair;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.Range;
 
@@ -28,6 +29,32 @@ public class MecanumDrive extends StrafingDriveTrain {
 
     this.ticksPerInch = ticksPerInch;
     this.ticksPer360 = ticksPer360;
+  }
+
+  public static MecanumDrive fromOctagonalMotors(DcMotor motorFL, DcMotor motorFR, DcMotor motorBL, DcMotor motorBR,
+      OpMode opMode, int ticksPerInch, int ticksPer360) {
+    // /-\
+    // | |
+    // \-/
+
+    return new MecanumDrive(
+        MotorPair.of(motorFR, motorBL),
+        MotorPair.of(motorFL, motorBR),
+        MotorPair.of(motorFL, motorBL),
+        MotorPair.of(motorFR, motorBR), opMode, ticksPerInch, ticksPer360);
+  }
+
+  public static MecanumDrive fromCrossedMotors(DcMotor motorFL, DcMotor motorFR, DcMotor motorBL, DcMotor motorBR,
+      OpMode opMode, int ticksPerInch, int ticksPer360) {
+    // \-/
+    // | |
+    // /-\
+
+    return new MecanumDrive(
+        MotorPair.of(motorFL, motorBR),
+        MotorPair.of(motorFR, motorBL),
+        MotorPair.of(motorFL, motorBL),
+        MotorPair.of(motorFR, motorBR), opMode, ticksPerInch, ticksPer360);
   }
 
   private void driveWithEncoder(Coordinate displacement, double power) {
