@@ -11,7 +11,7 @@ public class TankDriveAutonomousExample extends LinearOpMode {
   private DcMotor motorL = hardwareMap.dcMotor.get("motorL"),
       motorR = hardwareMap.dcMotor.get("motorR");
   private int ticksPerInch, ticksPer360;
-  private TankDrive tankDrive = new TankDrive(motorL, motorR, this, ticksPerInch, ticksPer360);
+  private TankDrive tankDrive = TankDrive.fromMotors(motorL, motorR, this, ticksPerInch, ticksPer360);
 
   @Override
   public void runOpMode() throws InterruptedException {
