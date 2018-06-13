@@ -8,6 +8,7 @@ import com.andoverrobotics.core.utilities.Coordinate;
 import com.andoverrobotics.core.utilities.IMotor;
 import com.andoverrobotics.core.utilities.MotorPair;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 public class MecanumDrive extends StrafingDriveTrain {

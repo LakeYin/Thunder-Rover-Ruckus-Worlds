@@ -7,12 +7,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class MecanumAutonomousExample extends LinearOpMode {
 
   private DcMotor motorFL = hardwareMap.dcMotor.get("motorFL"),
-      motorFR = hardwareMap.dcMotor.get("motorFR"),
-      motorBL = hardwareMap.dcMotor.get("motorBL"),
-      motorBR = hardwareMap.dcMotor.get("motorBR");
+  motorFR = hardwareMap.dcMotor.get("motorFR"),
+  motorBL = hardwareMap.dcMotor.get("motorBL"),
+  motorBR = hardwareMap.dcMotor.get("motorBR");
+  private int ticksPerInch, ticksPer360;
   private MecanumDrive mecanumDrive = MecanumDrive
       .fromOctagonalMotors(motorFL, motorFR, motorBL, motorBR, this, ticksPerInch, ticksPer360);
-  private int ticksPerInch, ticksPer360;
 
   @Override
   public void runOpMode() throws InterruptedException {
