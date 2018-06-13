@@ -1,204 +1,142 @@
 package com.andoverrobotics.core.drivetrain;
 
-import com.andoverrobotics.core.utilities.Converter;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.Range;
-
-import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
-import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
+
+import com.andoverrobotics.core.utilities.Converter;
+import com.andoverrobotics.core.utilities.Coordinate;
+import com.andoverrobotics.core.utilities.IMotor;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.util.Range;
 
 public class MecanumDrive extends StrafingDriveTrain {
 
-  private DcMotor motorFL;
-  private DcMotor motorFR;
-  private DcMotor motorBL;
-  private DcMotor motorBR;
+  private final IMotor leftDiagonal, rightDiagonal, leftSide, rightSide;
+
   private final int ticksPerInch;
   private final int ticksPer360;
 
-  public MecanumDrive(DcMotor motorL, DcMotor motorR, OpMode opMode,
-                      int ticksPerInch, int ticksPer360) {
+  public MecanumDrive(IMotor leftDiagonal, IMotor rightDiagonal, IMotor leftSide, IMotor rightSide,
+      OpMode opMode, int ticksPerInch, int ticksPer360) {
+
     super(opMode);
 
-    this.motorFL = motorFL;
-    this.motorFR = motorFR;
-    this.motorBL = motorBL;
-    this.motorBR = motorBR;
+    this.leftDiagonal = leftDiagonal;
+    this.rightDiagonal = rightDiagonal;
+    this.leftSide = leftSide;
+    this.rightSide = rightSide;
+
     this.ticksPerInch = ticksPerInch;
     this.ticksPer360 = ticksPer360;
   }
 
-  @Override
-  public void driveForwards(double distanceInInches, double power) {
-    driveWithEncoder(Math.abs(distanceInInches), Math.abs(power));
-  }
+  private void driveWithEncoder(Coordinate displacement, double power) {
+    double clippedPower = Range.clip(power, -1, 1);
 
-  private void driveWithEncoder(double displacementInInches, double power) {
-    power = Range.clip(power, -1, 1);
-    power = Math.abs(power);
-
-    if (displacementInInches < 0) {
-      power *= -1;
+    if (displacement.getPolarDistance() < 1e-5) {
+      return;
     }
 
-    setMotorMode(STOP_AND_RESET_ENCODER);
-    setMotorMode(RUN_TO_POSITION);
+    Coordinate diagonalOffsets = displacement.rotate(-45);
+    double maxOffset = Math.max(diagonalOffsets.getX(), diagonalOffsets.getY());
 
-    double robotTurn = displacementInInches * ticksPerInch;
+    int leftOffset = (int) (diagonalOffsets.getY() * ticksPerInch),
+        rightOffset = (int) (diagonalOffsets.getX() * ticksPerInch);
 
-    motorFL.setTargetPosition((int) (robotTurn));
-    motorFR.setTargetPosition((int) (robotTurn));
-    motorBL.setTargetPosition((int) (robotTurn));
-    motorBR.setTargetPosition((int) (robotTurn));
+    double leftPower = clippedPower * (diagonalOffsets.getY() / maxOffset),
+        rightPower = clippedPower * (diagonalOffsets.getX() / maxOffset);
 
-    motorFL.setPower(power);
-    motorFR.setPower(power);
-    motorBL.setPower(power);
-    motorBR.setPower(power);
+    leftDiagonal.startRunToPosition(leftOffset, leftPower);
+    rightDiagonal.startRunToPosition(rightOffset, rightPower);
 
-    while (motorFL.isBusy() && motorFR.isBusy() && motorBL.isBusy() && motorBR.isBusy() && opModeIsActive()) {
-      reportMotorPositions();
+    while (isBusy() && opModeIsActive()) {
     }
 
     stop();
     setMotorMode(RUN_USING_ENCODER);
-  }
-
-  @Override
-  public void driveBackwards(double distanceInInches, double power) {
-    driveWithEncoder(-Math.abs(distanceInInches), -Math.abs(power));
   }
 
   @Override
   public void rotateClockwise(int degrees, double power) {
-    power = Range.clip(power, -1, 1);
-    power = Math.abs(power);
-    degrees = Converter.normalizedDegrees(degrees);
-
-    rotateWithEncoder(degrees, -degrees, power, -power);
+    rotateWithEncoder(-Converter.normalizedDegrees(degrees), -Math.abs(power));
   }
 
   @Override
   public void rotateCounterClockwise(int degrees, double power) {
-    power = Range.clip(power, -1, 1);
-    power = Math.abs(power);
-    degrees = Converter.normalizedDegrees(degrees);
-
-    rotateWithEncoder(-degrees, degrees, -power, power);
+    rotateWithEncoder(Converter.normalizedDegrees(degrees), Math.abs(power));
   }
 
-  private void rotateWithEncoder(int leftDegrees, int rightDegrees,
-      double leftPower, double rightPower) {
+  // Positive input means counter-clockwise
+  private void rotateWithEncoder(int degrees, double power) {
+    double clippedPower = Math.abs(Range.clip(power, -1, 1));
+    double rotationTicks = degrees / 360.0 * ticksPer360;
 
-    setMotorMode(STOP_AND_RESET_ENCODER);
-    setMotorMode(RUN_TO_POSITION);
+    leftSide.startRunToPosition((int) -rotationTicks, -clippedPower);
+    rightSide.startRunToPosition((int) rotationTicks, clippedPower);
 
-    motorFL.setTargetPosition((int) (leftDegrees / 360.0 * ticksPer360));
-    motorFR.setTargetPosition((int) (rightDegrees / 360.0 * ticksPer360));
-    motorBL.setTargetPosition((int) (leftDegrees / 360.0 * ticksPer360));
-    motorBR.setTargetPosition((int) (rightDegrees / 360.0 * ticksPer360));
-
-    motorFL.setPower(leftPower);
-    motorFR.setPower(rightPower);
-    motorBL.setPower(leftPower);
-    motorBR.setPower(rightPower);
-
-    while (motorFL.isBusy() && motorFR.isBusy() && motorBL.isBusy() && motorBR.isBusy() && opModeIsActive()) {
-      reportMotorPositions();
+    while (isBusy() && opModeIsActive()) {
     }
 
     stop();
     setMotorMode(RUN_USING_ENCODER);
   }
 
-  public void strafeRight(double power, double distanceInInches)
-  {
-
-    // Set the encoder mode to 3 (STOP_AND_RESET_ENCODERS)
-    setMotorMode(STOP_AND_RESET_ENCODER);
-
-    // Sets the power range
-    power = Range.clip(power, -1, 1);
-
-    // Setting the target positions
-    motorFL.setTargetPosition((int)(distanceInInches * -ticksPerInch));
-    motorBL.setTargetPosition((int)(distanceInInches * ticksPerInch));
-    motorFR.setTargetPosition((int)(distanceInInches * ticksPerInch));
-    motorBR.setTargetPosition((int)(distanceInInches * -ticksPerInch));
-
-    // Set encoder mode to RUN_TO_POSITION
-    setMotorMode(RUN_TO_POSITION);
-
-    motorFR.setPower(power);
-    motorBL.setPower(power);
-    motorFL.setPower(power);
-    motorBR.setPower(power);
-
-    // While loop for updating telemetry
-    while(motorFL.isBusy() && motorFR.isBusy() && opModeIsActive()){
-
-      // Updates the position of the motors
-      double LPos = motorFL.getCurrentPosition();
-      double RPos = motorFR.getCurrentPosition();
-
-      while (motorFL.isBusy() && motorFR.isBusy() && motorBL.isBusy() && motorBR.isBusy() && opModeIsActive()) {
-        reportMotorPositions();
-      }
-
-    }
-
-    // Stops the motors
-    stop();
-
-    // Resets to run using encoders mode
-    setMotorMode(RUN_USING_ENCODER);
-  }
-
-  public void strafeLeft(double power, double distanceInInches){
-    strafeRight(power, -distanceInInches);
+  @Override
+  public void strafeInches(Coordinate inchOffset, double power) {
+    driveWithEncoder(inchOffset, power);
   }
 
   // -- TeleOp methods --
 
   @Override
   public void setMovementPower(double power) {
+    double clippedPower = Range.clip(power, -1, 1);
+
     setMotorMode(RUN_WITHOUT_ENCODER);
 
-    motorFL.setPower(power);
-    motorFR.setPower(power);
-    motorBL.setPower(power);
-    motorBR.setPower(power);
+    leftSide.setPower(clippedPower);
+    rightSide.setPower(clippedPower);
   }
 
   @Override
   public void setRotationPower(double power) { //clockwise if power is positive
+    double clippedPower = Range.clip(power, -1, 1);
+
     setMotorMode(RUN_WITHOUT_ENCODER);
 
-    motorFL.setPower(power);
-    motorFR.setPower(-power);
-    motorBL.setPower(power);
-    motorBR.setPower(-power);
+    leftSide.setPower(clippedPower);
+    rightSide.setPower(-clippedPower);
   }
 
   @Override
-  protected DcMotor[] getMotors() {
-    return new DcMotor[]{motorFL, motorBR, motorBL, motorBR};
+  public void setStrafe(int polarDirection, double power) {
+    double direction = Converter.degreesToRadians(polarDirection - 45);
+
+    setMotorMode(RUN_WITHOUT_ENCODER);
+
+    leftDiagonal.setPower(Math.sin(direction) * Math.abs(power));
+    rightDiagonal.setPower(Math.cos(direction) * Math.abs(power));
   }
 
-  private void reportMotorPositions() {
-    double FLPos = motorFL.getCurrentPosition();
-    double FRPos = motorFR.getCurrentPosition();
-    double BLPos = motorBL.getCurrentPosition();
-    double BRPos = motorBR.getCurrentPosition();
+  @Override
+  public void setMovementAndRotation(double movePower, double rotatePower) {
+    setMotorMode(RUN_WITHOUT_ENCODER);
 
-    opMode.telemetry.addData("motorFL Pos:", FLPos);
-    opMode.telemetry.addData("motorFR Pos:", FRPos);
-    opMode.telemetry.addData("motorBL Pos:", BLPos);
-    opMode.telemetry.addData("motorBR Pos:", BRPos);
+    double leftPower = movePower + rotatePower,
+        rightPower = movePower - rotatePower;
 
-    opMode.telemetry.update();
+    double maxPower = Math.max(Math.abs(leftPower), Math.abs(rightPower));
+    if (maxPower > 1) {
+      leftPower /= maxPower;
+      rightPower /= maxPower;
+    }
+
+    leftSide.setPower(leftPower);
+    rightSide.setPower(rightPower);
+  }
+
+  @Override
+  protected IMotor[] getMotors() {
+    return new IMotor[]{leftDiagonal, rightDiagonal, leftSide, rightSide};
   }
 }

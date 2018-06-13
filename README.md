@@ -12,4 +12,4 @@ Each TeamCode written by each team should be documented with the standard specif
 ### Javadoc Reference Material
 
 ### Online User Forum
-The programming Discord can be found here:
+The programming Discord can be found [here](https://discord.gg/mut9kTr).

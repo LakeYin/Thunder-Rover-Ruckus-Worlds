@@ -39,6 +39,30 @@ public class CoordinateTest {
     assertEquals(20 * Math.sin(2.44346), testee.getY(), 1e-4);
   }
 
+  @Test
+  public void rotate() {
+    givenPolar(5, 24);
+
+    testee = testee.rotate(30);
+
+    assertEquals(5, testee.getPolarDistance(), 1e-5);
+    assertEquals(54, testee.getPolarDirection(), 1e-5);
+    assertEquals(5 * Math.cos(54 / 180.0 * Math.PI), testee.getX(), 1e-5);
+    assertEquals(5 * Math.sin(54 / 180.0 * Math.PI), testee.getY(), 1e-5);
+
+    givenPolar(5, 350);
+
+    testee = testee.rotate(20);
+
+    assertEquals(5, testee.getPolarDistance(), 1e-5);
+    assertEquals(10, testee.getPolarDirection(), 1e-5);
+
+    testee = testee.rotate(-35);
+
+    assertEquals(5 * Math.cos(25 / 180.0 * Math.PI), testee.getX(), 1e-5);
+    assertEquals(-5 * Math.sin(25 / 180.0 * Math.PI), testee.getY(), 1e-5);
+  }
+
   private void given(Coordinate coord) {
     testee = coord;
   }

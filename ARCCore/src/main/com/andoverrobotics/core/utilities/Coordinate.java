@@ -14,6 +14,13 @@ public class Coordinate {
     this.y = other.y;
   }
 
+  // Counter-clockwise by default
+  public Coordinate rotate(int degrees) {
+    return Coordinate.fromPolar(
+        getPolarDistance(),
+        Converter.normalizedDegrees(getPolarDirection() + degrees));
+  }
+
   public int getPolarDirection() {
     return Converter.radiansToDegrees(Math.atan2(y, x));
   }
