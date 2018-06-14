@@ -46,7 +46,7 @@ public class ConfigurationTest {
   }
 
   @Test
-  public void fromPropertiesReader_givenProperties_returnsCorrectly() throws IOException {
+  public void fromPropertiesReaderGivenPropertiesReturnsCorrectly() throws IOException {
     Configuration stringConfig =
         Configuration.fromProperties(new StringReader(schemaDataFileContents));
     assertEquals(config, stringConfig);
@@ -55,24 +55,24 @@ public class ConfigurationTest {
   // NORMAL COURSE /////
 
   @Test
-  public void getInt_givenIntKey_returnsCorrectValue() {
+  public void getIntGivenIntKeyReturnsCorrectValue() {
     assertEquals(4,
         config.getInt("autonomousTrials"));
   }
 
   @Test
-  public void getDouble_givenDoubleKey_returnsCorrectValue() {
+  public void getDoubleGivenDoubleKeyReturnsCorrectValue() {
     assertEquals(0.412,
         config.getDouble("motorSpeed"), 1e-8);
   }
 
   @Test
-  public void getBoolean_givenBooleanKey_returnsCorrectValue() {
+  public void getBooleanGivenBooleanKeyReturnsCorrectValue() {
     assertFalse(config.getBoolean("useEncoders"));
   }
 
   @Test
-  public void getString_givenKey_returnsCorrectValue() {
+  public void getStringGivenKeyReturnsCorrectValue() {
     assertEquals("ConfigTestBot",
         config.getString("robotName"));
   }
@@ -80,29 +80,29 @@ public class ConfigurationTest {
   // BAD FORMAT COURSE /////
 
   @Test(expected = InvalidFormatError.class)
-  public void getInt_givenFloatKey_throwsException() {
+  public void getIntGivenFloatKeyThrowsException() {
     config.getInt("motorSpeed");
   }
 
   @Test(expected = InvalidFormatError.class)
-  public void getDouble_givenBooleanKey_throwsException() {
+  public void getDoubleGivenBooleanKeyThrowsException() {
     config.getDouble("useEncoders");
   }
 
   @Test(expected = InvalidFormatError.class)
-  public void getBoolean_givenIntKey_throwsException() {
+  public void getBooleanGivenIntKeyThrowsException() {
     config.getBoolean("autonomousTrials");
   }
 
   // NONEXISTENT FIELD COURSE /////
 
   @Test(expected = NoSuchFieldError.class)
-  public void get_givenInvalidKey_throwsException() {
+  public void getGivenInvalidKeyThrowsException() {
     config.getString("badKey");
   }
 
   @Test
-  public void fromMapToSchema_givenProvider_loadsCorrectValues() {
+  public void fromMapToSchemaGivenProviderLoadsCorrectValues() {
     TestSchema config = Configuration.from(schemaProvider).loadToSchema(new TestSchema());
 
     assertEquals(4, config.autonomousTrials);
@@ -113,13 +113,13 @@ public class ConfigurationTest {
   }
 
   @Test
-  public void equals_givenEqualConfigs_returnsTrue() {
+  public void equalsGivenEqualConfigsReturnsTrue() {
     Configuration config1 = Configuration.from(schemaProvider);
     assertEquals(config1, config);
   }
 
   @Test(expected = InvalidSchemaError.class)
-  public void fromMapToSchema_givenBadSchema_throwsException() {
+  public void fromMapToSchemaGivenBadSchemaThrowsException() {
     Configuration.from(schemaProvider).loadToSchema(new BadTestSchema());
   }
 }

@@ -77,18 +77,18 @@ public class TankDrive extends DriveTrain {
   public void rotateClockwise(int degrees, double givenPower) {
     double power = Range.clip(givenPower, -1, 1);
     power = Math.abs(power);
-    degrees = Converter.normalizedDegrees(degrees);
+    int normalizedDegrees = Converter.normalizedDegrees(degrees);
 
-    rotateWithEncoder(degrees, -degrees, power, -power);
+    rotateWithEncoder(normalizedDegrees, -normalizedDegrees, power, -power);
   }
 
   @Override
   public void rotateCounterClockwise(int degrees, double givenPower) {
     double power = Range.clip(givenPower, -1, 1);
     power = Math.abs(power);
-    degrees = Converter.normalizedDegrees(degrees);
+    int normalizedDegrees = Converter.normalizedDegrees(degrees);
 
-    rotateWithEncoder(-degrees, degrees, -power, power);
+    rotateWithEncoder(-normalizedDegrees, normalizedDegrees, -power, power);
   }
 
   private void rotateWithEncoder(int leftDegrees, int rightDegrees,
