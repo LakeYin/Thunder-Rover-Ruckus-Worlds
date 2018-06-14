@@ -50,15 +50,14 @@ public class TankDrive extends DriveTrain {
     driveWithEncoder(Math.abs(distanceInInches), Math.abs(power));
   }
 
-  private void driveWithEncoder(double displacementInInches, double power) {
+  private void driveWithEncoder(double displacementInInches, double givenPower) {
 
-    if (power == 0) {
+    if (givenPower == 0) {
       stop();
       return;
     }
 
-    power = Range.clip(power, -1, 1);
-    power = Math.abs(power);
+    double power = Math.abs(Range.clip(givenPower, -1, 1));
 
     if (displacementInInches < 0) {
       power *= -1;
@@ -75,8 +74,8 @@ public class TankDrive extends DriveTrain {
   }
 
   @Override
-  public void rotateClockwise(int degrees, double power) {
-    power = Range.clip(power, -1, 1);
+  public void rotateClockwise(int degrees, double givenPower) {
+    double power = Range.clip(givenPower, -1, 1);
     power = Math.abs(power);
     degrees = Converter.normalizedDegrees(degrees);
 
@@ -84,8 +83,8 @@ public class TankDrive extends DriveTrain {
   }
 
   @Override
-  public void rotateCounterClockwise(int degrees, double power) {
-    power = Range.clip(power, -1, 1);
+  public void rotateCounterClockwise(int degrees, double givenPower) {
+    double power = Range.clip(givenPower, -1, 1);
     power = Math.abs(power);
     degrees = Converter.normalizedDegrees(degrees);
 

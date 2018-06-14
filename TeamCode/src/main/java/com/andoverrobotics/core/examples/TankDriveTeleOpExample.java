@@ -10,16 +10,16 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 public class TankDriveTeleOpExample extends OpMode {
 
   private static final int ticksPerInch = 1000, ticksPer360 = 1440 * 4;
-  private DcMotor motorL, motorR;
   private TankDrive tankDrive;
 
   @Override
   public void init() {
-    motorL = hardwareMap.dcMotor.get("motorL");
-    motorR = hardwareMap.dcMotor.get("motorR");
+    DcMotor motorL = hardwareMap.dcMotor.get("motorL");
+    DcMotor motorR = hardwareMap.dcMotor.get("motorR");
     motorL.setDirection(Direction.REVERSE);
 
-    tankDrive = TankDrive.fromMotors(motorL, motorR, this, ticksPerInch, ticksPer360);
+    tankDrive = TankDrive.fromMotors(
+        motorL, motorR, this, ticksPerInch, ticksPer360);
   }
 
   @Override

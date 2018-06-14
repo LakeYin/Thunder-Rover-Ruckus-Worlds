@@ -10,21 +10,18 @@ public class MecanumAutonomousExample extends LinearOpMode {
 
   private static final int ticksPerInch = 20, ticksPer360 = 200;
 
-  private DcMotor motorFL, motorFR, motorBL, motorBR;
-  private MecanumDrive drivetrain;
-
   @Override
   public void runOpMode() {
 
-    motorFL = hardwareMap.dcMotor.get("motorFL");
-    motorFR = hardwareMap.dcMotor.get("motorFR");
-    motorBL = hardwareMap.dcMotor.get("motorBL");
-    motorBR = hardwareMap.dcMotor.get("motorBR");
+    DcMotor motorFL = hardwareMap.dcMotor.get("motorFL");
+    DcMotor motorFR = hardwareMap.dcMotor.get("motorFR");
+    DcMotor motorBL = hardwareMap.dcMotor.get("motorBL");
+    DcMotor motorBR = hardwareMap.dcMotor.get("motorBR");
 
-    drivetrain = MecanumDrive.fromOctagonalMotors(
+    MecanumDrive drivetrain = MecanumDrive.fromOctagonalMotors(
         motorFL, motorFR, motorBL, motorBR, this, ticksPerInch, ticksPer360);
 
-    /* Make the following sideways V shape:
+    /* Makes the following sideways V shape:
 
       ⬈
       ⬉
@@ -35,7 +32,7 @@ public class MecanumAutonomousExample extends LinearOpMode {
       drivetrain.strafeInches(Math.pow(-1, i) * 36 / Math.sqrt(2), 36 / Math.sqrt(2), 1);
     }
 
-    /* Make the following sideways V shape:
+    /* Makes the following sideways V shape:
 
       ⬊
       ⬋

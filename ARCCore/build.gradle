@@ -8,7 +8,6 @@ android {
     }
 
     compileSdkVersion 23
-    buildToolsVersion '26.0.2'
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
@@ -29,14 +28,14 @@ repositories {
 }
 
 dependencies {
-    compile project(':FtcRobotController')
-    compile (name: 'RobotCore-release', ext: 'aar')
-    compile (name: 'Hardware-release', ext: 'aar')
-    compile (name: 'FtcCommon-release', ext: 'aar')
-    compile (name:'Analytics-release', ext:'aar')
-    compile (name:'WirelessP2p-release', ext:'aar')
+    implementation project(':FtcRobotController')
+    implementation (name: 'RobotCore-release', ext: 'aar')
+    implementation (name: 'Hardware-release', ext: 'aar')
+    implementation (name: 'FtcCommon-release', ext: 'aar')
+    implementation (name:'Analytics-release', ext:'aar')
+    implementation (name:'WirelessP2p-release', ext:'aar')
 
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:2.18.3'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-core:2.18.3'
 }
 
