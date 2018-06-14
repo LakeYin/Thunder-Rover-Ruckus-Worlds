@@ -1,3 +1,5 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0ed9efc1a65747c9ad806a66419d4054)](https://www.codacy.com/app/michael_47/ARC-Core?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Andover-Robotics/ARC-Core&amp;utm_campaign=Badge_Grade)
+
 ## Welcome!
 This is the common code base for the Andover Robotics teams. All three teams will fork from this repository to program their own robots.
 ## Downloading the Project

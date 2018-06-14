@@ -19,7 +19,7 @@ public class MotorPairTest {
   private MotorPair pair = MotorPair.of(one, two);
 
   @Before
-  public void setUp() throws Exception {
+  public void setUp() {
     reset(one, two);
   }
 
@@ -43,8 +43,8 @@ public class MotorPairTest {
 
     pair.addTargetPosition(-10);
 
-    verify(one).setTargetPosition(60);
-    verify(two).setTargetPosition(-30);
+    verify(one).setTargetPosition(40);
+    verify(two).setTargetPosition(-50);
   }
 
   @Test

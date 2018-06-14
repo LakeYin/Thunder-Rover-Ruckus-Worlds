@@ -1,13 +1,16 @@
 package com.andoverrobotics.core.utilities;
 
-import android.util.Pair;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 
-public class MotorPair extends Pair<DcMotor, DcMotor> implements IMotor {
+public class MotorPair implements IMotor {
+
+  private DcMotor first;
+  private DcMotor second;
 
   private MotorPair(DcMotor first, DcMotor second) {
-    super(first, second);
+    this.first = first;
+    this.second = second;
   }
 
   public static MotorPair of(DcMotor one, DcMotor two) {
