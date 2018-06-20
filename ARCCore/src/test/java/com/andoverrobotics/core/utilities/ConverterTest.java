@@ -28,20 +28,20 @@ public class ConverterTest {
 
   @Test
   public void radiansToDegreesInRange() {
-    assertEquals(0, Converter.radiansToDegrees(0.0));
-    assertEquals(45, Converter.radiansToDegrees(Math.PI / 4));
-    assertEquals(90, Converter.radiansToDegrees(Math.PI / 2));
+    assertEquals(0, Converter.radiansToDegrees(0.0), 1e-7);
+    assertEquals(45, Converter.radiansToDegrees(Math.PI / 4), 1e-7);
+    assertEquals(90, Converter.radiansToDegrees(Math.PI / 2), 1e-7);
   }
 
   @Test
   public void radiansToDegreesUnderRange() {
-    assertEquals(180, Converter.radiansToDegrees(-Math.PI));
-    assertEquals(90, Converter.radiansToDegrees(-Math.PI * 1.5));
+    assertEquals(180, Converter.radiansToDegrees(-Math.PI), 1e-7);
+    assertEquals(90, Converter.radiansToDegrees(-Math.PI * 1.5), 1e-7);
   }
 
   @Test
   public void radiansToDegreesAboveRange() {
-    assertEquals(135, Converter.radiansToDegrees(Math.PI * 2.75));
-    assertEquals(270, Converter.radiansToDegrees(Math.PI * 5.5));
+    assertEquals(135, Converter.radiansToDegrees(Math.PI * 2.75), 1e-7);
+    assertEquals(270, Converter.radiansToDegrees(Math.PI * 5.5), 1e-7);
   }
 }

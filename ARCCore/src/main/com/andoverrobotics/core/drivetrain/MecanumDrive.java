@@ -58,6 +58,10 @@ public class MecanumDrive extends StrafingDriveTrain {
         MotorPair.of(motorFR, motorBR), opMode, ticksPerInch, ticksPer360);
   }
 
+  // Rotates the given displacement by 45deg clockwise, assigns its components to the diagonals as
+  // a tick offset (setTargetPosition), then scales its components down such that the greatest
+  // component is equal to the power given, followed by assigning these components to the diagonals
+  // as power.
   private void driveWithEncoder(Coordinate displacement, double power) {
     double clippedPower = Range.clip(power, -1, 1);
 
@@ -95,7 +99,7 @@ public class MecanumDrive extends StrafingDriveTrain {
   }
 
   // Positive input means counter-clockwise
-  private void rotateWithEncoder(int degrees, double power) {
+  private void rotateWithEncoder(double degrees, double power) {
     double clippedPower = Math.abs(Range.clip(power, -1, 1));
     double rotationTicks = degrees / 360.0 * ticksPer360;
 
@@ -137,13 +141,15 @@ public class MecanumDrive extends StrafingDriveTrain {
   }
 
   @Override
-  public void setStrafe(int polarDirection, double power) {
-    double direction = Converter.degreesToRadians(polarDirection - 45);
+  public void setStrafe(Coordinate offset, double unscaledPower) {
+    double direction = Converter.degreesToRadians(offset.getPolarDirection() - 45);
+    double magnitude = Math.min(1, offset.getPolarDistance());
+    double power = Range.clip(unscaledPower, -1, 1);
 
     setMotorMode(RUN_WITHOUT_ENCODER);
 
-    leftDiagonal.setPower(Math.sin(direction) * Math.abs(power));
-    rightDiagonal.setPower(Math.cos(direction) * Math.abs(power));
+    leftDiagonal.setPower(Math.sin(direction) * magnitude * Math.abs(power));
+    rightDiagonal.setPower(Math.cos(direction) * magnitude * Math.abs(power));
   }
 
   @Override

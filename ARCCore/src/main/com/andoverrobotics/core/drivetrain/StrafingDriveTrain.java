@@ -65,7 +65,7 @@ public abstract class StrafingDriveTrain extends DriveTrain {
     setStrafe(Coordinate.fromXY(x, y));
   }
   public final void setStrafe(Coordinate direction) {
-    setStrafe(direction.getPolarDirection());
+    setStrafe(direction, defaultPower);
   }
   public final void setStrafe(int polarDirection) {
     setStrafe(polarDirection, defaultPower);
@@ -73,8 +73,5 @@ public abstract class StrafingDriveTrain extends DriveTrain {
   public final void setStrafe(double x, double y, double power) {
     setStrafe(Coordinate.fromXY(x, y), power);
   }
-  public final void setStrafe(Coordinate direction, double power) {
-    setStrafe(direction.getPolarDirection(), power);
-  }
-  public abstract void setStrafe(int polarDirection, double power);
+  public abstract void setStrafe(Coordinate direction, double power);
 }

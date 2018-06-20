@@ -7,6 +7,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
+import com.andoverrobotics.core.utilities.Coordinate;
 import com.andoverrobotics.core.utilities.IMotor;
 import com.andoverrobotics.core.utilities.MotorPair;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -148,7 +149,7 @@ public class MecanumDriveTest {
   public void strafeInches() {
     driveTrain.strafeInches(10, 15, 0.4);
 
-    verifyRunToPosition(leftDiagonal, (int) (3.5355339 * 5), 0.077752);
+    verifyRunToPosition(leftDiagonal, (int) (3.5355339 * 5), 0.08);
     verifyRunToPosition(rightDiagonal, (int) (17.67766953 * 5), 0.4);
   }
 
@@ -193,6 +194,30 @@ public class MecanumDriveTest {
   public void setMovementAndRotationWithMultipleOverflows() {
     driveTrain.setMovementAndRotation(0.8, 5);
     verifyPowersWithoutEncoder(1, -4.2 / 5.8);
+  }
+
+  @Test
+  public void setStrafeWithinUnitCircle() {
+    driveTrain.setStrafe(Coordinate.fromXY(0.5, 0.7), 1);
+
+    verifyPairPower(leftDiagonal, 0.141421356);
+    verifyPairPower(rightDiagonal, 0.8485281374);
+  }
+
+  @Test
+  public void setStrafeOutsideUnitCircle() {
+    driveTrain.setStrafe(Coordinate.fromXY(525, -1441), 0.5);
+
+    verifyPairPower(leftDiagonal, -0.45322105262);
+    verifyPairPower(rightDiagonal, -0.211165047915);
+  }
+
+  @Test
+  public void setStrafeWithOrigin() {
+    driveTrain.setStrafe(0, 0, Double.MAX_VALUE);
+
+    verifyPairPower(leftDiagonal, 0);
+    verifyPairPower(rightDiagonal, 0);
   }
 
   private void verifyPowersWithoutEncoder(double leftPower, double rightPower) {

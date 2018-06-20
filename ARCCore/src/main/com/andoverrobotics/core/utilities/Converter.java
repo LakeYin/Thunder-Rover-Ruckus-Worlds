@@ -5,12 +5,12 @@ package com.andoverrobotics.core.utilities;
 public class Converter {
   private static final double TAU = 2 * Math.PI;
 
-  public static double degreesToRadians(int degrees) {
+  public static double degreesToRadians(double degrees) {
     return normalizedRadians(degrees / 180.0 * Math.PI);
   }
 
-  public static int radiansToDegrees(double radians) {
-    return normalizedDegrees((int) Math.round(radians / Math.PI * 180));
+  public static double radiansToDegrees(double radians) {
+    return normalizedDegrees(radians / Math.PI * 180);
   }
 
   public static double inchesToMillimeter(double inches) {
@@ -21,8 +21,8 @@ public class Converter {
     return millimeters / 25.4;
   }
 
-  public static int normalizedDegrees(final int inputDegrees) {
-    int degrees = inputDegrees;
+  public static double normalizedDegrees(final double inputDegrees) {
+    double degrees = inputDegrees;
 
     while (degrees < 0)
       degrees += 360;

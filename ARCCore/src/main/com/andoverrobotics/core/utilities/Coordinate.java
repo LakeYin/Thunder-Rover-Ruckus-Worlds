@@ -21,7 +21,7 @@ public class Coordinate {
         Converter.normalizedDegrees(getPolarDirection() + degrees));
   }
 
-  public int getPolarDirection() {
+  public double getPolarDirection() {
     return Converter.radiansToDegrees(Math.atan2(y, x));
   }
 
@@ -41,7 +41,7 @@ public class Coordinate {
     return new Coordinate(x, y);
   }
 
-  public static Coordinate fromPolar(double distance, int degrees) {
+  public static Coordinate fromPolar(double distance, double degrees) {
     double angle = Converter.degreesToRadians(degrees);
 
     return new Coordinate(distance * Math.cos(angle), distance * Math.sin(angle));

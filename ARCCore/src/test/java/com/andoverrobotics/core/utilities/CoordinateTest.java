@@ -10,13 +10,13 @@ public class CoordinateTest {
   @Test
   public void getPolarDirection() {
     givenEuclidean(1, 0);
-    assertEquals(0, testee.getPolarDirection());
+    assertEquals(0, testee.getPolarDirection(), 1e-7);
 
     givenEuclidean(2, 2);
-    assertEquals(45, testee.getPolarDirection());
+    assertEquals(45, testee.getPolarDirection(), 1e-7);
 
     givenEuclidean(3, -1);
-    assertEquals(342, testee.getPolarDirection());
+    assertEquals(341.565051177, testee.getPolarDirection(), 1e-7);
   }
 
   @Test

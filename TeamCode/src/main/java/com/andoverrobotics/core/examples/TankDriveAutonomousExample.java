@@ -13,11 +13,14 @@ public class TankDriveAutonomousExample extends LinearOpMode {
 
   @Override
   public void runOpMode() {
+
     DcMotor motorL = hardwareMap.dcMotor.get("motorL");
     DcMotor motorR = hardwareMap.dcMotor.get("motorR");
     motorL.setDirection(Direction.REVERSE);
 
     TankDrive tankDrive = TankDrive.fromMotors(motorL, motorR, this, ticksPerInch, ticksPer360);
+
+    waitForStart();
 
     for (int i = 0; i < 4; i++) {
       tankDrive.driveForwards(36, 1);
