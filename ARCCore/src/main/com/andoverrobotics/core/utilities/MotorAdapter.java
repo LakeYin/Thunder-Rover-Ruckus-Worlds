@@ -3,14 +3,25 @@ package com.andoverrobotics.core.utilities;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 
+/**
+ * Adapts a DcMotor to the IMotor interface for the Drivetrains.
+ */
 public class MotorAdapter implements IMotor {
 
   private final DcMotor motor;
 
+  /**
+   * Creates a new MotorAdapter for the given motor.
+   *
+   * @param motor The motor to send commands to
+   */
   public MotorAdapter(DcMotor motor) {
     this.motor = motor;
   }
 
+  /**
+   * @return The motor that this instance adapts
+   */
   public DcMotor getMotor() {
     return motor;
   }
