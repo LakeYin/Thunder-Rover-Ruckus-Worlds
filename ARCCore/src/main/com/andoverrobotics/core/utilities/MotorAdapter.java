@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 
 /**
- * Adapts a DcMotor to the IMotor interface for the Drivetrains.
+ * Adapts a DcMotor to the IMotor interface for the DriveTrains.
  */
 public class MotorAdapter implements IMotor {
 
@@ -38,8 +38,9 @@ public class MotorAdapter implements IMotor {
 
   @Override
   public void startRunToPosition(int tickOffset, double absPower) {
-    if (tickOffset == 0 || absPower < 1e-5)
+    if (tickOffset == 0 || absPower < 1e-5) {
       return;
+    }
 
     setMode(RunMode.RUN_TO_POSITION);
     addTargetPosition(tickOffset);

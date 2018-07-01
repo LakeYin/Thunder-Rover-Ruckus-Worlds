@@ -1,8 +1,10 @@
 package com.andoverrobotics.core.utilities;
 
+import java.util.Objects;
+
 /**
  * Represents a coordinate in the 2D coordinate plane with support for both Cartesian and polar
- * representations.
+ * components.
  */
 public class Coordinate {
 
@@ -17,7 +19,7 @@ public class Coordinate {
   /**
    * Creates a Coordinate instance with the components of another Coordinate.
    *
-   * @param other The Coordinate instance to copy components from
+   * @param other The Coordinate instance from which the components are copied
    */
   public Coordinate(Coordinate other) {
     this.x = other.x;
@@ -31,7 +33,7 @@ public class Coordinate {
    * direction about the origin.
    *
    * @param degrees The number of degrees to rotate. Positive means counter-clockwise, negative
-   *                means clockwise.
+   * means clockwise.
    * @return The coordinate of the rotated point
    */
   public Coordinate rotate(int degrees) {
@@ -94,5 +96,23 @@ public class Coordinate {
     double angle = Converter.degreesToRadians(degrees);
 
     return new Coordinate(distance * Math.cos(angle), distance * Math.sin(angle));
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Coordinate that = (Coordinate) o;
+    return Double.compare(that.x, x) == 0 &&
+        Double.compare(that.y, y) == 0;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(x, y);
   }
 }

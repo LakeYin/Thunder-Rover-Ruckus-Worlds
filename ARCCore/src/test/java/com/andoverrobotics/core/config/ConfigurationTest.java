@@ -31,18 +31,18 @@ public class ConfigurationTest {
   //   referring to ConfigurationTest.
   static class TestSchema {
 
-    int autonomousTrials;
-    double motorSpeed;
-    boolean useEncoders;
-    boolean useSensors;
-    String robotName;
+    public int autonomousTrials;
+    public double motorSpeed;
+    public boolean useEncoders;
+    public boolean useSensors;
+    public String robotName;
   }
 
   static class BadTestSchema {
 
-    double motorSpeed;
-    boolean useEncoders;
-    float badType;
+    public double motorSpeed;
+    public boolean useEncoders;
+    public float badType;
   }
 
   @Test

@@ -3,6 +3,9 @@ package com.andoverrobotics.core.utilities;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 
+/**
+ * Implements the {@link IMotor} interface for the collective control of two physical motors.
+ */
 public class MotorPair implements IMotor {
 
   private DcMotor first;
@@ -13,6 +16,13 @@ public class MotorPair implements IMotor {
     this.second = second;
   }
 
+  /**
+   * Creates a MotorPair.
+   *
+   * @param one The first motor in a pair
+   * @param two The second motor in a pair
+   * @return The new MotorPair
+   */
   public static MotorPair of(DcMotor one, DcMotor two) {
     return new MotorPair(one, two);
   }

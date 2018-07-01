@@ -16,3 +16,6 @@ dependencies {
     compile project(':FtcRobotController')
     compile project(':ARCCore')
 }
+android {
+    buildToolsVersion '27.0.3'
+}

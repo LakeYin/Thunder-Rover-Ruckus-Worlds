@@ -11,7 +11,8 @@ Ask Lake Yin, Michael Peng, or Justin Zhu for help with any coding problems.
 ### User Documentation and Tutorials
 Each TeamCode written by each team should be documented with the standard specified [here](documentation.md).
 
-### Javadoc Reference Material
+### JavaDoc Reference Material
+Our JavaDocs are located [here](https://Andover-Robotics.github.io/ARC-Core).
 
 ### Online User Forum
 The programming Discord can be found [here](https://discord.gg/mut9kTr).

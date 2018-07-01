@@ -11,6 +11,12 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
+/**
+ * Implements the {@link StrafingDriveTrain} for a Mecanum drivetrain. <p> See {@link
+ * #fromOctagonalMotors(DcMotor, DcMotor, DcMotor, DcMotor, OpMode, int, int)} and {@link
+ * #fromCrossedMotors(DcMotor, DcMotor, DcMotor, DcMotor, OpMode, int, int)} for instructions about
+ * easier construction.
+ */
 public class MecanumDrive extends StrafingDriveTrain {
 
   private final IMotor leftDiagonal, rightDiagonal, leftSide, rightSide;
@@ -18,6 +24,24 @@ public class MecanumDrive extends StrafingDriveTrain {
   private final int ticksPerInch;
   private final int ticksPer360;
 
+  /**
+   * Constructs a new <code>MecanumDrive</code> instance with the given {@link IMotor}s and encoder
+   * parameters.
+   *
+   * @param leftDiagonal The {@link IMotor} that represents the two physical motors that make the
+   * robot go (forward and) to the left when the power is positive
+   * @param rightDiagonal The {@link IMotor} that represents the two physical motors that make the
+   * robot go (forward and) to the right when the power is positive
+   * @param leftSide The {@link IMotor} that represents the two physical motors that are on the left
+   * side of the robot
+   * @param rightSide The {@link IMotor} that represents the two physical motors that are on the
+   * right side of the robot
+   * @param opMode The main {@link OpMode}
+   * @param ticksPerInch The number of encoder ticks required to cause a diagonal displacement of 1
+   * inch for the robot
+   * @param ticksPer360 The number of encoder ticks required to cause a full rotation for the robot,
+   * when this amount is applied to the left and right sides in opposite directions
+   */
   public MecanumDrive(IMotor leftDiagonal, IMotor rightDiagonal, IMotor leftSide, IMotor rightSide,
       OpMode opMode, int ticksPerInch, int ticksPer360) {
 
@@ -32,7 +56,32 @@ public class MecanumDrive extends StrafingDriveTrain {
     this.ticksPer360 = ticksPer360;
   }
 
-  public static MecanumDrive fromOctagonalMotors(DcMotor motorFL, DcMotor motorFR, DcMotor motorBL, DcMotor motorBR,
+  /**
+   * Constructs a new MecanumDrive instance that uses the given physical motors, which are arranged
+   * in an octagonal manner. <p> <h2>The Octagonal Configuration</h2> In the octagonal configuration,
+   * the front left and the back right motors cause the robot to move forward and to the right
+   * (diagonally), and the other two motors cause the robot to move forward and to the left.
+   *
+   * It is named to be "octagonal" because of its diagram:
+   * <pre>
+   *   /-\
+   *   | |
+   *   \-/
+   * </pre>
+   *
+   * @param motorFL The motor located at the front-left of the robot
+   * @param motorFR The motor located at the front-right of the robot
+   * @param motorBL The motor located at the rear-left of the robot
+   * @param motorBR The motor located at the rear-right of the robot
+   * @param opMode The main {@link OpMode}
+   * @param ticksPerInch The number of encoder ticks required to cause a diagonal displacement of 1
+   * inch for the robot
+   * @param ticksPer360 The number of encoder ticks required to cause a full rotation for the robot,
+   * when this amount is applied to the left and right sides in opposite directions
+   * @return The new MecanumDrive instance
+   */
+  public static MecanumDrive fromOctagonalMotors(DcMotor motorFL, DcMotor motorFR, DcMotor motorBL,
+      DcMotor motorBR,
       OpMode opMode, int ticksPerInch, int ticksPer360) {
     // /-\
     // | |
@@ -45,7 +94,32 @@ public class MecanumDrive extends StrafingDriveTrain {
         MotorPair.of(motorFR, motorBR), opMode, ticksPerInch, ticksPer360);
   }
 
-  public static MecanumDrive fromCrossedMotors(DcMotor motorFL, DcMotor motorFR, DcMotor motorBL, DcMotor motorBR,
+  /**
+   * Constructs a new MecanumDrive instance that uses the given physical motors, which are arranged
+   * in a a crossed manner. <p> <b>The Crossed Configuration</b> In the crossed configuration, the
+   * front left and the back right motors cause the robot to move forward and to the left
+   * (diagonally), and the other two motors cause the robot to move forward and to the right.
+   *
+   * It is named to be "octagonal" because of its diagram:
+   * <pre>
+   *   \-/
+   *   | |
+   *   /-\
+   * </pre>
+   *
+   * @param motorFL The motor located at the front-left of the robot
+   * @param motorFR The motor located at the front-right of the robot
+   * @param motorBL The motor located at the rear-left of the robot
+   * @param motorBR The motor located at the rear-right of the robot
+   * @param opMode The main {@link OpMode}
+   * @param ticksPerInch The number of encoder ticks required to cause a diagonal displacement of 1
+   * inch for the robot
+   * @param ticksPer360 The number of encoder ticks required to cause a full rotation for the robot,
+   * when this amount is applied to the left and right sides in opposite directions
+   * @return The new MecanumDrive instance
+   */
+  public static MecanumDrive fromCrossedMotors(DcMotor motorFL, DcMotor motorFR, DcMotor motorBL,
+      DcMotor motorBR,
       OpMode opMode, int ticksPerInch, int ticksPer360) {
     // \-/
     // | |
