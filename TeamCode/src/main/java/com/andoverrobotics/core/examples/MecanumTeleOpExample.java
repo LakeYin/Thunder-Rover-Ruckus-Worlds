@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 @TeleOp(name = "Mecanum TeleOp Example", group = "ARC")
 public class MecanumTeleOpExample extends OpMode {
 
-  private static final int ticksPerInch = 20, ticksPer360 = 200;
+  private static final int TICKS_PER_INCH = 20, TICKS_PER_360 = 200;
 
   private MecanumDrive mecanumDrive;
 
@@ -24,7 +24,7 @@ public class MecanumTeleOpExample extends OpMode {
     motorBL.setDirection(Direction.REVERSE);
 
     mecanumDrive = MecanumDrive.fromOctagonalMotors(
-        motorFL, motorFR, motorBL, motorBR, this, ticksPerInch, ticksPer360);
+        motorFL, motorFR, motorBL, motorBR, this, TICKS_PER_INCH, TICKS_PER_360);
   }
 
   @Override
