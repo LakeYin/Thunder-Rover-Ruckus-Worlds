@@ -7,7 +7,7 @@ android {
         targetSdkVersion 19
     }
 
-    compileSdkVersion 23
+    compileSdkVersion 24
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
@@ -29,12 +29,11 @@ repositories {
 
 dependencies {
     implementation project(':FtcRobotController')
-    implementation (name: 'RobotCore-release', ext: 'aar')
-    implementation (name: 'Hardware-release', ext: 'aar')
-    implementation (name: 'FtcCommon-release', ext: 'aar')
-    implementation (name:'Analytics-release', ext:'aar')
-    implementation (name:'WirelessP2p-release', ext:'aar')
-
+    implementation(name: 'RobotCore-release', ext: 'aar')
+    implementation(name: 'Hardware-release', ext: 'aar')
+    implementation(name: 'FtcCommon-release', ext: 'aar')
+    implementation(name: 'Analytics-release', ext: 'aar')
+    implementation(name: 'WirelessP2p-release', ext: 'aar')
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.18.3'
 }

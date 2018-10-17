@@ -89,10 +89,10 @@ public class VuforiaPhoneTesting extends OpMode {
   private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = FRONT;
 
   private OpenGLMatrix lastLocation = null;
-  boolean targetVisible;
-  Dogeforia vuforia;
-  WebcamName webcamName;
-  List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
+  private boolean targetVisible;
+  private Dogeforia vuforia;
+  private WebcamName webcamName;
+  private List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
 
   GoldAlignDetector detector;
 
@@ -173,10 +173,6 @@ public class VuforiaPhoneTesting extends OpMode {
     vuforia.start();
 
 
-  }
-
-  @Override
-  public void init_loop() {
   }
 
   /*

@@ -33,8 +33,6 @@ import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.Dogeforia;
 import com.disnodeteam.dogecv.detectors.roverruckus.GoldAlignDetector;
-import com.disnodeteam.dogecv.detectors.roverruckus.SamplingOrderDetector;
-import com.disnodeteam.dogecv.filters.LeviColorFilter;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -55,7 +53,6 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGR
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
-import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.FRONT;
 
 /**
@@ -88,10 +85,10 @@ public class VuforiaWebcamTesting extends OpMode {
   private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = FRONT;
 
   private OpenGLMatrix lastLocation = null;
-  boolean targetVisible;
-  Dogeforia vuforia;
-  WebcamName webcamName;
-  List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
+  private boolean targetVisible;
+  private Dogeforia vuforia;
+  private WebcamName webcamName;
+  private List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
 
   GoldAlignDetector detector;
 
