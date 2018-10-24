@@ -34,4 +34,12 @@ public enum ControlMode {
     this.activator = activator;
     this.applier = applier;
   }
+
+  public void apply(Gamepad gamepad) {
+    applier.accept(gamepad);
+  }
+
+  public boolean shouldBeActivated(Gamepad gamepad) {
+    return activator.test(gamepad);
+  }
 }

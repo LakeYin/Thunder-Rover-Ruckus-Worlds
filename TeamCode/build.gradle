@@ -19,7 +19,13 @@ dependencies {
 }
 android {
     buildToolsVersion '28.0.3'
+
     compileSdkVersion 24
+
+    defaultConfig {
+        minSdkVersion 24
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
