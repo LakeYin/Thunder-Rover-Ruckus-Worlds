@@ -15,7 +15,8 @@ dependencies {
     implementation project(':ARCCore')
     implementation project(':openCVLibrary3')
     implementation project(':DogeCV')
-    implementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-core:2.18.3'
 }
 android {
     buildToolsVersion '28.0.3'

@@ -10,14 +10,23 @@ import java.io.IOException;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Bot {
-  final StrafingDriveTrain drivetrain;
+  private static Bot instance = null;
+
+  public static Bot getInstance() {
+    if (instance == null)
+      throw new RuntimeException("Bot instance referenced before the Bot is instantiated");
+    return instance;
+  }
+
+  public final StrafingDriveTrain drivetrain;
 
   // Configuration
-  private final Configuration mainConfig;
+  public final Configuration mainConfig;
 
   // Context
-  private final Context context;
-  private final OpMode opMode;
+  public final Context context;
+  public final OpMode opMode;
+  public final Telemetry telemetry;
 
   public Bot(HardwareMap hardware,
       Telemetry telemetry,
@@ -28,6 +37,7 @@ public class Bot {
 
     this.context = context;
     this.opMode = opMode;
+    this.telemetry = telemetry;
 
     drivetrain = MecanumDrive.fromOctagonalMotors(
         hardware.dcMotor.get("motorFL"),
@@ -38,6 +48,6 @@ public class Bot {
         mainConfig.getInt("ticksPer360")
     );
 
-
+    instance = this;
   }
 }

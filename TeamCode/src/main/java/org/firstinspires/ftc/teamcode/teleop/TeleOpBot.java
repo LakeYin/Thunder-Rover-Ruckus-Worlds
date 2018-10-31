@@ -9,6 +9,13 @@ import org.firstinspires.ftc.teamcode.Bot;
 
 public class TeleOpBot extends Bot {
 
+  // package-scope, final fields
+
+  public static TeleOpBot fromOpMode(OpMode opMode) throws IOException {
+    return new TeleOpBot(opMode.hardwareMap,
+            opMode.telemetry, opMode.hardwareMap.appContext, opMode);
+  }
+
   public TeleOpBot(HardwareMap hardware,
       Telemetry telemetry, Context context,
       OpMode opMode) throws IOException {

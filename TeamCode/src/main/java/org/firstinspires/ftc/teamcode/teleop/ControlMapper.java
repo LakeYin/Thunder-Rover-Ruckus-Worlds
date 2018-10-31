@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.teleop;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 public class ControlMapper {
-  private ControlMode
+  private IControlMode
       modeForGamepad1 = ControlMode.DRIVE,
       modeForGamepad2 = ControlMode.SLIDE_1;
 
@@ -23,19 +23,19 @@ public class ControlMapper {
     }
   }
 
-  public ControlMode getModeForGamepad1() {
+  public IControlMode getModeForGamepad1() {
     return modeForGamepad1;
   }
 
-  public ControlMode getModeForGamepad2() {
+  public IControlMode getModeForGamepad2() {
     return modeForGamepad2;
   }
 
-  public void setModeForGamepad1(ControlMode modeForGamepad1) {
+  public void setModeForGamepad1(IControlMode modeForGamepad1) {
     this.modeForGamepad1 = modeForGamepad1;
   }
 
-  public void setModeForGamepad2(ControlMode modeForGamepad2) {
+  public void setModeForGamepad2(IControlMode modeForGamepad2) {
     this.modeForGamepad2 = modeForGamepad2;
   }
 }
