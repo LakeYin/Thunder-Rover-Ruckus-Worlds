@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import com.andoverrobotics.core.drivetrain.MecanumDrive;
+import com.andoverrobotics.core.drivetrain.TankDrive;
+import com.andoverrobotics.core.utilities.Converter;
 import com.andoverrobotics.core.utilities.Coordinate;
 import org.firstinspires.ftc.teamcode.autonomous.TaskFactory;
 import org.firstinspires.ftc.teamcode.autonomous.TaskFactory.MissingArgumentException;
@@ -12,51 +14,78 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class TaskFactoryTest {
-  private MecanumDrive drivetrain = mock(MecanumDrive.class);
-  private TaskFactory factory = new TaskFactory(drivetrain);
+  private MecanumDrive strafingDrivetrain = mock(MecanumDrive.class);
+  private TankDrive tankDrive = mock(TankDrive.class);
+  private TaskFactory strafingFactory = new TaskFactory(strafingDrivetrain),
+    tankDriveFactory = new TaskFactory(tankDrive);
 
   @Before
-  public void setUp() throws Exception {
-    reset(drivetrain);
+  public void setUp() {
+    reset(strafingDrivetrain, tankDrive);
   }
 
   @Test
-  public void moveCommand() {
-    Runnable task = factory.parseTask("move 2.52 1.24");
+  public void moveCommandWithStrafingDrivetrain() {
+    Runnable task = strafingFactory.parseTask("move 2.52 1.24");
     task.run();
-    verify(drivetrain).strafeInches(Coordinate.fromXY(2.52, 1.24));
+    verify(strafingDrivetrain).strafeInches(Coordinate.fromXY(2.52, 1.24));
+  }
+
+  @Test
+  public void moveInClockwiseWithTankDrive() {
+    Runnable task = tankDriveFactory.parseTask("move 1.25 5.21");
+    task.run();
+
+    int rotationDegrees = (int) Math.round(Converter.radiansToDegrees(Math.atan2(1.25, 5.21)));
+
+    verify(tankDrive).rotateClockwise(rotationDegrees);
+    verify(tankDrive).driveForwards(Math.hypot(1.25, 5.21));
+    verify(tankDrive).rotateCounterClockwise(rotationDegrees);
+    verifyNoMoreInteractions(tankDrive);
+  }
+
+  @Test
+  public void moveInCounterClockwiseWithTankDrive() {
+    Runnable task = tankDriveFactory.parseTask("move -2 -10");
+    task.run();
+
+    int rotationDegrees = (int) -Math.round(Math.atan2(-2, -10)/Math.PI*180);
+
+    verify(tankDrive).rotateCounterClockwise(rotationDegrees);
+    verify(tankDrive).driveForwards(Math.hypot(-2, -10));
+    verify(tankDrive).rotateClockwise(rotationDegrees);
   }
 
   @Test
   public void emptyCommand() {
-    Runnable task = factory.parseTask("\n  \r \t   \n");
+    Runnable task = strafingFactory.parseTask("\n  \r \t   \n");
     assertNotNull("Even if the input is empty, the output shouldn't be null", task);
   }
 
   @Test
-  public void rotateCommand() {
-    Runnable task = factory.parseTask("rotate 40");
+  public void rotateCommandWithStrafingDrivetrain() {
+    Runnable task = strafingFactory.parseTask("rotate 40");
     task.run();
-    verify(drivetrain).rotateClockwise(40);
+    verify(strafingDrivetrain).rotateClockwise(40);
 
-    task = factory.parseTask("rotate -20");
+    task = tankDriveFactory.parseTask("rotate -20");
     task.run();
-    verify(drivetrain).rotateCounterClockwise(20);
+    verify(tankDrive).rotateCounterClockwise(20);
   }
 
   @Test(expected = MissingArgumentException.class)
   public void commandMissingArguments() {
-    factory.parseTask("move 1.2");
+    strafingFactory.parseTask("move 1.2");
   }
 
   @Test(expected = NumberFormatException.class)
   public void name() {
-    factory.parseTask("rotate 20.5");
+    strafingFactory.parseTask("rotate 20.5");
   }
 
   @Test(expected = NoSuchCommandException.class)
   public void unknownCommand() {
-    factory.parseTask("hello world");
+    strafingFactory.parseTask("hello world");
   }
 
   @Test
@@ -64,8 +93,8 @@ public class TaskFactoryTest {
     Runnable task = mock(Runnable.class);
     String arcExpertise = "get into states by hosting qualifier";
 
-    factory.addCustomTask(arcExpertise, task);
-    factory.parseTask(arcExpertise).run();
+    strafingFactory.addCustomTask(arcExpertise, task);
+    strafingFactory.parseTask(arcExpertise).run();
 
     verify(task).run();
   }

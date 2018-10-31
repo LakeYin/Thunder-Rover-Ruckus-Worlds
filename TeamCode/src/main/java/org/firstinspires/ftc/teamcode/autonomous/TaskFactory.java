@@ -1,8 +1,14 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import com.andoverrobotics.core.drivetrain.StrafingDriveTrain;
+import com.andoverrobotics.core.drivetrain.DriveTrain;
 import com.andoverrobotics.core.utilities.Coordinate;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Scanner;
+import java.util.stream.Stream;
 
 public class TaskFactory {
 
@@ -17,15 +23,25 @@ public class TaskFactory {
     }
   }
 
-  private final StrafingDriveTrain drivetrain;
+  private final DriveTrain drivetrain;
   private HashMap<String, Runnable> customTasks = new HashMap<>();
 
-  public TaskFactory(StrafingDriveTrain drivetrain) {
+  public TaskFactory(DriveTrain drivetrain) {
     this.drivetrain = drivetrain;
   }
 
   public void addCustomTask(String command, Runnable task) {
     customTasks.put(command, task);
+  }
+
+  public String[] commandsInFile(String filename) throws FileNotFoundException {
+    Scanner scanner = new Scanner(new File(filename));
+    List<String> commands = new ArrayList<>();
+
+    while (scanner.hasNextLine())
+      commands.add(scanner.nextLine());
+
+    return commands.toArray(new String[0]);
   }
 
   public Runnable parseTask(String taskCommand) {
