@@ -1,0 +1,8 @@
+move 0 12
+sample_mineral
+move -51 0
+rotate -135
+move 0 35
+drop_team_marker
+rotate 180
+move 0 70

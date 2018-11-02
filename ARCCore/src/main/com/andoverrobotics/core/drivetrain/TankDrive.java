@@ -3,6 +3,7 @@ package com.andoverrobotics.core.drivetrain;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
 
+import android.util.Log;
 import com.andoverrobotics.core.utilities.Converter;
 import com.andoverrobotics.core.utilities.IMotor;
 import com.andoverrobotics.core.utilities.MotorAdapter;
@@ -147,9 +148,9 @@ public class TankDrive extends DriveTrain {
       double leftPower, double rightPower) {
 
     // Fails unit tests
-    /*Log.d("TankDrive Encoder",
+    Log.d("TankDrive Encoder",
         String.format("leftTickOffset=%d rightTickOffset=%d leftPower=%.3f rightPower=%.3f",
-        leftTickOffset, rightTickOffset, leftPower, rightPower));*/
+        leftTickOffset, rightTickOffset, leftPower, rightPower));
 
     motorL.startRunToPosition(leftTickOffset, leftPower);
     motorR.startRunToPosition(rightTickOffset, rightPower);
