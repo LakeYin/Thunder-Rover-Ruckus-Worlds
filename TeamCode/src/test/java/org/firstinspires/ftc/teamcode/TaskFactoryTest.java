@@ -57,6 +57,14 @@ public class TaskFactoryTest {
   }
 
   @Test
+  public void reverseWithTankDrive() {
+    Runnable task = tankDriveFactory.parseTask("move 0 -10");
+    task.run();
+
+    verify(tankDrive).driveBackwards(10);
+  }
+
+  @Test
   public void emptyCommand() {
     Runnable task = strafingFactory.parseTask("\n  \r \t   \n");
     assertNotNull("Even if the input is empty, the output shouldn't be null", task);
@@ -79,7 +87,7 @@ public class TaskFactoryTest {
   }
 
   @Test(expected = NumberFormatException.class)
-  public void name() {
+  public void commandWithBadArgumentFormat() {
     strafingFactory.parseTask("rotate 20.5");
   }
 
