@@ -8,7 +8,7 @@ if len(argv) <= 1:
     print("Supply path to script")
     exit(1)
 
-setup_playing_field()
+setup_playing_field(turtle)
 
 def move(draw, args):
     x, y = map(float, args)
