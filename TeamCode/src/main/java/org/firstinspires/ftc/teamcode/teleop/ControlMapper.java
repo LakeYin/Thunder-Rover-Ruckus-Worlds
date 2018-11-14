@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 public class ControlMapper {
   private IControlMode
       modeForGamepad1 = ControlMode.DRIVE,
-      modeForGamepad2 = ControlMode.SLIDE_1;
+      modeForGamepad2 = ControlMode.LEFT_SLIDE;
 
   public void applyGamepadInputs(Gamepad gamepad1, Gamepad gamepad2) {
     modeForGamepad1.apply(gamepad1);

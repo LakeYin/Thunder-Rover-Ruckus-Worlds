@@ -30,7 +30,7 @@ public class ControlModeTest {
   @Test
   public void initialValues() {
     assertEquals(mapper.getModeForGamepad1(), ControlMode.DRIVE);
-    assertEquals(mapper.getModeForGamepad2(), ControlMode.SLIDE_1);
+    assertEquals(mapper.getModeForGamepad2(), ControlMode.LEFT_SLIDE);
   }
 
   @Test
@@ -52,6 +52,6 @@ public class ControlModeTest {
     mapper.applyGamepadInputs(gamepad1, gamepad2);
 
     assertEquals(mapper.getModeForGamepad1(), ControlMode.REAR_SLIDE);
-    assertEquals(mapper.getModeForGamepad2(), ControlMode.SLIDE_1);
+    assertEquals(mapper.getModeForGamepad2(), ControlMode.LEFT_SLIDE);
   }
 }
