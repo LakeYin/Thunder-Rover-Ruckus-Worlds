@@ -14,7 +14,7 @@ public class Bot {
 
   public static Bot getInstance() {
     if (instance == null)
-      throw new RuntimeException("Bot instance referenced before the Bot is instantiated");
+      throw new NullPointerException("Bot instance referenced before the Bot is instantiated");
     return instance;
   }
 

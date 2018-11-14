@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public enum ControlMode implements IControlMode {
-  DRIVE(g -> g.x, gamepad -> {
+  DRIVE(g -> g.y, gamepad -> {
 
     final Coordinate leftTarget = Coordinate.fromXY(gamepad.left_stick_x, -gamepad.left_stick_y);
     final Bot bot = Bot.getInstance();
@@ -19,13 +19,13 @@ public enum ControlMode implements IControlMode {
       bot.drivetrain.setStrafe(leftTarget, leftTarget.getPolarDistance());
     }
   }),
-  SLIDE_1(g -> g.a, gamepad -> {
+  SLIDE_1(g -> g.x, gamepad -> {
 
   }),
   SLIDE_2(g -> g.b, gamepad -> {
 
   }),
-  BOTH_SLIDES(g -> g.y, gamepad -> {
+  REAR_SLIDE(g -> g.a, gamepad -> {
 
   });
 
