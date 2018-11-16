@@ -63,17 +63,23 @@ public class Bot {
         motorHw.get("leftLift"),
         servoHw.get("leftGrabber"),
         servoHw.get("leftLateral"),
-        servoHw.get("leftVertical")
+        servoHw.get("leftVertical"),
+        mainConfig.getDouble("leftClosed"),
+        mainConfig.getDouble("leftOpen")
     );
     rightArm = new Arm(
         motorHw.get("rightLift"),
         servoHw.get("rightGrabber"),
         servoHw.get("rightLateral"),
-        servoHw.get("rightVertical")
+        servoHw.get("rightVertical"),
+        mainConfig.getDouble("rightClosed"),
+        mainConfig.getDouble("rightOpen")
     );
     backArm = new SimpleArm(
         motorHw.get("backLift"),
-        servoHw.get("backGrabber")
+        servoHw.get("backGrabber"),
+        mainConfig.getDouble("backClosed"),
+        mainConfig.getDouble("backOpen")
     );
 
     instance = this;

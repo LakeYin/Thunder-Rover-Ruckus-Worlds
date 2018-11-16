@@ -8,7 +8,11 @@ public class SimpleArm {
   protected final DcMotor liftMotor;
   protected final Servo grabber;
 
-  public SimpleArm(DcMotor liftMotor, Servo grabber) {
+  private final double openPos, closedPos;
+
+  public SimpleArm(DcMotor liftMotor, Servo grabber, double openPos, double closedPos) {
+    this.openPos = openPos;
+    this.closedPos = closedPos;
     liftMotor.setMode(RunMode.RUN_WITHOUT_ENCODER);
     this.liftMotor = liftMotor;
     this.grabber = grabber;
@@ -30,6 +34,14 @@ public class SimpleArm {
 
     liftMotor.setPower(0);
     liftMotor.setMode(RunMode.RUN_WITHOUT_ENCODER);
+  }
+
+  public void openGrabber() {
+    setGrabberPosition(openPos);
+  }
+
+  public void closeGrabber() {
+    setGrabberPosition(closedPos);
   }
 
   public void moveGrabber(double offset) {

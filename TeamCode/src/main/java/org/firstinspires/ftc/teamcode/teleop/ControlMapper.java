@@ -11,10 +11,10 @@ public class ControlMapper {
     modeForGamepad1.apply(gamepad1);
     modeForGamepad2.apply(gamepad2);
 
-    applyModes(gamepad1, gamepad2);
+    activateModes(gamepad1, gamepad2);
   }
 
-  private void applyModes(Gamepad gamepad1, Gamepad gamepad2) {
+  public void activateModes(Gamepad gamepad1, Gamepad gamepad2) {
     for (ControlMode mode : ControlMode.values()) {
       if (mode.shouldBeActivated(gamepad1))
         modeForGamepad1 = mode;

@@ -9,9 +9,7 @@ import org.firstinspires.ftc.teamcode.Bot;
 
 public class AutonomousBot extends Bot {
 
-  public AutonomousBot(HardwareMap hardware,
-      Telemetry telemetry, Context context,
-      OpMode opMode) throws IOException {
-    super(hardware, telemetry, context, opMode);
+  public AutonomousBot(OpMode opMode) throws IOException {
+    super(opMode.hardwareMap, opMode.telemetry, opMode.hardwareMap.appContext, opMode);
   }
 }

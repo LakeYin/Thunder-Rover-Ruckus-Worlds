@@ -49,9 +49,9 @@ public class ControlModeTest {
     gamepad1.a = true;
     gamepad2.x = true;
 
-    mapper.applyGamepadInputs(gamepad1, gamepad2);
+    mapper.activateModes(gamepad1, gamepad2);
 
-    assertEquals(mapper.getModeForGamepad1(), ControlMode.REAR_SLIDE);
-    assertEquals(mapper.getModeForGamepad2(), ControlMode.LEFT_SLIDE);
+    assertEquals(ControlMode.BOTH_SLIDES, mapper.getModeForGamepad1());
+    assertEquals(ControlMode.LEFT_SLIDE, mapper.getModeForGamepad2());
   }
 }

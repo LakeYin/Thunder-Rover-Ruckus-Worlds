@@ -8,8 +8,9 @@ public class Arm extends SimpleArm {
 
   private final Servo lateralServo, verticalServo;
 
-  public Arm(DcMotor liftMotor, Servo grabber, Servo lateralServo, Servo verticalServo) {
-    super(liftMotor, grabber);
+  public Arm(DcMotor liftMotor, Servo grabber, Servo lateralServo, Servo verticalServo,
+      double openPos, double closedPos) {
+    super(liftMotor, grabber, openPos, closedPos);
     this.lateralServo = lateralServo;
     this.verticalServo = verticalServo;
   }

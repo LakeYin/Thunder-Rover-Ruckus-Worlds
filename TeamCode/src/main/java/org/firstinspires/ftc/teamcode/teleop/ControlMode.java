@@ -21,14 +21,54 @@ public enum ControlMode implements IControlMode {
     }
   }),
 
-  LEFT_SLIDE(g -> g.x, gamepad -> controlArm(gamepad, Bot.getInstance().leftArm)),
-  RIGHT_SLIDE(g -> g.b, gamepad -> controlArm(gamepad, Bot.getInstance().rightArm)),
-  REAR_SLIDE(g -> g.a, gamepad -> controlSimpleArm(gamepad, Bot.getInstance().backArm));
+
+  REAR_SLIDE(g -> g.a && g.x, gamepad -> controlSimpleArm(gamepad, Bot.getInstance().backArm)),
+  LEFT_SLIDE(g -> g.x, gamepad -> controlArmWithMicroAdjust(gamepad, Bot.getInstance().leftArm)),
+  RIGHT_SLIDE(g -> g.b, gamepad -> controlArmWithMicroAdjust(gamepad, Bot.getInstance().rightArm)),
+  BOTH_SLIDES(g -> g.a, ControlMode::controlBothArms);
+
+  private static void controlBothArms(Gamepad gamepad) {
+    Bot bot = Bot.getInstance();
+
+    if (gamepad.dpad_down) {
+      bot.leftArm.openGrabber();
+      bot.rightArm.openGrabber();
+    }
+
+    controlLiftByTriggerBumper(bot.leftArm, gamepad.left_bumper, gamepad.left_trigger);
+    controlLiftByTriggerBumper(bot.rightArm, gamepad.right_bumper, gamepad.right_trigger);
+    rotateArmByStick(gamepad.left_stick_x, gamepad.left_stick_y, bot.leftArm);
+    rotateArmByStick(gamepad.right_stick_x, gamepad.right_stick_y, bot.rightArm);
+  }
+
+  private static void controlLiftByTriggerBumper(Arm arm, boolean bumper,
+      float trigger) {
+    arm.setLiftPower(booleanToInt(bumper) * 0.3 - trigger);
+  }
+
+  private static void controlArmWithMicroAdjust(Gamepad gamepad, Arm arm) {
+    controlArm(gamepad, arm);
+    Bot.getInstance().drivetrain.setStrafe(getMicroAdjustCoord(gamepad), 0.1);
+  }
+
+  private static Coordinate getMicroAdjustCoord(Gamepad gamepad) {
+    double x = booleanToInt(gamepad.dpad_right) - booleanToInt(gamepad.dpad_left);
+    double y = booleanToInt(gamepad.dpad_up) - booleanToInt(gamepad.dpad_down);
+    return Coordinate.fromXY(x, y);
+  }
+
+  private static int booleanToInt(boolean bool) {
+    return bool ? 1 : 0;
+  }
 
   private static void controlArm(Gamepad gamepad, Arm arm) {
     controlSimpleArm(gamepad, arm);
-    arm.rotateLateral(gamepad.left_stick_x * 0.01);
-    arm.rotateVertical(gamepad.left_stick_y * -0.01);
+    rotateArmByStick(gamepad.left_stick_x, gamepad.left_stick_y, arm);
+  }
+
+  private static void rotateArmByStick(double x, double y, Arm arm) {
+    arm.rotateLateral(x * 0.01);
+    arm.rotateVertical(y * -0.01);
   }
 
   private static void controlSimpleArm(Gamepad gamepad, SimpleArm arm) {
