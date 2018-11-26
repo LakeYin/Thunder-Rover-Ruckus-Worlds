@@ -27,7 +27,6 @@ public class AutoOpMode extends LinearOpMode {
       executeCommands("auto-part1.task");
       executeCommands(taskFilenameForDetectedTarget());
 
-
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
