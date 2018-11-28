@@ -1,20 +1,4 @@
-move _ 0
-
-<<<<<<< facing wall
-move -45 0
-=======
-rotate 90
-move 0 45
->>>>>>> facing depot
-
+move 45 0
 drop_team_marker
-
-<<<<<<< facing wall
-move -45 0
-move -72 0
-=======
-rotate 180
-move 0 45
+rotate -90
 move 0 72
->>>>>>> facing depot
-

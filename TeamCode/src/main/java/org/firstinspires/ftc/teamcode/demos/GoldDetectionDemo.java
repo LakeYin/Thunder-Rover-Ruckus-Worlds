@@ -22,6 +22,8 @@ public class GoldDetectionDemo extends LinearOpMode {
         opModeIsActive();
         target = detector.goldPosition()) {
       telemetry.addData("Gold Position", target.map(Enum::name).orElse("none"));
+      telemetry.addData("currentRecognition()", detector.currentRecognition()
+          .map(Enum::name).orElse("none"));
       telemetry.update();
     }
   }

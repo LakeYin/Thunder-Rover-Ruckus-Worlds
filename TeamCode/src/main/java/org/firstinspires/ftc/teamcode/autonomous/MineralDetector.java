@@ -17,6 +17,31 @@ public class MineralDetector {
     LEFT, CENTER, RIGHT
   }
 
+  public enum Mineral {
+    SILVER(LABEL_SILVER_MINERAL), GOLD(LABEL_GOLD_MINERAL);
+
+    static Mineral byLabel(String label) {
+
+      for (Mineral min : Mineral.values()) {
+        if (min.label.equals(label)) {
+          return min;
+        }
+      }
+
+      throw new IllegalArgumentException("Invalid mineral label: " + label);
+    }
+
+    private final String label;
+
+    Mineral(String label) {
+      this.label = label;
+    }
+
+    public String getLabel() {
+      return label;
+    }
+  }
+
   private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
   private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
   private static final String LABEL_SILVER_MINERAL = "Silver Mineral";
@@ -31,6 +56,13 @@ public class MineralDetector {
 
   public void activate() {
     detector.activate();
+  }
+
+  public Optional<Mineral> currentRecognition() {
+    return detector.getRecognitions().stream()
+        .findFirst()
+        .map(Recognition::getLabel)
+        .map(Mineral::byLabel);
   }
 
   public Optional<GoldPosition> goldPosition() {
