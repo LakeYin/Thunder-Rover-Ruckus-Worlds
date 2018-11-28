@@ -1,4 +1,4 @@
-move 0 12
+rotate 180
 sample_mineral
 move -51 0
 rotate -45

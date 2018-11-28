@@ -17,6 +17,7 @@ public class AutoOpMode extends LinearOpMode {
   private AutonomousBot bot;
   private TaskFactory tasks;
   private VuMarkDetector detector;
+  private SampleMineralTask mineralTask;
 
   @Override
   public void runOpMode() {
@@ -48,6 +49,9 @@ public class AutoOpMode extends LinearOpMode {
     bot = new AutonomousBot(this);
     tasks = new TaskFactory(bot.drivetrain);
     detector = new VuMarkDetector(hardwareMap);
+    mineralTask = new SampleMineralTask(hardwareMap);
+
+    tasks.addCustomTask("sample_mineral", mineralTask);
   }
 
   private Target waitForVisibleTarget(int msTimeout) {
