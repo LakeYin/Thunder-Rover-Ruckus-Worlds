@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:osb="http://www.openswatchbook.org/uri/2009/osb"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="720mm"
+   height="1280mm"
+   viewBox="0 0 720 1280"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.2 2405546, 2018-03-11"
+   sodipodi:docname="driver_station_wallpaper.svg">
+  <defs
+     id="defs2">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient5091">
+      <stop
+         style="stop-color:#423fe0;stop-opacity:1"
+         offset="0"
+         id="stop5087" />
+      <stop
+         style="stop-color:#ff6641;stop-opacity:1"
+         offset="1"
+         id="stop5089" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient5081"
+       osb:paint="solid">
+      <stop
+         style="stop-color:#000000;stop-opacity:1;"
+         offset="0"
+         id="stop5079" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient5091"
+       id="linearGradient5093"
+       x1="49.177593"
+       y1="-948.47601"
+       x2="712.00598"
+       y2="-56.864876"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient5091"
+       id="linearGradient5113"
+       x1="377.14182"
+       y1="4187.3579"
+       x2="2349.9231"
+       y2="4187.3579"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient5091"
+       id="linearGradient5115"
+       gradientUnits="userSpaceOnUse"
+       x1="377.14182"
+       y1="4187.3579"
+       x2="2349.9231"
+       y2="4187.3579" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient5091"
+       id="linearGradient5117"
+       gradientUnits="userSpaceOnUse"
+       x1="377.14182"
+       y1="4187.3579"
+       x2="2349.9231"
+       y2="4187.3579" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.175"
+     inkscape:cx="1497.1301"
+     inkscape:cy="1053.9606"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1028"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,983.00003)">
+    <rect
+       style="fill:url(#linearGradient5093);fill-opacity:1;stroke:none;stroke-width:9.52499962;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect5085"
+       width="724.83496"
+       height="1280.7555"
+       x="-2.1381562"
+       y="-983.75555" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot5095"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:url(#linearGradient5113);fill-opacity:1;stroke:none"
+       transform="matrix(0.26458333,0,0,0.26458333,0,-1049.6782)"><flowRegion
+         id="flowRegion5097"
+         style="fill:url(#linearGradient5117);fill-opacity:1"><rect
+           id="rect5099"
+           width="2739.5337"
+           height="783.87836"
+           x="-8.0812273"
+           y="4053.917"
+           style="fill:url(#linearGradient5115);fill-opacity:1" /></flowRegion><flowPara
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:266.66665649px;font-family:'IBM Plex Mono';-inkscape-font-specification:'IBM Plex Mono';text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1"
+         id="flowPara5119">DRIVER STATION</flowPara><flowPara
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:266.66665649px;font-family:'IBM Plex Mono';-inkscape-font-specification:'IBM Plex Mono';text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1"
+         id="flowPara5123">4410</flowPara></flowRoot>  </g>
+</svg>
