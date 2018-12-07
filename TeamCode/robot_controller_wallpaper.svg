@@ -11,26 +11,29 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="720mm"
-   height="1280mm"
-   viewBox="0 0 720 1280"
+   width="720"
+   height="1280"
+   viewBox="0 0 190.50001 338.66666"
    version="1.1"
    id="svg8"
    inkscape:version="0.92.2 2405546, 2018-03-11"
-   sodipodi:docname="robot_controller_wallpaper.svg">
+   sodipodi:docname="robot_controller_wallpaper.svg"
+   inkscape:export-filename="/home/michael/Code/Rover_Ruckus-2018-2019/TeamCode/driver_station_wallpaper.svg.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96">
   <defs
      id="defs2">
     <linearGradient
-       id="linearGradient5148"
+       id="linearGradient5736"
        inkscape:collect="always">
       <stop
-         id="stop5144"
+         id="stop5732"
          offset="0"
-         style="stop-color:#04c052;stop-opacity:1" />
+         style="stop-color:#c35800;stop-opacity:1" />
       <stop
-         id="stop5146"
+         id="stop5734"
          offset="1"
-         style="stop-color:#b134df;stop-opacity:1" />
+         style="stop-color:#4aa2ff;stop-opacity:1" />
     </linearGradient>
     <linearGradient
        inkscape:collect="always"
@@ -54,13 +57,14 @@
     </linearGradient>
     <linearGradient
        inkscape:collect="always"
-       xlink:href="#linearGradient5148"
+       xlink:href="#linearGradient5736"
        id="linearGradient5093"
-       x1="-121.66765"
-       y1="-141.11887"
-       x2="702.93457"
-       y2="-871.78156"
-       gradientUnits="userSpaceOnUse" />
+       x1="26.152044"
+       y1="273.05267"
+       x2="558.02264"
+       y2="-809.78375"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.26264823,0,0,0.26456165,1.0692601,218.8031)" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient5091"
@@ -96,9 +100,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.175"
-     inkscape:cx="1497.1301"
-     inkscape:cy="2425.3892"
+     inkscape:zoom="0.7"
+     inkscape:cx="168.57143"
+     inkscape:cy="419.67488"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -106,7 +110,8 @@
      inkscape:window-height="1028"
      inkscape:window-x="0"
      inkscape:window-y="0"
-     inkscape:window-maximized="1" />
+     inkscape:window-maximized="1"
+     units="px" />
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -123,29 +128,29 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,983.00003)">
+     transform="translate(0,41.666609)">
     <rect
-       style="fill:url(#linearGradient5093);fill-opacity:1;stroke:none;stroke-width:9.52499962;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:url(#linearGradient5093);fill-opacity:1;stroke:none;stroke-width:2.51082039;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect5085"
-       width="724.83496"
-       height="1280.7555"
-       x="-2.1381562"
-       y="-983.75555" />
+       width="190.37662"
+       height="338.83881"
+       x="0.5076772"
+       y="-41.460896" />
     <flowRoot
        xml:space="preserve"
        id="flowRoot5095"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:url(#linearGradient5113);fill-opacity:1;stroke:none"
-       transform="matrix(0.26458333,0,0,0.26458333,0,-1049.6782)"><flowRegion
+       transform="matrix(0.26458333,0,0,0.26458333,-129.79703,-851.92117)"><flowRegion
          id="flowRegion5097"
          style="fill:url(#linearGradient5117);fill-opacity:1"><rect
            id="rect5099"
-           width="2739.5337"
-           height="783.87836"
+           width="1725.248"
+           height="261.6044"
            x="-8.0812273"
            y="4053.917"
            style="fill:url(#linearGradient5115);fill-opacity:1" /></flowRegion><flowPara
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:266.66665649px;font-family:'IBM Plex Mono';-inkscape-font-specification:'IBM Plex Mono';text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:69.33334351px;font-family:'IBM Plex Mono';-inkscape-font-specification:'IBM Plex Mono';text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1"
          id="flowPara5119">ROBOT CONTROLLER</flowPara><flowPara
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:266.66665649px;font-family:'IBM Plex Mono';-inkscape-font-specification:'IBM Plex Mono';text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1"
-         id="flowPara5123">4410</flowPara></flowRoot>  </g>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:69.33334351px;font-family:'IBM Plex Mono';-inkscape-font-specification:'IBM Plex Mono';text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1"
+         id="flowPara5123">            4410</flowPara></flowRoot>  </g>
 </svg>
