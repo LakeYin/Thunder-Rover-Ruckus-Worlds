@@ -2,11 +2,10 @@ package org.firstinspires.ftc.teamcode.teleop;
 
 import com.andoverrobotics.core.utilities.Coordinate;
 import com.qualcomm.robotcore.hardware.Gamepad;
-import org.firstinspires.ftc.teamcode.Arm;
-import org.firstinspires.ftc.teamcode.Bot;
-
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import org.firstinspires.ftc.teamcode.Arm;
+import org.firstinspires.ftc.teamcode.Bot;
 import org.firstinspires.ftc.teamcode.SimpleArm;
 
 public enum ControlMode implements IControlMode {
@@ -22,7 +21,7 @@ public enum ControlMode implements IControlMode {
   }),
 
 
-  REAR_SLIDE(g -> g.a && g.x, gamepad -> controlSimpleArm(gamepad, Bot.getInstance().backArm)),
+  REAR_SLIDE(g -> g.start, gamepad -> controlSimpleArm(gamepad, Bot.getInstance().backArm)),
   LEFT_SLIDE(g -> g.x, gamepad -> controlArmWithMicroAdjust(gamepad, Bot.getInstance().leftArm)),
   RIGHT_SLIDE(g -> g.b, gamepad -> controlArmWithMicroAdjust(gamepad, Bot.getInstance().rightArm)),
   BOTH_SLIDES(g -> g.a, ControlMode::controlBothArms);
@@ -48,7 +47,7 @@ public enum ControlMode implements IControlMode {
 
   private static void controlArmWithMicroAdjust(Gamepad gamepad, Arm arm) {
     controlArm(gamepad, arm);
-    Bot.getInstance().drivetrain.setStrafe(getMicroAdjustCoord(gamepad), 0.1);
+    Bot.getInstance().drivetrain.setStrafe(getMicroAdjustCoord(gamepad), 0.2);
   }
 
   private static Coordinate getMicroAdjustCoord(Gamepad gamepad) {
@@ -67,8 +66,8 @@ public enum ControlMode implements IControlMode {
   }
 
   private static void rotateArmByStick(double x, double y, Arm arm) {
-    arm.rotateLateral(x * 0.01);
-    arm.rotateVertical(y * -0.01);
+    arm.rotateLateral(x * 0.007);
+    arm.rotateVerticalByPower(y * -0.25);
   }
 
   private static void controlSimpleArm(Gamepad gamepad, SimpleArm arm) {

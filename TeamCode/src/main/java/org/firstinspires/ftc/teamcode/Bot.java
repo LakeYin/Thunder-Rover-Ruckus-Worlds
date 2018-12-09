@@ -5,7 +5,9 @@ import com.andoverrobotics.core.config.Configuration;
 import com.andoverrobotics.core.drivetrain.MecanumDrive;
 import com.andoverrobotics.core.drivetrain.StrafingDriveTrain;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.HardwareMap.DeviceMapping;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -51,11 +53,17 @@ public class Bot {
     DeviceMapping<DcMotor> motorHw = hardware.dcMotor;
     DeviceMapping<Servo> servoHw = hardware.servo;
 
+    DcMotor frontLeft = motorHw.get("motorFL"),
+        backLeft = motorHw.get("motorBL");
+
+    frontLeft.setDirection(Direction.REVERSE);
+    backLeft.setDirection(Direction.REVERSE);
+
     drivetrain = MecanumDrive.fromOctagonalMotors(
-        motorHw.get("motorFL"),
+        frontLeft,
         motorHw.get("motorFR"),
-        motorHw.get("motorRL"),
-        motorHw.get("motorRR"),
+        backLeft,
+        motorHw.get("motorBR"),
         opMode, mainConfig.getInt("ticksPerInch"),
         mainConfig.getInt("ticksPer360")
     );
@@ -63,15 +71,21 @@ public class Bot {
         motorHw.get("leftLift"),
         servoHw.get("leftGrabber"),
         servoHw.get("leftLateral"),
-        servoHw.get("leftVertical"),
+        hardware.crservo.get("leftVertical"),
         mainConfig.getDouble("leftClosed"),
         mainConfig.getDouble("leftOpen")
     );
+
+    DcMotor rightLift = motorHw.get("rightLift");
+    CRServo rightVertical = hardware.crservo.get("rightVertical");
+    rightLift.setDirection(Direction.REVERSE);
+    rightVertical.setDirection(Direction.REVERSE);
+
     rightArm = new Arm(
-        motorHw.get("rightLift"),
+        rightLift,
         servoHw.get("rightGrabber"),
         servoHw.get("rightLateral"),
-        servoHw.get("rightVertical"),
+        rightVertical,
         mainConfig.getDouble("rightClosed"),
         mainConfig.getDouble("rightOpen")
     );
