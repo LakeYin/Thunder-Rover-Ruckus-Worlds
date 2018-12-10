@@ -31,8 +31,8 @@ public class AutoOpMode extends LinearOpMode {
 
       initFields();
       waitForStart();
-      executeCommands(CONFIG_PATH + "auto-land.task");
-      //executeCommands(taskFilenameForDetectedTarget());
+      executeCommands(CONFIG_PATH + "auto-part1.task");
+      executeCommands(taskFilenameForDetectedTarget());
 
     } catch (Exception e) {
       throw new RuntimeException(e);
