@@ -1,8 +1,7 @@
-package org.firstinspires.ftc.teamcode.autonomous;
+package org.firstinspires.ftc.teamcode.autonomous.tasks;
 
 import com.andoverrobotics.core.drivetrain.DriveTrain;
 import com.andoverrobotics.core.drivetrain.StrafingDriveTrain;
-import com.andoverrobotics.core.utilities.Converter;
 import com.andoverrobotics.core.utilities.Coordinate;
 
 public class MoveTask implements Runnable {

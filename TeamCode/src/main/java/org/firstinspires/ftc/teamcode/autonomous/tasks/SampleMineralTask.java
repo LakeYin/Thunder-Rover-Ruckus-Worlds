@@ -1,8 +1,9 @@
-package org.firstinspires.ftc.teamcode.autonomous;
+package org.firstinspires.ftc.teamcode.autonomous.tasks;
 
 import com.andoverrobotics.core.drivetrain.StrafingDriveTrain;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.Bot;
+import org.firstinspires.ftc.teamcode.autonomous.MineralDetector;
 import org.firstinspires.ftc.teamcode.autonomous.MineralDetector.Mineral;
 
 public class SampleMineralTask implements Runnable {

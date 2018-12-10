@@ -7,6 +7,7 @@ import com.andoverrobotics.core.drivetrain.StrafingDriveTrain;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.HardwareMap.DeviceMapping;
@@ -38,6 +39,7 @@ public class Bot {
   // Hardware
   public final Arm leftArm, rightArm;
   public final SimpleArm backArm;
+  public final Servo teamMarker;
 
   public Bot(HardwareMap hardware,
       Telemetry telemetry,
@@ -89,12 +91,18 @@ public class Bot {
         mainConfig.getDouble("rightClosed"),
         mainConfig.getDouble("rightOpen")
     );
+
+    DcMotor backLift = motorHw.get("backLift");
+    backLift.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
+
     backArm = new SimpleArm(
-        motorHw.get("backLift"),
+        backLift,
         servoHw.get("backGrabber"),
         mainConfig.getDouble("backClosed"),
         mainConfig.getDouble("backOpen")
     );
+
+    teamMarker = servoHw.get("teamMarker");
 
     instance = this;
   }

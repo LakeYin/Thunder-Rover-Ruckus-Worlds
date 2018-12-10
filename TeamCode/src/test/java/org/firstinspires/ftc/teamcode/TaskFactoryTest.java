@@ -1,15 +1,18 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import com.andoverrobotics.core.drivetrain.MecanumDrive;
 import com.andoverrobotics.core.drivetrain.TankDrive;
 import com.andoverrobotics.core.utilities.Converter;
 import com.andoverrobotics.core.utilities.Coordinate;
-import org.firstinspires.ftc.teamcode.autonomous.TaskFactory;
-import org.firstinspires.ftc.teamcode.autonomous.TaskFactory.MissingArgumentException;
-import org.firstinspires.ftc.teamcode.autonomous.TaskFactory.NoSuchCommandException;
+import org.firstinspires.ftc.teamcode.autonomous.tasks.TaskFactory;
+import org.firstinspires.ftc.teamcode.autonomous.tasks.TaskFactory.MissingArgumentException;
+import org.firstinspires.ftc.teamcode.autonomous.tasks.TaskFactory.NoSuchCommandException;
 import org.junit.Before;
 import org.junit.Test;
 

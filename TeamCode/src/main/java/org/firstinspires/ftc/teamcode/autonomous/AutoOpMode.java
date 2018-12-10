@@ -1,23 +1,29 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
+import android.util.Log;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Optional;
 import org.firstinspires.ftc.teamcode.autonomous.VuMarkDetector.Target;
+import org.firstinspires.ftc.teamcode.autonomous.tasks.LandTask;
+import org.firstinspires.ftc.teamcode.autonomous.tasks.SampleMineralTask;
+import org.firstinspires.ftc.teamcode.autonomous.tasks.TaskFactory;
+import org.firstinspires.ftc.teamcode.autonomous.tasks.TeamMarkerTask;
 
 @Autonomous(name = "Main Autonomous", group = "ARC Lightning")
 public class AutoOpMode extends LinearOpMode {
 
+  private static final String CONFIG_PATH = "/storage/self/primary/FIRST/config/";
+
   private static final String
-      CRATER_LEFT_TASK = "auto-craterLeft.task",
-      CRATER_RIGHT_TASK = "auto-craterRight.task";
+      CRATER_LEFT_TASK = CONFIG_PATH + "auto-craterLeft.task",
+      CRATER_RIGHT_TASK = CONFIG_PATH + "auto-craterRight.task";
 
   private AutonomousBot bot;
   private TaskFactory tasks;
   private VuMarkDetector detector;
-  private SampleMineralTask mineralTask;
 
   @Override
   public void runOpMode() {
@@ -25,8 +31,8 @@ public class AutoOpMode extends LinearOpMode {
 
       initFields();
       waitForStart();
-      executeCommands("auto-part1.task");
-      executeCommands(taskFilenameForDetectedTarget());
+      executeCommands(CONFIG_PATH + "auto-land.task");
+      //executeCommands(taskFilenameForDetectedTarget());
 
     } catch (Exception e) {
       throw new RuntimeException(e);
@@ -49,9 +55,11 @@ public class AutoOpMode extends LinearOpMode {
     bot = new AutonomousBot(this);
     tasks = new TaskFactory(bot.drivetrain);
     detector = new VuMarkDetector(hardwareMap);
-    mineralTask = new SampleMineralTask(hardwareMap);
 
-    tasks.addCustomTask("sample_mineral", mineralTask);
+    tasks.addCustomTask("sample_mineral", new SampleMineralTask(hardwareMap));
+    tasks.addCustomTask("land", new LandTask());
+    tasks.addCustomTask("drop_team_marker", new TeamMarkerTask());
+
   }
 
   private Target waitForVisibleTarget(int msTimeout) {
@@ -76,6 +84,7 @@ public class AutoOpMode extends LinearOpMode {
         telemetry.addData("Task file", filename);
         telemetry.addData("Running task", command);
         telemetry.update();
+        Log.d("Task Runner", "Running " + command);
         task.run();
       }
     }

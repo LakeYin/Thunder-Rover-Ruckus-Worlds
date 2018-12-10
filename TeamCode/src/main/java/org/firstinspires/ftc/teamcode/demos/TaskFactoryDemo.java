@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 import java.io.FileNotFoundException;
-import org.firstinspires.ftc.teamcode.autonomous.TaskFactory;
+import org.firstinspires.ftc.teamcode.autonomous.tasks.TaskFactory;
 
 @Autonomous(name = "TaskFactory Demo", group = "ARC Lightning")
 public class TaskFactoryDemo extends LinearOpMode {

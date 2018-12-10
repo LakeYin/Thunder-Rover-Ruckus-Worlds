@@ -25,12 +25,11 @@ public class EncoderDemo extends LinearOpMode {
       motor.setMode(RunMode.STOP_AND_RESET_ENCODER);
       motor.setMode(RunMode.RUN_USING_ENCODER);
 
-      motor.setTargetPosition(1440 * 2);
-      motor.setMode(RunMode.RUN_TO_POSITION);
-      motor.setPower(1);
+      motor.setPower(0.5);
 
-      while (motor.isBusy()) {
-        telemetry.addData("Position: ", motor.getCurrentPosition());
+      double runtime = getRuntime();
+      while (opModeIsActive() && getRuntime() - runtime < 5) {
+        telemetry.addData("Position", motor.getCurrentPosition());
         telemetry.update();
       }
       motor.setPower(0);

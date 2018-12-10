@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.autonomous;
+package org.firstinspires.ftc.teamcode.autonomous.tasks;
 
 import com.andoverrobotics.core.drivetrain.DriveTrain;
 import com.andoverrobotics.core.utilities.Coordinate;
@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Stream;
 
 public class TaskFactory {
 
