@@ -42,7 +42,7 @@ public enum ControlMode implements IControlMode {
 
   private static void controlLiftByTriggerBumper(Arm arm, boolean bumper,
       float trigger) {
-    arm.setLiftPower(booleanToInt(bumper) * 0.3 - trigger);
+    arm.setLiftPower(booleanToInt(bumper) * 0.15 - trigger);
   }
 
   private static void controlArmWithMicroAdjust(Gamepad gamepad, Arm arm) {
@@ -67,7 +67,7 @@ public enum ControlMode implements IControlMode {
 
   private static void rotateArmByStick(double x, double y, Arm arm) {
     arm.rotateLateral(x * 0.007);
-    arm.rotateVerticalByPower(y * -0.25);
+    arm.rotateVerticalByPower(y * -0.15);
   }
 
   private static void controlSimpleArm(Gamepad gamepad, SimpleArm arm) {
