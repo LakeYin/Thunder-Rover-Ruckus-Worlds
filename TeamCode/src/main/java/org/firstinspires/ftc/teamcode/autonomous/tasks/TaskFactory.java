@@ -23,13 +23,13 @@ public class TaskFactory {
   }
 
   private final DriveTrain drivetrain;
-  private HashMap<String, Runnable> customTasks = new HashMap<>();
+  private HashMap<String, Task> customTasks = new HashMap<>();
 
   public TaskFactory(DriveTrain drivetrain) {
     this.drivetrain = drivetrain;
   }
 
-  public void addCustomTask(String command, Runnable task) {
+  public void addCustomTask(String command, Task task) {
     customTasks.put(command, task);
   }
 
@@ -43,7 +43,7 @@ public class TaskFactory {
     return commands.toArray(new String[0]);
   }
 
-  public Runnable parseTask(String taskCommand) {
+  public Task parseTask(String taskCommand) {
     final String trimmedCommand = taskCommand.trim();
 
     if (trimmedCommand.length() == 0)

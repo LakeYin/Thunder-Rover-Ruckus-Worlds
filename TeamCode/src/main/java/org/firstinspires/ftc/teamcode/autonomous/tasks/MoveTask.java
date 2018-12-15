@@ -4,7 +4,7 @@ import com.andoverrobotics.core.drivetrain.DriveTrain;
 import com.andoverrobotics.core.drivetrain.StrafingDriveTrain;
 import com.andoverrobotics.core.utilities.Coordinate;
 
-public class MoveTask implements Runnable {
+public class MoveTask implements Task {
   private final DriveTrain drivetrain;
   private final Coordinate offset;
 

@@ -2,22 +2,15 @@ package org.firstinspires.ftc.teamcode.autonomous.tasks;
 
 import org.firstinspires.ftc.teamcode.Bot;
 
-public class LandTask implements Runnable {
+public class LandTask implements Task {
 
   private Bot bot = Bot.getInstance();
 
   @Override
-  public void run() {
-    try {
-
-      lowerBot();
-      strafeBot();
-      lowerGrabber();
-
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
-
+  public void run() throws InterruptedException {
+    lowerBot();
+    strafeBot();
+    lowerGrabber();
   }
 
   private void strafeBot() throws InterruptedException {

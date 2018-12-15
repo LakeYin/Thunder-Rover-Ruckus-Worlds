@@ -4,17 +4,20 @@ import com.andoverrobotics.core.config.Configuration;
 import com.andoverrobotics.core.drivetrain.StrafingDriveTrain;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import java.io.IOException;
+import java.util.Optional;
 import org.firstinspires.ftc.teamcode.Bot;
 import org.firstinspires.ftc.teamcode.autonomous.MineralDetector;
 import org.firstinspires.ftc.teamcode.autonomous.MineralDetector.Mineral;
 
-public class SampleMineralTask implements Runnable {
+public class SampleMineralTask implements Task {
 
   // Fields and class need to be kept public (so that the schema can be loaded)
   public static class ConfigSchema {
     public double knockDistance;
     public double distanceBetweenMinerals;
     public int delayBeforeRecognition;
+    public int degreeBetweenMinerals;
+    public boolean useRotation;
   }
 
   private ConfigSchema schema;
@@ -23,7 +26,6 @@ public class SampleMineralTask implements Runnable {
   public SampleMineralTask(HardwareMap map) {
     populateSchema();
     detector = new MineralDetector(map);
-    detector.activate();
   }
 
   private void populateSchema() {
@@ -38,7 +40,12 @@ public class SampleMineralTask implements Runnable {
   // Precondition: detector activated and phone facing minerals
   @Override
   public void run() {
+    detector.activate();
     runMineralCheck();
+    detector.shutdown();
+  }
+
+  public void shutdown() {
     detector.shutdown();
   }
 
@@ -50,18 +57,35 @@ public class SampleMineralTask implements Runnable {
       return;
     }
 
-    driveTrain.strafeRight(schema.distanceBetweenMinerals);
+    switchRight();
 
     if (detectedGold()) {
       knockMineral();
-      driveTrain.strafeLeft(schema.distanceBetweenMinerals);
+      switchLeft();
       return;
     }
 
-    driveTrain.strafeLeft(schema.distanceBetweenMinerals * 2);
+    switchLeft();
+    switchLeft();
 
     knockMineral();
     driveTrain.strafeLeft(schema.distanceBetweenMinerals);
+  }
+
+  private void switchLeft() {
+    if (schema.useRotation) {
+      Bot.getInstance().drivetrain.rotateClockwise(schema.degreeBetweenMinerals);
+    } else {
+      Bot.getInstance().drivetrain.strafeLeft(schema.distanceBetweenMinerals);
+    }
+  }
+
+  private void switchRight() {
+    if (schema.useRotation) {
+      Bot.getInstance().drivetrain.rotateCounterClockwise(schema.degreeBetweenMinerals);
+    } else {
+      Bot.getInstance().drivetrain.strafeRight(schema.distanceBetweenMinerals);
+    }
   }
 
   private void knockMineral() {
@@ -74,10 +98,14 @@ public class SampleMineralTask implements Runnable {
     try {
 
       Thread.sleep(schema.delayBeforeRecognition);
-      return detector.currentRecognition().orElse(null) == Mineral.GOLD;
+      Optional<Mineral> recognition = detector.currentRecognition();
+
+      Bot.getInstance().opMode.telemetry.addData("Seen", recognition);
+      Bot.getInstance().opMode.telemetry.update();
+
+      return recognition.orElse(Mineral.GOLD) == Mineral.GOLD;
 
     } catch (InterruptedException e) {
-
       e.printStackTrace();
       return false;
     }

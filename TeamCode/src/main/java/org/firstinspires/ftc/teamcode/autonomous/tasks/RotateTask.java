@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.autonomous.tasks;
 
 import com.andoverrobotics.core.drivetrain.DriveTrain;
 
-public class RotateTask implements Runnable {
+public class RotateTask implements Task {
   private final DriveTrain drivetrain;
   private final int degrees;
 
