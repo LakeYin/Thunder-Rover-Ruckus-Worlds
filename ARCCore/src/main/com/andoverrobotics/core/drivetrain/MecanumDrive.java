@@ -245,6 +245,6 @@ public class MecanumDrive extends StrafingDriveTrain {
 
   @Override
   protected IMotor[] getMotors() {
-    return new IMotor[]{leftDiagonal, rightDiagonal, leftSide, rightSide};
+    return new IMotor[]{leftDiagonal, rightDiagonal};
   }
 }

@@ -39,7 +39,7 @@ public class VuMarkDetector {
 
   private void loadTrackablesIfNeeded() {
     if (trackables == null) {
-      trackables = this.vuforia.loadTrackablesFromAsset("RoverRuckus");
+      trackables = vuforia.loadTrackablesFromAsset("RoverRuckus");
 
       for (int i = 0; i < Target.values().length; ++i) {
         trackables.get(i).setName(Target.values()[i].name());

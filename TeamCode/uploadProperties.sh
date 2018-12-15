@@ -1,0 +1,1 @@
+~/Library/Android/Sdk/platform-tools/adb push config/* /storage/self/primary/FIRST/config/

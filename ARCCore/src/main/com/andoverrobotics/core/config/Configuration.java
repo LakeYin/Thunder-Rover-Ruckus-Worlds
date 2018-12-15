@@ -31,7 +31,8 @@ import java.util.Properties;
  *   usePredefinedAutonomous=false
  *   selectedProcedureName=auto2
  * }</pre>
- * <p>
+ * <p> Ensure that both the schema class and all the fields are declared public. Otherwise, an
+ * {@link java.lang.IllegalAccessException} might occur.
  *
  * @see InvalidFormatError
  * @see InvalidSchemaError

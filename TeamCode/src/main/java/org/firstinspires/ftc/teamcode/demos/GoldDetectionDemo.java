@@ -16,6 +16,7 @@ public class GoldDetectionDemo extends LinearOpMode {
     detector = new MineralDetector(hardwareMap);
     detector.activate();
 
+
     waitForStart();
 
     for (Optional<GoldPosition> target = Optional.empty();

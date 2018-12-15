@@ -2,7 +2,9 @@ package org.firstinspires.ftc.teamcode.autonomous;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.FRONT;
 
+import android.hardware.camera2.CameraManager;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.vuforia.CameraDevice;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
@@ -12,6 +14,7 @@ class VuforiaProvider {
   private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = FRONT;
 
   private static VuforiaLocalizer localizer = null;
+  private static CameraManager cameraManager;
 
   static VuforiaLocalizer getLocalizer(HardwareMap hardwareMap) {
     if (localizer == null) {
@@ -22,7 +25,17 @@ class VuforiaProvider {
       parameters.cameraDirection = CAMERA_CHOICE;
       localizer = ClassFactory.getInstance().createVuforia(parameters);
     }
+    if (cameraManager == null) {
+      cameraManager = hardwareMap.appContext.getSystemService(CameraManager.class);
+    }
     return localizer;
   }
 
+  static void setFrontFlashlight(boolean lit) {
+    try {
+      CameraDevice.getInstance().setFlashTorchMode(lit);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
 }

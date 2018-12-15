@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 import com.qualcomm.robotcore.hardware.HardwareMap.DeviceMapping;
 import java.util.Arrays;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 @Autonomous(name = "Encoder Value Demo", group = "ARC")
 public class EncoderValueDemo extends LinearOpMode {
@@ -25,21 +26,22 @@ public class EncoderValueDemo extends LinearOpMode {
     waitForStart();
 
     forAllMotors(it -> it.setPower(SPEED_MAGNITUDE));
-    until(gamepad1.b, this::showTickValues);
+    until(() -> gamepad1.b, this::showTickValues);
     forAllMotors(it -> it.setPower(0));
 
     telemetry.addLine("Record data for translation");
     telemetry.addLine("Prepare for rotation. Press A to continue");
     telemetry.update();
 
-    until(gamepad1.a, () -> {});
+    until(() -> gamepad1.a, () -> {});
+    resetEncoders();
 
     frontLeft.setPower(SPEED_MAGNITUDE);
     backLeft.setPower(SPEED_MAGNITUDE);
     frontRight.setPower(-SPEED_MAGNITUDE);
     backRight.setPower(-SPEED_MAGNITUDE);
 
-    until (gamepad1.b, this::showTickValues);
+    until (() -> gamepad1.b, this::showTickValues);
 
     forAllMotors(it -> it.setPower(0));
 
@@ -47,11 +49,11 @@ public class EncoderValueDemo extends LinearOpMode {
     telemetry.addLine("Press A or STOP on the robot controller to end");
     telemetry.update();
 
-    until(gamepad1.a, () -> {});
+    until(() -> gamepad1.a, () -> {});
   }
 
-  private void until(boolean condition, Runnable toDo) {
-    while (!condition && opModeIsActive()) {
+  private void until(Supplier<Boolean> condition, Runnable toDo) {
+    while (!condition.get() && opModeIsActive()) {
       toDo.run();
     }
   }
@@ -72,6 +74,10 @@ public class EncoderValueDemo extends LinearOpMode {
     frontLeft.setDirection(Direction.REVERSE);
     backLeft.setDirection(Direction.REVERSE);
 
+    resetEncoders();
+  }
+
+  private void resetEncoders() {
     forAllMotors(it -> {
       it.setMode(RunMode.STOP_AND_RESET_ENCODER);
       it.setMode(RunMode.RUN_USING_ENCODER);

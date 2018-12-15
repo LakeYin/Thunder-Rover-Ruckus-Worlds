@@ -51,10 +51,11 @@ public class MineralDetector {
 
   public MineralDetector(HardwareMap hardware) {
     localizer = VuforiaProvider.getLocalizer(hardware);
-    initTensorFlow(hardware);
+    initTensorFlowIfNeeded(hardware);
   }
 
   public void activate() {
+    VuforiaProvider.setFrontFlashlight(true);
     detector.activate();
   }
 
@@ -89,14 +90,17 @@ public class MineralDetector {
 
   public void shutdown() {
     detector.shutdown();
+    VuforiaProvider.setFrontFlashlight(false);
   }
 
-  private void initTensorFlow(HardwareMap hardwareMap) {
-    int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
-        "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-    TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+  private void initTensorFlowIfNeeded(HardwareMap hardwareMap) {
+    if (detector == null) {
+      int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+          "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+      TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
 
-    detector = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, localizer);
-    detector.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
+      detector = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, localizer);
+      detector.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
+    }
   }
 }

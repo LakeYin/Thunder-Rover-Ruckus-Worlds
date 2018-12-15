@@ -5,7 +5,6 @@ import com.andoverrobotics.core.config.Configuration;
 import com.andoverrobotics.core.drivetrain.MecanumDrive;
 import com.andoverrobotics.core.drivetrain.StrafingDriveTrain;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
@@ -40,7 +39,7 @@ public class Bot {
 
   // Hardware
   public final Arm leftArm, rightArm;
-  public final SimpleArm backArm;
+  public final SimpleArm hookArm;
   public final Servo teamMarker;
 
   public Bot(HardwareMap hardware,
@@ -53,7 +52,6 @@ public class Bot {
     this.context = context;
     this.opMode = opMode;
     this.telemetry = telemetry;
-
 
     DeviceMapping<DcMotor> motorHw = hardware.dcMotor;
     DeviceMapping<Servo> servoHw = hardware.servo;
@@ -76,40 +74,33 @@ public class Bot {
           opMode, mainConfig.getInt("ticksPerInch"),
           mainConfig.getInt("ticksPer360")
       );
+      drivetrain.setDefaultDrivePower(mainConfig.getDouble("defaultDrivePower"));
     }
+
+    DcMotor leftLift = motorHw.get("leftLift");
+    DcMotor rightLift = motorHw.get("rightLift");
+    rightLift.setDirection(Direction.REVERSE);
+    leftLift.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
+    rightLift.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
+
     leftArm = new Arm(
-        motorHw.get("leftLift"),
+        leftLift,
         servoHw.get("leftGrabber"),
-        servoHw.get("leftLateral"),
-        hardware.crservo.get("leftVertical"),
         mainConfig.getDouble("leftClosed"),
         mainConfig.getDouble("leftOpen")
     );
 
-    DcMotor rightLift = motorHw.get("rightLift");
-    CRServo rightVertical = hardware.crservo.get("rightVertical");
-    rightLift.setDirection(Direction.REVERSE);
-    rightVertical.setDirection(Direction.REVERSE);
-
     rightArm = new Arm(
         rightLift,
         servoHw.get("rightGrabber"),
-        servoHw.get("rightLateral"),
-        rightVertical,
         mainConfig.getDouble("rightClosed"),
         mainConfig.getDouble("rightOpen")
     );
 
-    DcMotor backLift = motorHw.get("backLift");
-    backLift.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
+    DcMotor hookLift = motorHw.get("backLift");
+    hookLift.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
 
-    backArm = new SimpleArm(
-        backLift,
-        servoHw.get("backGrabber"),
-        mainConfig.getDouble("backClosed"),
-        mainConfig.getDouble("backOpen")
-    );
-
+    hookArm = new SimpleArm(hookLift);
     teamMarker = servoHw.get("teamMarker");
 
     instance = this;

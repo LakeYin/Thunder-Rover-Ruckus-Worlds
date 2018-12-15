@@ -40,14 +40,15 @@ public class MotorPair implements IMotor {
   }
 
   @Override
-  public void startRunToPosition(int tickOffset, double absPower) {
+  public void startRunToPosition(int tickOffset, double power) {
+    double absPower = Math.abs(power);
     if (tickOffset == 0 || absPower < 1e-5) {
       return;
     }
 
-    setMode(RunMode.RUN_TO_POSITION);
     addTargetPosition(tickOffset);
-    setPower(tickOffset > 0 ? Math.abs(absPower) : -Math.abs(absPower));
+    setMode(RunMode.RUN_TO_POSITION);
+    setPower(absPower);
   }
 
   @Override
