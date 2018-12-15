@@ -21,7 +21,7 @@ public enum ControlMode implements IControlMode {
   }),
 
 
-  REAR_SLIDE(g -> g.start, gamepad -> controlSimpleArm(gamepad, Bot.getInstance().backArm)),
+  REAR_SLIDE(g -> g.start, gamepad -> controlSimpleArm(gamepad, Bot.getInstance().hookArm)),
   LEFT_SLIDE(g -> g.x, gamepad -> controlArmWithMicroAdjust(gamepad, Bot.getInstance().leftArm)),
   RIGHT_SLIDE(g -> g.b, gamepad -> controlArmWithMicroAdjust(gamepad, Bot.getInstance().rightArm)),
   BOTH_SLIDES(g -> g.a, ControlMode::controlBothArms);
@@ -36,8 +36,6 @@ public enum ControlMode implements IControlMode {
 
     controlLiftByTriggerBumper(bot.leftArm, gamepad.left_bumper, gamepad.left_trigger);
     controlLiftByTriggerBumper(bot.rightArm, gamepad.right_bumper, gamepad.right_trigger);
-    rotateArmByStick(gamepad.left_stick_x, gamepad.left_stick_y, bot.leftArm);
-    rotateArmByStick(gamepad.right_stick_x, gamepad.right_stick_y, bot.rightArm);
   }
 
   private static void controlLiftByTriggerBumper(Arm arm, boolean bumper,
@@ -47,7 +45,7 @@ public enum ControlMode implements IControlMode {
 
   private static void controlArmWithMicroAdjust(Gamepad gamepad, Arm arm) {
     controlArm(gamepad, arm);
-    Bot.getInstance().drivetrain.setStrafe(getMicroAdjustCoord(gamepad), 0.2);
+    Bot.getInstance().drivetrain.setStrafe(getMicroAdjustCoord(gamepad), 0.3);
   }
 
   private static Coordinate getMicroAdjustCoord(Gamepad gamepad) {
@@ -62,17 +60,11 @@ public enum ControlMode implements IControlMode {
 
   private static void controlArm(Gamepad gamepad, Arm arm) {
     controlSimpleArm(gamepad, arm);
-    rotateArmByStick(gamepad.left_stick_x, gamepad.left_stick_y, arm);
-  }
-
-  private static void rotateArmByStick(double x, double y, Arm arm) {
-    arm.rotateLateral(x * 0.007);
-    arm.rotateVerticalByPower(y * -0.25);
+    arm.moveGrabber((gamepad.right_trigger - gamepad.left_trigger) * 0.01);
   }
 
   private static void controlSimpleArm(Gamepad gamepad, SimpleArm arm) {
-    arm.setLiftPower(-gamepad.right_stick_y);
-    arm.moveGrabber((gamepad.right_trigger - gamepad.left_trigger) * 0.01);
+    arm.setLiftPower(-gamepad.right_stick_y * 0.7);
   }
 
   /**

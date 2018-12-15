@@ -1,27 +1,37 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.Range;
 
 public class Arm extends SimpleArm {
 
-  private final Servo lateralServo;
-  private final CRServo verticalServo;
+  private final Servo grabber;
 
-  public Arm(DcMotor liftMotor, Servo grabber, Servo lateralServo, CRServo verticalServo,
-      double openPos, double closedPos) {
-    super(liftMotor, grabber, openPos, closedPos);
-    this.lateralServo = lateralServo;
-    this.verticalServo = verticalServo;
+  public Arm(DcMotor liftMotor, Servo grabber, double openPos, double closedPos) {
+    super(liftMotor);
+    this.grabber = grabber;
+    // Open => 0.0, Closed => 1.0
+    grabber.scaleRange(openPos, closedPos);
   }
 
-  public void rotateLateral(double offset) {
-    lateralServo.setPosition(Range.clip(lateralServo.getPosition() + offset, 0, 1));
+
+  public void openGrabber() {
+    setGrabberPosition(0.0);
   }
 
-  public void rotateVerticalByPower(double power) {
-    verticalServo.setPower(power);
+  public void closeGrabber() {
+    setGrabberPosition(1.0);
+  }
+
+  public void moveGrabber(double offset) {
+    setGrabberPosition(getGrabberPosition() + offset);
+  }
+
+  public void setGrabberPosition(double position) {
+    grabber.setPosition(position);
+  }
+
+  public double getGrabberPosition() {
+    return grabber.getPosition();
   }
 }

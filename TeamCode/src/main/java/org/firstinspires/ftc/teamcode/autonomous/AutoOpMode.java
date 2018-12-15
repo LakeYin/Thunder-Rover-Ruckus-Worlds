@@ -31,11 +31,11 @@ public class AutoOpMode extends LinearOpMode {
 
       initFields();
       waitForStart();
-      executeCommands(CONFIG_PATH + "auto-land.task");
-      //executeCommands(taskFilenameForDetectedTarget());
+      executeCommands(CONFIG_PATH + "auto-part1.task");
+      executeCommands(taskFilenameForDetectedTarget());
 
     } catch (Exception e) {
-      throw new RuntimeException(e);
+      e.printStackTrace();
     }
   }
 
@@ -84,7 +84,7 @@ public class AutoOpMode extends LinearOpMode {
         telemetry.addData("Task file", filename);
         telemetry.addData("Running task", command);
         telemetry.update();
-        Log.d("Task Runner", "Running " + command);
+        Log.d("Task Runner", String.format("Running %s from file %s", command, filename));
         task.run();
       }
     }

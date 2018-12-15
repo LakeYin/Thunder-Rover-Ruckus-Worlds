@@ -17,7 +17,7 @@ public class VuMarkDetector {
 
   public VuMarkDetector(HardwareMap hardwareMap) {
     vuforia = VuforiaProvider.getLocalizer(hardwareMap);
-    loadTrackables();
+    loadTrackablesIfNeeded();
   }
 
   public void activate() {
@@ -37,11 +37,13 @@ public class VuMarkDetector {
     trackables.deactivate();
   }
 
-  private void loadTrackables() {
-    trackables = this.vuforia.loadTrackablesFromAsset("RoverRuckus");
+  private void loadTrackablesIfNeeded() {
+    if (trackables == null) {
+      trackables = vuforia.loadTrackablesFromAsset("RoverRuckus");
 
-    for (int i = 0; i < Target.values().length; ++i) {
-      trackables.get(i).setName(Target.values()[i].name());
+      for (int i = 0; i < Target.values().length; ++i) {
+        trackables.get(i).setName(Target.values()[i].name());
+      }
     }
   }
 }

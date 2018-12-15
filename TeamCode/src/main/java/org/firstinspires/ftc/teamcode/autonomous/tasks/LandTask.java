@@ -27,14 +27,14 @@ public class LandTask implements Runnable {
   }
 
   private void lowerBot() throws InterruptedException {
-    bot.backArm.setLiftPower(0.3);
+    bot.hookArm.setLiftPower(0.3);
     Thread.sleep(1000);
-    bot.backArm.setLiftPower(0);
+    bot.hookArm.setLiftPower(0);
   }
 
   private void lowerGrabber() throws InterruptedException {
-    bot.backArm.setLiftPower(-0.3);
+    bot.hookArm.setLiftPower(-0.3);
     Thread.sleep(1500);
-    bot.backArm.setLiftPower(0);
+    bot.hookArm.setLiftPower(0);
   }
 }
