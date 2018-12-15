@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.firstinspires.ftc.teamcode.autonomous.VuMarkDetector.Target;
 import org.firstinspires.ftc.teamcode.autonomous.tasks.LandTask;
 import org.firstinspires.ftc.teamcode.autonomous.tasks.SampleMineralTask;
+import org.firstinspires.ftc.teamcode.autonomous.tasks.Task;
 import org.firstinspires.ftc.teamcode.autonomous.tasks.TaskFactory;
 import org.firstinspires.ftc.teamcode.autonomous.tasks.TeamMarkerTask;
 
@@ -24,22 +25,47 @@ public class AutoOpMode extends LinearOpMode {
   private AutonomousBot bot;
   private TaskFactory tasks;
   private VuMarkDetector detector;
+  private SampleMineralTask sampleMineralTask;
 
   @Override
   public void runOpMode() {
     try {
 
       initFields();
-      waitForStart();
+      spamTelemetryAndWaitForStart();
+      throwIfInterrupted();
       executeCommands(CONFIG_PATH + "auto-part1.task");
       executeCommands(taskFilenameForDetectedTarget());
 
     } catch (Exception e) {
       e.printStackTrace();
+      //cleanup();
     }
   }
 
+  private void spamTelemetryAndWaitForStart() {
+    while (!opModeIsActive() && !isStopRequested()) {
+      telemetry.addData("Waiting in Init", System.currentTimeMillis());
+      telemetry.update();
+    }
+  }
+
+  private void cleanup() {
+    try {
+      detector.deactivate();
+      sampleMineralTask.shutdown();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void throwIfInterrupted() throws InterruptedException {
+    if (Thread.interrupted())
+      throw new InterruptedException("OpMode stopped manually");
+  }
+
   private String taskFilenameForDetectedTarget() {
+    detector = new VuMarkDetector(hardwareMap);
     detector.activate();
     Target target = waitForVisibleTarget(5000);
 
@@ -54,9 +80,9 @@ public class AutoOpMode extends LinearOpMode {
   private void initFields() throws IOException {
     bot = new AutonomousBot(this);
     tasks = new TaskFactory(bot.drivetrain);
-    detector = new VuMarkDetector(hardwareMap);
+    sampleMineralTask = new SampleMineralTask(hardwareMap);
 
-    tasks.addCustomTask("sample_mineral", new SampleMineralTask(hardwareMap));
+    tasks.addCustomTask("sample_mineral", sampleMineralTask);
     tasks.addCustomTask("land", new LandTask());
     tasks.addCustomTask("drop_team_marker", new TeamMarkerTask());
 
@@ -65,7 +91,7 @@ public class AutoOpMode extends LinearOpMode {
   private Target waitForVisibleTarget(int msTimeout) {
     double startTime = getRuntime();
 
-    while ((getRuntime() - startTime) * 1000 < msTimeout) {
+    while ((getRuntime() - startTime) * 1000 < msTimeout && !Thread.interrupted() && opModeIsActive()) {
       Optional<Target> target = detector.visibleTarget();
 
       if (target.isPresent())
@@ -75,10 +101,11 @@ public class AutoOpMode extends LinearOpMode {
     return null;
   }
 
-  private void executeCommands(String filename) throws FileNotFoundException {
+  private void executeCommands(String filename) throws FileNotFoundException, InterruptedException {
     String[] commands = tasks.commandsInFile(filename);
     for (String command : commands) {
-      Runnable task = tasks.parseTask(command);
+      Task task = tasks.parseTask(command);
+      throwIfInterrupted();
 
       if (task != null) {
         telemetry.addData("Task file", filename);
@@ -86,6 +113,7 @@ public class AutoOpMode extends LinearOpMode {
         telemetry.update();
         Log.d("Task Runner", String.format("Running %s from file %s", command, filename));
         task.run();
+        throwIfInterrupted();
       }
     }
     telemetry.addData("Done running", filename);

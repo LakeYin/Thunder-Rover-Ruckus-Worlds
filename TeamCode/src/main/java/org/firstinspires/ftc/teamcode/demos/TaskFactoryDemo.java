@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 import java.io.FileNotFoundException;
+import org.firstinspires.ftc.teamcode.autonomous.tasks.Task;
 import org.firstinspires.ftc.teamcode.autonomous.tasks.TaskFactory;
 
 @Autonomous(name = "TaskFactory Demo", group = "ARC Lightning")
@@ -37,13 +38,13 @@ public class TaskFactoryDemo extends LinearOpMode {
       waitForStart();
 
       for (String command : commands) {
-        Runnable task = theFactory.parseTask(command);
+        Task task = theFactory.parseTask(command);
         telemetry.addData("Now running", command);
         telemetry.update();
         task.run();
       }
 
-    } catch (FileNotFoundException e) {
+    } catch (FileNotFoundException | InterruptedException e) {
       e.printStackTrace();
     }
 

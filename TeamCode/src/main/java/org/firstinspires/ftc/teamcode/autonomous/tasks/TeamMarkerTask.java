@@ -2,12 +2,14 @@ package org.firstinspires.ftc.teamcode.autonomous.tasks;
 
 import org.firstinspires.ftc.teamcode.Bot;
 
-public class TeamMarkerTask implements Runnable {
+public class TeamMarkerTask implements Task {
 
   @Override
-  public void run() {
+  public void run() throws InterruptedException {
     Bot bot = Bot.getInstance();
     bot.teamMarker.setPosition(0.0);
+    Thread.sleep(500);
     bot.teamMarker.setPosition(1.0);
+    Thread.sleep(2000);
   }
 }

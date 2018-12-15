@@ -13,10 +13,10 @@ public class VuMarkDetector {
   }
 
   private VuforiaLocalizer vuforia;
-  private VuforiaTrackables trackables;
+  private static VuforiaTrackables trackables;
 
   public VuMarkDetector(HardwareMap hardwareMap) {
-    vuforia = VuforiaProvider.getLocalizer(hardwareMap);
+    vuforia = VuforiaManager.getVuMarkLocalizer(hardwareMap);
     loadTrackablesIfNeeded();
   }
 
@@ -35,6 +35,7 @@ public class VuMarkDetector {
 
   public void deactivate() {
     trackables.deactivate();
+    VuforiaManager.deinitVuforia();
   }
 
   private void loadTrackablesIfNeeded() {
