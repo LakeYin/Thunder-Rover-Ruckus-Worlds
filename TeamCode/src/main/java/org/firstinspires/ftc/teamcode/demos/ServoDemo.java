@@ -40,7 +40,9 @@ public class ServoDemo extends OpMode {
     telemetry.addData("Left stick x", gamepad1.left_stick_x);
     telemetry.update();*/
 
-    telemetry.addData("Position", servo.getPosition());
+    double position = servo.getPosition() + (gamepad1.left_trigger * 0.01) - (gamepad1.right_trigger * 0.01);
+    servo.setPosition(position);
+    telemetry.addData("Position", position);
   }
 
 }
