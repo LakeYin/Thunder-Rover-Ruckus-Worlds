@@ -56,6 +56,7 @@ public class MineralDetector {
 
   public void activate() {
     VuforiaManager.setFrontFlashlight(true);
+    VuforiaManager.deinitVuforia();
     detector.activate();
   }
 

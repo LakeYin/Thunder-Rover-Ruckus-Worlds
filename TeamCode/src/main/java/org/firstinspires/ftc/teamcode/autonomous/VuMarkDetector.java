@@ -35,7 +35,9 @@ public class VuMarkDetector {
 
   public void deactivate() {
     trackables.deactivate();
-    VuforiaManager.deinitVuforia();
+    // DeInit will occur right before VuMarkDetector begins running
+    // Otherwise, interrupts will cause RobotCore's cleanup code to deinitialize a Vuforia instance
+    //   that has already been deinitialized, causing a NPE
   }
 
   private void loadTrackablesIfNeeded() {
