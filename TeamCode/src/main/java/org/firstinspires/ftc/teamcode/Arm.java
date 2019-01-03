@@ -10,10 +10,18 @@ public class Arm extends SimpleArm {
   public Arm(DcMotor liftMotor, Servo grabber, double openPos, double closedPos) {
     super(liftMotor);
     this.grabber = grabber;
-    // Open => 0.0, Closed => 1.0
-    grabber.scaleRange(openPos, closedPos);
+
+    initScaleRange(openPos, closedPos);
   }
 
+  private void initScaleRange(double openPos, double closedPos) {
+    if (openPos > closedPos) {
+      grabber.setDirection(Servo.Direction.REVERSE);
+      grabber.scaleRange(1 - openPos, 1 - closedPos);
+    } else {
+      grabber.scaleRange(openPos, closedPos);
+    }
+  }
 
   public void openGrabber() {
     setGrabberPosition(0.0);

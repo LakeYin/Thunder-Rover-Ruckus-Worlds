@@ -27,5 +27,6 @@ public class TeleOpMode extends OpMode {
   @Override
   public void loop() {
     controlMapper.applyGamepadInputs(gamepad1, gamepad2);
+    telemetry.addData("Connection Keep-Alive", getRuntime());
   }
 }
