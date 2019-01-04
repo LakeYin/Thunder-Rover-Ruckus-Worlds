@@ -74,6 +74,10 @@ public class Coordinate {
     return y;
   }
 
+  public Coordinate multiply(double factor) {
+    return Coordinate.fromXY(getX() * factor, getY() * factor);
+  }
+
   /**
    * Constructs a new coordinate with the given Cartesian components.
    *

@@ -26,7 +26,7 @@ public class MotorDelayEstimationDemo extends LinearOpMode {
         motor.setPower(targetSpeed);
         double startTime = System.currentTimeMillis();
 
-        while (!gamepad1.x) {
+        while (!gamepad1.y && !isStopRequested() && opModeIsActive()) {
             telemetry.addData("Time Elapsed", System.currentTimeMillis() - startTime);
             telemetry.update();
         }

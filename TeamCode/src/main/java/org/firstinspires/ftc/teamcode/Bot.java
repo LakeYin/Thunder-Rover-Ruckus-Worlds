@@ -97,7 +97,7 @@ public class Bot {
         mainConfig.getDouble("rightOpen")
     );
 
-    DcMotor hookLift = motorHw.get("backLift");
+    DcMotor hookLift = motorHw.get("hookLift");
     hookLift.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
 
     hookArm = new SimpleArm(hookLift);
