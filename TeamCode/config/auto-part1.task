@@ -1,4 +1,5 @@
-move 0 -13
+land
+move 0 -10
 sample_mineral
 move 0 -5
 move 30 0
