@@ -23,7 +23,7 @@ public enum ControlMode implements IControlMode {
   }),
 
 
-  REAR_SLIDE(g -> g.start, gamepad -> controlHook(gamepad, Bot.getInstance().hookArm)),
+  HOOK_SLIDE(g -> g.start, gamepad -> controlHook(gamepad, Bot.getInstance().hookArm)),
   LEFT_SLIDE(g -> g.x, gamepad -> controlArmWithMicroAdjust(gamepad, Bot.getInstance().leftArm)),
   RIGHT_SLIDE(g -> g.b, gamepad -> controlArmWithMicroAdjust(gamepad, Bot.getInstance().rightArm)),
   BOTH_SLIDES(g -> g.a, ControlMode::controlBothArms);
