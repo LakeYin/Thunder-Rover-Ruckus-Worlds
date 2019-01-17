@@ -8,7 +8,7 @@ public class TeamMarkerTask implements Task {
   public void run() throws InterruptedException {
     Bot bot = Bot.getInstance();
     bot.rightArm.setLiftPower(-0.5);
-    Thread.sleep(400);
+    Thread.sleep(500);
     bot.rightArm.setLiftPower(0);
 
     bot.teamMarker.setPosition(0.0);

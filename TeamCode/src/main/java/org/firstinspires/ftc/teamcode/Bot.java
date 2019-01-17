@@ -99,6 +99,7 @@ public class Bot {
 
     DcMotor hookLift = motorHw.get("hookLift");
     hookLift.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
+    hookLift.setDirection(Direction.REVERSE);
 
     hookArm = new SimpleArm(hookLift);
     teamMarker = servoHw.get("teamMarker");
