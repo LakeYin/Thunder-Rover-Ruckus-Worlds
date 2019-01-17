@@ -20,6 +20,8 @@ public class MineralDetector {
   public enum Mineral {
     SILVER(LABEL_SILVER_MINERAL), GOLD(LABEL_GOLD_MINERAL);
 
+    private final String label;
+
     static Mineral byLabel(String label) {
 
       for (Mineral min : Mineral.values()) {
@@ -31,14 +33,8 @@ public class MineralDetector {
       throw new IllegalArgumentException("Invalid mineral label: " + label);
     }
 
-    private final String label;
-
     Mineral(String label) {
       this.label = label;
-    }
-
-    public String getLabel() {
-      return label;
     }
   }
 
@@ -56,7 +52,6 @@ public class MineralDetector {
 
   public void activate() {
     VuforiaManager.setFrontFlashlight(true);
-    VuforiaManager.deinitVuforia();
     detector.activate();
   }
 

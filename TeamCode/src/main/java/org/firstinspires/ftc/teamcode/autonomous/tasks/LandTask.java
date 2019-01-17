@@ -17,29 +17,30 @@ public class LandTask implements Task {
 
   private void exitHook() throws InterruptedException {
     bot.drivetrain.setStrafe(-1, 0, POWER);
-    Thread.sleep(200);
+    Thread.sleep(500);
     bot.drivetrain.stop();
   }
 
   private void strafeBot() throws InterruptedException {
     bot.drivetrain.setStrafe(0, -1, POWER);
-    Thread.sleep(150);
+    Thread.sleep(250);
     bot.drivetrain.setStrafe(1, 0, POWER);
-    Thread.sleep(200);
+    Thread.sleep(500);
     bot.drivetrain.stop();
   }
 
   private void lowerBot() throws InterruptedException {
     bot.hookArm.setLiftPower(-1.0);
-    Thread.sleep(1900);
+    Thread.sleep(3100);
     bot.hookArm.setLiftPower(0);
   }
 
   private void startLowerGrabber() {
     Thread thread = new Thread(() -> {
       try {
+        Thread.sleep(2000);
         bot.hookArm.setLiftPower(1.0);
-        Thread.sleep(1900);
+        Thread.sleep(3100);
         bot.hookArm.setLiftPower(0);
       } catch (Exception e) {}
     });

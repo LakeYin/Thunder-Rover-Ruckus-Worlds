@@ -12,7 +12,7 @@ public enum ControlMode implements IControlMode {
   DRIVE(g -> g.y, gamepad -> {
     final boolean microAdjust = gamepad.left_bumper || gamepad.right_bumper;
     Coordinate leftTarget = Coordinate.fromXY(gamepad.left_stick_x, -gamepad.left_stick_y)
-            .multiply(microAdjust ? 0.3 : 1);
+            .multiply(microAdjust ? 0.6 : 1);
     final Bot bot = Bot.getInstance();
 
     if (Math.abs(gamepad.right_stick_x) > 0.1) {
