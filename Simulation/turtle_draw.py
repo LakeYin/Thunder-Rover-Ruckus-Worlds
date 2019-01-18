@@ -28,7 +28,7 @@ cmds = {
     'rotate': lambda draw, args: draw.right(int(args[0]))
 }
 
-starts = [(34.5/2, 34.5/2, 45), (-34.5/2, 34.5/2, 135)]
+starts = [(34.5/2, 34.5/2, 225), (-34.5/2, 34.5/2, 315)]
 
 try:
     scripts = []
