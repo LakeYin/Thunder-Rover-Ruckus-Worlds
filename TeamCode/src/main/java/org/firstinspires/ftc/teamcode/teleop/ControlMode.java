@@ -28,6 +28,8 @@ public enum ControlMode implements IControlMode {
   RIGHT_SLIDE(g -> g.b, gamepad -> controlArmWithMicroAdjust(gamepad, Bot.getInstance().rightArm)),
   BOTH_SLIDES(g -> g.a, ControlMode::controlBothArms);
 
+  public static final double ARM_LIFT_SENSITIVITY = 0.2;
+
   private static void controlBothArms(Gamepad gamepad) {
     Bot bot = Bot.getInstance();
 
@@ -42,21 +44,21 @@ public enum ControlMode implements IControlMode {
 
   private static void controlLiftByTriggerBumper(Arm arm, boolean bumper,
       float trigger) {
-    arm.setLiftPower(booleanToInt(bumper) * 0.3 - trigger);
+    arm.setLiftPower((booleanToInt(bumper) - trigger) * ARM_LIFT_SENSITIVITY);
   }
 
   private static void controlArmWithMicroAdjust(Gamepad gamepad, Arm arm) {
     controlArm(gamepad, arm);
-    Bot.getInstance().drivetrain.setStrafe(getMicroAdjustCoord(gamepad), 0.3);
+    Bot.getInstance().drivetrain.setStrafe(getMicroAdjustCoord(gamepad), 0.45);
   }
 
-  private static Coordinate getMicroAdjustCoord(Gamepad gamepad) {
+  static Coordinate getMicroAdjustCoord(Gamepad gamepad) {
     double x = booleanToInt(gamepad.dpad_right) - booleanToInt(gamepad.dpad_left);
     double y = booleanToInt(gamepad.dpad_up) - booleanToInt(gamepad.dpad_down);
     return Coordinate.fromXY(x, y);
   }
 
-  private static int booleanToInt(boolean bool) {
+  static int booleanToInt(boolean bool) {
     return bool ? 1 : 0;
   }
 
@@ -66,11 +68,11 @@ public enum ControlMode implements IControlMode {
   }
 
   private static void controlSimpleArm(Gamepad gamepad, SimpleArm arm) {
-    arm.setLiftPower(-gamepad.right_stick_y * 0.15);
+    arm.setLiftPower(-gamepad.right_stick_y * ARM_LIFT_SENSITIVITY);
   }
 
   private static void controlHook(Gamepad gamepad, SimpleArm arm) {
-    arm.setLiftPower(-gamepad.right_stick_y * 0.8);
+    arm.setLiftPower(-gamepad.right_stick_y);
   }
 
   /**

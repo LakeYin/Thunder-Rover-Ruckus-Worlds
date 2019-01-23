@@ -35,6 +35,11 @@ public class ControlMapper {
     }
   }
 
+  public void cheer() {
+    if (!tts.isSpeaking())
+      tts.speak(String.valueOf(Math.random()));
+  }
+
   private void announceModeActivation(ControlMode mode, String gamepad) {
     tts.speak(gamepad + " set to " + mode.name().replace('_', ' '));
   }
