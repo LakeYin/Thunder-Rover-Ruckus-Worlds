@@ -4,6 +4,7 @@ import org.firstinspires.ftc.teamcode.Bot;
 
 public class LandTask implements Task {
   private static final double POWER = 0.5;
+  private static final int LAND_WAIT = 2000;
 
   private Bot bot = Bot.getInstance();
 
@@ -31,7 +32,7 @@ public class LandTask implements Task {
 
   private void lowerBot() throws InterruptedException {
     bot.hookArm.setLiftPower(-1.0);
-    Thread.sleep(3100);
+    Thread.sleep(LAND_WAIT);
     bot.hookArm.setLiftPower(0);
   }
 
@@ -40,7 +41,7 @@ public class LandTask implements Task {
       try {
         Thread.sleep(2000);
         bot.hookArm.setLiftPower(1.0);
-        Thread.sleep(3100);
+        Thread.sleep(LAND_WAIT);
         bot.hookArm.setLiftPower(0);
       } catch (Exception e) {}
     });

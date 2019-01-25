@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import java.util.Optional;
 import org.firstinspires.ftc.teamcode.autonomous.MineralDetector;
 import org.firstinspires.ftc.teamcode.autonomous.MineralDetector.GoldPosition;
+import org.firstinspires.ftc.teamcode.autonomous.VuforiaManager;
 
 @Autonomous(name = "Gold Detection Demo", group = "ARC")
 public class GoldDetectionDemo extends LinearOpMode {
@@ -13,6 +14,7 @@ public class GoldDetectionDemo extends LinearOpMode {
 
   @Override
   public void runOpMode() {
+    VuforiaManager.initVuforia(hardwareMap);
     detector = new MineralDetector(hardwareMap);
     detector.activate();
 

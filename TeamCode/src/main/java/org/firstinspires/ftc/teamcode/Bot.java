@@ -27,7 +27,7 @@ public class Bot {
     return instance;
   }
 
-  public final StrafingDriveTrain drivetrain;
+  public final MecanumDrive drivetrain;
 
   // Configuration
   public final Configuration mainConfig;
@@ -56,10 +56,10 @@ public class Bot {
     DeviceMapping<DcMotor> motorHw = hardware.dcMotor;
     DeviceMapping<Servo> servoHw = hardware.servo;
 
-    if (mainConfig.getBoolean("useSimulation")) {
-      new SimulationRelay(mainConfig.getInt("simulationRelayPort"));
-      drivetrain = new SimDriveTrain(opMode);
-    } else {
+//    if (mainConfig.getBoolean("useSimulation")) {
+//      new SimulationRelay(mainConfig.getInt("simulationRelayPort"));
+//      drivetrain = new SimDriveTrain(opMode);
+//    } else {
       DcMotor frontLeft = motorHw.get("motorFL"),
           backLeft = motorHw.get("motorBL");
 
@@ -75,7 +75,7 @@ public class Bot {
           mainConfig.getInt("ticksPer360")
       );
       drivetrain.setDefaultDrivePower(mainConfig.getDouble("defaultDrivePower"));
-    }
+//    }
 
     DcMotor leftLift = motorHw.get("leftLift");
     DcMotor rightLift = motorHw.get("rightLift");
@@ -99,7 +99,7 @@ public class Bot {
 
     DcMotor hookLift = motorHw.get("hookLift");
     hookLift.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
-    hookLift.setDirection(Direction.REVERSE);
+    hookLift.setDirection(Direction.FORWARD);
 
     hookArm = new SimpleArm(hookLift);
     teamMarker = servoHw.get("teamMarker");

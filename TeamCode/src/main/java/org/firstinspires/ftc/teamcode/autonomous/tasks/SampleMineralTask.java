@@ -96,14 +96,19 @@ public class SampleMineralTask implements Task {
 
   private boolean detectedGold() {
     try {
+      long startTime = System.currentTimeMillis();
+      Optional<Mineral> recognition;
 
-      Thread.sleep(schema.delayBeforeRecognition);
-      Optional<Mineral> recognition = detector.currentRecognition();
+      while (!(recognition = detector.currentRecognition()).isPresent() &&
+          System.currentTimeMillis() < startTime + schema.delayBeforeRecognition) {
+        if (Thread.interrupted())
+          throw new InterruptedException("Interrupted while waiting for mineral recognition");
+      }
 
       Bot.getInstance().opMode.telemetry.addData("Seen", recognition);
       Bot.getInstance().opMode.telemetry.update();
 
-      return recognition.orElse(Mineral.GOLD) == Mineral.GOLD;
+      return recognition.orElse(Mineral.SILVER) == Mineral.GOLD;
 
     } catch (InterruptedException e) {
       e.printStackTrace();

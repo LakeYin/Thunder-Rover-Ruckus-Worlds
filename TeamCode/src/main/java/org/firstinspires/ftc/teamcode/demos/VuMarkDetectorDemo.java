@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import java.util.Optional;
 import org.firstinspires.ftc.teamcode.autonomous.VuMarkDetector;
 import org.firstinspires.ftc.teamcode.autonomous.VuMarkDetector.Target;
+import org.firstinspires.ftc.teamcode.autonomous.VuforiaManager;
 
 @Autonomous(name = "VuMark Detection Demo", group = "ARC")
 public class VuMarkDetectorDemo extends LinearOpMode {
@@ -13,7 +14,8 @@ public class VuMarkDetectorDemo extends LinearOpMode {
 
   @Override
   public void runOpMode() {
-    detector = new VuMarkDetector(hardwareMap);
+    VuforiaManager.initVuforia(hardwareMap);
+    detector = new VuMarkDetector();
     detector.activate();
 
     waitForStart();

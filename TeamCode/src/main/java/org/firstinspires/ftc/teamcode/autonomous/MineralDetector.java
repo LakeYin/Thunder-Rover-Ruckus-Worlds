@@ -46,7 +46,7 @@ public class MineralDetector {
   private TFObjectDetector detector;
 
   public MineralDetector(HardwareMap hardware) {
-    localizer = VuforiaManager.getMineralLocalizer(hardware);
+    localizer = VuforiaManager.getLocalizer();
     initTensorFlowIfNeeded(hardware);
   }
 
@@ -86,8 +86,6 @@ public class MineralDetector {
 
   public void shutdown() {
     detector.shutdown();
-    VuforiaManager.setFrontFlashlight(false);
-    VuforiaManager.deinitVuforia();
   }
 
   private void initTensorFlowIfNeeded(HardwareMap hardwareMap) {

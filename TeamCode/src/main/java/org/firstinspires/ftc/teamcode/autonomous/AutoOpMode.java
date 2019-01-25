@@ -50,22 +50,13 @@ public class AutoOpMode extends LinearOpMode {
     }
   }
 
-  private void cleanup() {
-    try {
-      detector.deactivate();
-      sampleMineralTask.shutdown();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-
   private void throwIfInterrupted() throws InterruptedException {
     if (Thread.interrupted())
       throw new InterruptedException("OpMode stopped manually");
   }
 
   private String taskFilenameForDetectedTarget() {
-    detector = new VuMarkDetector(hardwareMap);
+    detector = new VuMarkDetector();
     detector.activate();
     Target target = waitForVisibleTarget(5000);
 
@@ -78,6 +69,7 @@ public class AutoOpMode extends LinearOpMode {
   }
 
   private void initFields() throws IOException {
+    VuforiaManager.initVuforia(hardwareMap);
     bot = new AutonomousBot(this);
     tasks = new TaskFactory(bot.drivetrain);
     sampleMineralTask = new SampleMineralTask(hardwareMap);
@@ -85,7 +77,6 @@ public class AutoOpMode extends LinearOpMode {
     tasks.addCustomTask("sample_mineral", sampleMineralTask);
     tasks.addCustomTask("land", new LandTask());
     tasks.addCustomTask("drop_team_marker", new TeamMarkerTask());
-
   }
 
   private Target waitForVisibleTarget(int msTimeout) {

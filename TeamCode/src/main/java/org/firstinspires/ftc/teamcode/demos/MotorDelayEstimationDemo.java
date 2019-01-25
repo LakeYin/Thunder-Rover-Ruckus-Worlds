@@ -10,7 +10,7 @@ public class MotorDelayEstimationDemo extends LinearOpMode {
     private static final String kTargetMotorName = "hookLift";
 
     private DcMotor motor;
-    private double targetSpeed = 0.4;
+    private double targetSpeed = -0.5;
 
     @Override
     public void runOpMode() {
@@ -39,7 +39,7 @@ public class MotorDelayEstimationDemo extends LinearOpMode {
     }
 
     private void adjustSpeedUsingTriggers() {
-        targetSpeed = Range.clip(targetSpeed + (gamepad1.left_trigger - gamepad1.right_trigger) * 0.01, -1, 1);
+        targetSpeed = Range.clip(targetSpeed + (gamepad1.left_trigger - gamepad1.right_trigger) * 0.001, -1, 1);
         telemetry.addData("Speed", targetSpeed);
         telemetry.update();
     }
