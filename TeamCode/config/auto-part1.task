@@ -1,6 +1,7 @@
 land
 move 0 -10
 sample_mineral
-move 0 -8
+move 0 -5
 move 35 0
-rotate -45
+move 7 4
+rotate -50
