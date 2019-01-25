@@ -31,6 +31,10 @@ public class MotorAdapter implements IMotor {
     motor.setPower(power);
   }
 
+  public double getPower() {
+    return motor.getPower();
+  }
+
   @Override
   public void addTargetPosition(int tickOffset) {
     motor.setTargetPosition(motor.getCurrentPosition() + tickOffset);

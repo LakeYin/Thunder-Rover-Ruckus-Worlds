@@ -47,13 +47,9 @@ public class TeleOpMode extends OpMode {
   private void controlDriveTrainRightArm(Gamepad gamepad) {
     Coordinate leftTarget = Coordinate.fromXY(gamepad.left_stick_x, -gamepad.left_stick_y);
 
-    if (Math.abs(gamepad.right_stick_x) > 0.1) {
-      bot.drivetrain.setRotationPower(gamepad.right_stick_x);
-    } else {
-      bot.drivetrain.setStrafe(leftTarget, leftTarget.getPolarDistance());
-    }
-
+    bot.drivetrain.setStrafeAndRotation(leftTarget, gamepad.right_stick_x * 0.7, leftTarget.getPolarDistance());
     bot.rightArm.setLiftPower((booleanToInt(gamepad.dpad_up) - booleanToInt(gamepad.dpad_down)) * LIFT_POWER);
+
     controlClawByTriggers(bot.rightArm, gamepad);
   }
 
@@ -67,6 +63,6 @@ public class TeleOpMode extends OpMode {
   }
 
   private void controlClawByTriggers(Arm arm, Gamepad gamepad) {
-    arm.moveGrabber((gamepad.left_trigger - gamepad.right_trigger) * 0.01);
+    arm.moveGrabber((gamepad.right_trigger - gamepad.left_trigger) * 0.01);
   }
 }
