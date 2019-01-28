@@ -40,7 +40,6 @@ public class Bot {
   // Hardware
   public final Arm leftArm, rightArm;
   public final SimpleArm hookArm;
-  public final Servo teamMarker;
 
   public Bot(HardwareMap hardware,
       Telemetry telemetry,
@@ -102,7 +101,6 @@ public class Bot {
     hookLift.setDirection(Direction.FORWARD);
 
     hookArm = new SimpleArm(hookLift);
-    teamMarker = servoHw.get("teamMarker");
 
     instance = this;
   }

@@ -50,8 +50,6 @@ public class SampleMineralTask implements Task {
   }
 
   private void runMineralCheck() {
-    final StrafingDriveTrain driveTrain = Bot.getInstance().drivetrain;
-
     if (detectedGold()) {
       knockMineral();
       return;
@@ -69,7 +67,7 @@ public class SampleMineralTask implements Task {
     switchLeft();
 
     knockMineral();
-    driveTrain.strafeLeft(schema.distanceBetweenMinerals);
+    switchRight();
   }
 
   private void switchLeft() {
@@ -99,14 +97,16 @@ public class SampleMineralTask implements Task {
       long startTime = System.currentTimeMillis();
       Optional<Mineral> recognition;
 
+      Thread.sleep(schema.delayBeforeRecognition);
       while (!(recognition = detector.currentRecognition()).isPresent() &&
-          System.currentTimeMillis() < startTime + schema.delayBeforeRecognition) {
+          System.currentTimeMillis() < startTime + 500) {
         if (Thread.interrupted())
           throw new InterruptedException("Interrupted while waiting for mineral recognition");
+
+        Bot.getInstance().opMode.telemetry.addData("Seen", recognition);
+        Bot.getInstance().opMode.telemetry.update();
       }
 
-      Bot.getInstance().opMode.telemetry.addData("Seen", recognition);
-      Bot.getInstance().opMode.telemetry.update();
 
       return recognition.orElse(Mineral.SILVER) == Mineral.GOLD;
 

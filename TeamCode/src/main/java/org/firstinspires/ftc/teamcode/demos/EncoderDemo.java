@@ -10,10 +10,10 @@ import java.util.stream.Stream;
 public class EncoderDemo extends LinearOpMode {
 
   // Change these values to your liking
-  private static final double kPower = 0.5;
+  private static final double kPower = -0.4;
   private static final int kRuntime = 5;
   private static final String[] kMotorsToTest = {
-      "motorFL", "motorFR", "motorBL", "motorBR"
+      "hookLift"
   };
 
   @Override
@@ -32,11 +32,14 @@ public class EncoderDemo extends LinearOpMode {
       motor.setPower(kPower);
 
       double runtime = getRuntime();
-      while (opModeIsActive() && getRuntime() - runtime < kRuntime) {
+      while (opModeIsActive() && !isStopRequested() && !gamepad1.y) {
         telemetry.addData("Position", motor.getCurrentPosition());
+        telemetry.addData("Press Y", "to stop");
         telemetry.update();
       }
       motor.setPower(0);
     }
+
+    while (!isStopRequested() && opModeIsActive());
   }
 }

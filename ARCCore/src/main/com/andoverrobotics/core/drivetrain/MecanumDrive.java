@@ -11,6 +11,7 @@ import com.andoverrobotics.core.utilities.MotorPair;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
+import java.util.stream.Stream;
 
 /**
  * Implements the {@link StrafingDriveTrain} for a Mecanum drivetrain. <p> See {@link
@@ -184,7 +185,7 @@ public class MecanumDrive extends StrafingDriveTrain {
       motor.startRunToPosition(rightOffset, rightPower);
     }
 
-    while (isBusy() && opModeIsActive()) {
+    while (isBusy() && opModeIsActive() && meanVarianceFromTargetPosition() > 10) {
     }
 
     stop();
@@ -213,7 +214,7 @@ public class MecanumDrive extends StrafingDriveTrain {
       motor.startRunToPosition((int) rotationTicks, clippedPower);
     }
 
-    while (isBusy() && opModeIsActive()) {
+    while (isBusy() && opModeIsActive() && meanVarianceFromTargetPosition() > 10) {
     }
 
     stop();
@@ -336,5 +337,14 @@ public class MecanumDrive extends StrafingDriveTrain {
   @Override
   protected IMotor[] getMotors() {
     return allMotors();
+  }
+
+  private double meanVarianceFromTargetPosition() {
+    int varianceSum = 0;
+    for (MotorAdapter motor : allMotors()) {
+      varianceSum += Math.abs(motor.getMotor().getTargetPosition() - motor.getMotor().getCurrentPosition());
+    }
+
+    return varianceSum / 4;
   }
 }

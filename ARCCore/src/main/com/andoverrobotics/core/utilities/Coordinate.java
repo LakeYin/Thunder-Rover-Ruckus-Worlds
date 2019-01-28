@@ -119,4 +119,8 @@ public class Coordinate {
   public int hashCode() {
     return Objects.hash(x, y);
   }
+
+  public Coordinate add(Coordinate other) {
+    return new Coordinate(x + other.x, y + other.y);
+  }
 }

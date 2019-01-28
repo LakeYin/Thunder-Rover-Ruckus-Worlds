@@ -4,16 +4,17 @@ import org.firstinspires.ftc.teamcode.Bot;
 
 public class TeamMarkerTask implements Task {
 
+  public TeamMarkerTask() {
+    Bot.getInstance().rightArm.setGrabberPosition(0.7);
+  }
+
   @Override
   public void run() throws InterruptedException {
     Bot bot = Bot.getInstance();
-    bot.rightArm.setLiftPower(-0.5);
-    Thread.sleep(500);
+    bot.rightArm.closeGrabber();
+    Thread.sleep(400);
+    bot.rightArm.setLiftPower(-0.3);
+    Thread.sleep(800);
     bot.rightArm.setLiftPower(0);
-
-    bot.teamMarker.setPosition(0.0);
-    Thread.sleep(1000);
-    bot.teamMarker.setPosition(0.5);
-    Thread.sleep(1000);
   }
 }

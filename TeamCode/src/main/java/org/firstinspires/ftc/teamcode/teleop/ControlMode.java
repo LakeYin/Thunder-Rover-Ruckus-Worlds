@@ -49,13 +49,13 @@ public enum ControlMode implements IControlMode {
 
   private static void controlArmWithMicroAdjust(Gamepad gamepad, Arm arm) {
     controlArm(gamepad, arm);
-    Bot.getInstance().drivetrain.setStrafe(getMicroAdjustCoord(gamepad), 0.45);
+    Bot.getInstance().drivetrain.setStrafe(getMicroAdjustCoord(gamepad), 0.5);
   }
 
   static Coordinate getMicroAdjustCoord(Gamepad gamepad) {
     double x = booleanToInt(gamepad.dpad_right) - booleanToInt(gamepad.dpad_left);
     double y = booleanToInt(gamepad.dpad_up) - booleanToInt(gamepad.dpad_down);
-    return Coordinate.fromXY(x, y);
+    return Coordinate.fromXY(x * 1.4, y);
   }
 
   static int booleanToInt(boolean bool) {

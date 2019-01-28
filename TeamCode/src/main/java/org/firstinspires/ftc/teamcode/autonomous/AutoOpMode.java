@@ -13,32 +13,28 @@ import org.firstinspires.ftc.teamcode.autonomous.tasks.Task;
 import org.firstinspires.ftc.teamcode.autonomous.tasks.TaskFactory;
 import org.firstinspires.ftc.teamcode.autonomous.tasks.TeamMarkerTask;
 
-@Autonomous(name = "Main Autonomous", group = "ARC Lightning")
-public class AutoOpMode extends LinearOpMode {
+public abstract class AutoOpMode extends LinearOpMode {
 
   private static final String CONFIG_PATH = "/storage/self/primary/FIRST/config/";
 
-  private static final String
-      CRATER_LEFT_TASK = CONFIG_PATH + "auto-craterLeft.task",
-      CRATER_RIGHT_TASK = CONFIG_PATH + "auto-craterRight.task";
-
   private AutonomousBot bot;
   private TaskFactory tasks;
-  private VuMarkDetector detector;
-  private SampleMineralTask sampleMineralTask;
 
   @Override
-  public void runOpMode() {
+  public abstract void runOpMode();
+
+  protected void runOpMode(String part2Filename) {
     try {
 
       initFields();
       spamTelemetryAndWaitForStart();
       throwIfInterrupted();
       executeCommands(CONFIG_PATH + "auto-part1.task");
-      executeCommands(taskFilenameForDetectedTarget());
+      executeCommands(CONFIG_PATH + part2Filename);
 
     } catch (Exception e) {
       e.printStackTrace();
+      stopSpammingTelemetry();
       //cleanup();
     }
   }
@@ -55,41 +51,15 @@ public class AutoOpMode extends LinearOpMode {
       throw new InterruptedException("OpMode stopped manually");
   }
 
-  private String taskFilenameForDetectedTarget() {
-    detector = new VuMarkDetector();
-    detector.activate();
-    Target target = waitForVisibleTarget(5000);
-
-    if (target == null) {
-      return Math.random() > 0.5 ? CRATER_LEFT_TASK : CRATER_RIGHT_TASK;
-    }
-
-    return target == Target.BACK_SPACE || target == Target.FRONT_CRATERS ?
-        CRATER_LEFT_TASK : CRATER_RIGHT_TASK;
-  }
-
   private void initFields() throws IOException {
     VuforiaManager.initVuforia(hardwareMap);
     bot = new AutonomousBot(this);
     tasks = new TaskFactory(bot.drivetrain);
-    sampleMineralTask = new SampleMineralTask(hardwareMap);
+    SampleMineralTask sampleMineralTask = new SampleMineralTask(hardwareMap);
 
     tasks.addCustomTask("sample_mineral", sampleMineralTask);
-    tasks.addCustomTask("land", new LandTask());
+    tasks.addCustomTask("land", new LandTask(bot.mainConfig.getBoolean("landWithEncoder")));
     tasks.addCustomTask("drop_team_marker", new TeamMarkerTask());
-  }
-
-  private Target waitForVisibleTarget(int msTimeout) {
-    double startTime = getRuntime();
-
-    while ((getRuntime() - startTime) * 1000 < msTimeout && !Thread.interrupted() && opModeIsActive()) {
-      Optional<Target> target = detector.visibleTarget();
-
-      if (target.isPresent())
-        return target.get();
-    }
-
-    return null;
   }
 
   private void executeCommands(String filename) throws FileNotFoundException, InterruptedException {
@@ -103,11 +73,33 @@ public class AutoOpMode extends LinearOpMode {
         telemetry.addData("Running task", command);
         telemetry.update();
         Log.d("Task Runner", String.format("Running %s from file %s", command, filename));
+        //startSpammingTelemetry();
         task.run();
+        //stopSpammingTelemetry();
         throwIfInterrupted();
       }
     }
     telemetry.addData("Done running", filename);
     telemetry.update();
+  }
+
+  private final Runnable spamTelemetry = () -> {
+    while (!Thread.interrupted()) {
+      telemetry.addData("Connection Keep-Alive", Math.random());
+      telemetry.update();
+    }
+  };
+
+  private Thread telemetrySpammer;
+
+  private void stopSpammingTelemetry() {
+    if (telemetrySpammer != null)
+      telemetrySpammer.interrupt();
+  }
+
+  private void startSpammingTelemetry() {
+    stopSpammingTelemetry();
+    telemetrySpammer = new Thread(spamTelemetry);
+    telemetrySpammer.start();
   }
 }
