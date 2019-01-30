@@ -37,10 +37,11 @@ public class TeleOpMode extends OpMode {
     // Control modes accessible via this statement
     // controlMapper.applyGamepadInputs(gamepad1, gamepad2);
 
-    controlRightArm(gamepad1);
+    controlRightArm(gamepad2);
     controlLeftArm(gamepad2);
+    controlHookArm(gamepad2);
 
-    Coordinate strafe = getLeftDrivetrainTarget(gamepad1).add(getMicroAdjustCoord(gamepad2).multiply(0.45));
+    Coordinate strafe = getLeftDrivetrainTarget(gamepad1).add(getMicroAdjustCoord(gamepad1).multiply(0.45));
     bot.drivetrain.setStrafeAndRotation(strafe, gamepad1.right_stick_x * 0.8,
         strafe.getPolarDistance());
 
@@ -63,12 +64,14 @@ public class TeleOpMode extends OpMode {
   private void controlLeftArm(Gamepad gamepad) {
     controlClawByTriggers(bot.leftArm, gamepad);
     bot.leftArm.setLiftPower(-gamepad.right_stick_y * LIFT_POWER);
+  }
 
+  private void controlHookArm(Gamepad gamepad) {
     if (gamepad.a)
       controlMapper.cheer();
 
     if (!taskHost.isRunning())
-      bot.hookArm.setLiftPower(-gamepad.left_stick_y);
+      bot.hookArm.setLiftPower(booleanToInt(gamepad.dpad_down) - booleanToInt(gamepad.dpad_up));
 
     if (gamepad.y)
       taskHost.beginAsync(TeleOpTaskHost.raiseHook);
