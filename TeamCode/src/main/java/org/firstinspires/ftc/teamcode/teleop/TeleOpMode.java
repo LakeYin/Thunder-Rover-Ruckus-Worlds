@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.teleop;
 import com.andoverrobotics.core.utilities.Coordinate;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.Arm;
 
@@ -13,6 +14,9 @@ import static org.firstinspires.ftc.teamcode.teleop.ControlMode.getMicroAdjustCo
 
 @TeleOp(name = "Main TeleOp", group = "ARC Lightning")
 public class TeleOpMode extends OpMode {
+
+  private static final double HOOK_ADJUST_POWER = 1;
+  private static final double LIFT_POWER = 0.25;
 
   private TeleOpBot bot;
   private ControlMapper controlMapper;
@@ -37,51 +41,52 @@ public class TeleOpMode extends OpMode {
     // Control modes accessible via this statement
     // controlMapper.applyGamepadInputs(gamepad1, gamepad2);
 
-    controlRightArm(gamepad2);
-    controlLeftArm(gamepad2);
+    controlDrivetrain(gamepad1);
+    controlArm(bot.leftArm, -gamepad2.left_stick_y, gamepad2.left_trigger, gamepad2.left_bumper);
+    controlArm(bot.rightArm, -gamepad2.right_stick_y, gamepad2.right_trigger,
+        gamepad2.right_bumper);
     controlHookArm(gamepad2);
-
-    Coordinate strafe = getLeftDrivetrainTarget(gamepad1).add(getMicroAdjustCoord(gamepad1).multiply(0.45));
-    bot.drivetrain.setStrafeAndRotation(strafe, gamepad1.right_stick_x * 0.8,
-        strafe.getPolarDistance());
-
 
     telemetry.addData("Connection Keep-Alive", getRuntime());
   }
 
-  private static final double LIFT_POWER = 0.2;
+  private void controlArm(Arm arm, float rotationPower, float closeGrabberPower,
+      boolean grabberOpen) {
+    arm.setLiftPower(rotationPower * LIFT_POWER);
+    if (grabberOpen) {
+      arm.openGrabber();
+    } else {
+      arm.moveGrabber(closeGrabberPower * -0.1);
+    }
+  }
 
-  private void controlRightArm(Gamepad gamepad) {
-    bot.rightArm.setLiftPower((booleanToInt(gamepad.y) - booleanToInt(gamepad.a)) * LIFT_POWER);
-
-    controlClawByTriggers(bot.rightArm, gamepad);
+  private void controlDrivetrain(Gamepad gamepad) {
+    Coordinate strafe = getLeftDrivetrainTarget(gamepad)
+        .add(getMicroAdjustCoord(gamepad).multiply(0.45));
+    bot.drivetrain.setStrafeAndRotation(strafe, gamepad.right_stick_x * 0.8,
+        strafe.getPolarDistance());
   }
 
   private Coordinate getLeftDrivetrainTarget(Gamepad gamepad) {
     return Coordinate.fromXY(gamepad.left_stick_x, -gamepad.left_stick_y);
   }
 
-  private void controlLeftArm(Gamepad gamepad) {
-    controlClawByTriggers(bot.leftArm, gamepad);
-    bot.leftArm.setLiftPower(-gamepad.right_stick_y * LIFT_POWER);
-  }
-
   private void controlHookArm(Gamepad gamepad) {
-    if (gamepad.a)
+    if (gamepad.a) {
       controlMapper.cheer();
-
-    if (!taskHost.isRunning())
-      bot.hookArm.setLiftPower(booleanToInt(gamepad.dpad_down) - booleanToInt(gamepad.dpad_up));
-
-    if (gamepad.y)
-      taskHost.beginAsync(TeleOpTaskHost.raiseHook);
-    else if (gamepad.x) {
-      taskHost.abort();
-      bot.hookArm.setLiftPower(0);
     }
-  }
 
-  private void controlClawByTriggers(Arm arm, Gamepad gamepad) {
-    arm.moveGrabber((gamepad.right_trigger - gamepad.left_trigger) * 0.01);
+    int liftPower = booleanToInt(gamepad.dpad_down) - booleanToInt(gamepad.dpad_up);
+    if (liftPower != 0 && taskHost.isRunning()) {
+      taskHost.abort();
+    }
+    if (!taskHost.isRunning()) {
+      bot.hookArm.liftMotor.setMode(RunMode.RUN_WITHOUT_ENCODER);
+      bot.hookArm.setLiftPower(liftPower * HOOK_ADJUST_POWER);
+    }
+
+    if (gamepad.y) {
+      taskHost.beginAsync(TeleOpTaskHost.raiseHook);
+    }
   }
 }

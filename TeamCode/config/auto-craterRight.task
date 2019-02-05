@@ -1,6 +1,6 @@
-move 74 3
-rotate -140
+move 75 3
+rotate -143
 move 0 -60
 drop_team_marker
-move -5 92
+move -8 92
 

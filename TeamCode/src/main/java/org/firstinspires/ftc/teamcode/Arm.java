@@ -24,11 +24,11 @@ public class Arm extends SimpleArm {
   }
 
   public void openGrabber() {
-    setGrabberPosition(0.0);
+    setGrabberPosition(1.0);
   }
 
   public void closeGrabber() {
-    setGrabberPosition(1.0);
+    setGrabberPosition(0.0);
   }
 
   public void moveGrabber(double offset) {

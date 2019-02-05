@@ -5,7 +5,9 @@ import com.andoverrobotics.core.drivetrain.StrafingDriveTrain;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import java.io.IOException;
 import java.util.Optional;
+import org.firstinspires.ftc.robotcore.external.android.AndroidTextToSpeech;
 import org.firstinspires.ftc.teamcode.Bot;
+import org.firstinspires.ftc.teamcode.autonomous.AutonomousBot;
 import org.firstinspires.ftc.teamcode.autonomous.MineralDetector;
 import org.firstinspires.ftc.teamcode.autonomous.MineralDetector.Mineral;
 
@@ -22,8 +24,11 @@ public class SampleMineralTask implements Task {
 
   private ConfigSchema schema;
   private final MineralDetector detector;
+  private AndroidTextToSpeech tts;
 
   public SampleMineralTask(HardwareMap map) {
+    tts = new AndroidTextToSpeech();
+    tts.initialize();
     populateSchema();
     detector = new MineralDetector(map);
   }
@@ -87,6 +92,7 @@ public class SampleMineralTask implements Task {
   }
 
   private void knockMineral() {
+    tts.speak("Look, I found the right mineral to knock");
     final StrafingDriveTrain drive = Bot.getInstance().drivetrain;
     drive.driveBackwards(schema.knockDistance);
     drive.driveForwards(schema.knockDistance);
@@ -97,16 +103,15 @@ public class SampleMineralTask implements Task {
       long startTime = System.currentTimeMillis();
       Optional<Mineral> recognition;
 
-      Thread.sleep(schema.delayBeforeRecognition);
+      AutonomousBot.sleep(schema.delayBeforeRecognition);
       while (!(recognition = detector.currentRecognition()).isPresent() &&
-          System.currentTimeMillis() < startTime + 500) {
+          System.currentTimeMillis() < startTime + 200) {
         if (Thread.interrupted())
           throw new InterruptedException("Interrupted while waiting for mineral recognition");
 
         Bot.getInstance().opMode.telemetry.addData("Seen", recognition);
         Bot.getInstance().opMode.telemetry.update();
       }
-
 
       return recognition.orElse(Mineral.SILVER) == Mineral.GOLD;
 

@@ -16,9 +16,7 @@ public class VuforiaManager {
   private static VuforiaLocalizer localizer;
 
   public static void initVuforia(HardwareMap map) {
-    int cameraMonitorViewId = map.appContext.getResources().getIdentifier(
-        "cameraMonitorViewId", "id", map.appContext.getPackageName());
-    VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+    VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
     localizer = getVuforiaLocalizerWithParams(parameters);
   }
 

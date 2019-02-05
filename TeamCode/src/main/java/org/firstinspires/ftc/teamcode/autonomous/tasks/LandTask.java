@@ -1,18 +1,27 @@
 package org.firstinspires.ftc.teamcode.autonomous.tasks;
 
+import com.andoverrobotics.core.config.Configuration;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
+import java.io.IOException;
 import org.firstinspires.ftc.teamcode.Bot;
+import org.firstinspires.ftc.teamcode.autonomous.tasks.SampleMineralTask.ConfigSchema;
 
 public class LandTask implements Task {
-  public static final double POWER = 0.5;
-  public static final int LAND_WAIT = 2000,
-    LAND_ENCODER_TICKS = -6000;
+
+  public static class ConfigSchema {
+    public double strafePower;
+    public int landWaitMs;
+    public int landTicks;
+    public int exitHookWaitMs;
+  }
 
   private boolean useEncoders;
+  private ConfigSchema schema;
 
   public LandTask(boolean useEncoders) {
     this.useEncoders = useEncoders;
+    populateSchema();
   }
 
   private Bot bot = Bot.getInstance();
@@ -26,24 +35,22 @@ public class LandTask implements Task {
 
   @Override
   public void run() throws InterruptedException {
-    positionReporter.start();
     lowerBot();
     exitHook();
     startLowerGrabber();
     strafeBot();
-    positionReporter.interrupt();
   }
 
   private void exitHook() throws InterruptedException {
-    bot.drivetrain.setStrafe(-1, 0, POWER);
-    Thread.sleep(500);
+    bot.drivetrain.setStrafe(-1, 0, schema.strafePower);
+    Thread.sleep(schema.exitHookWaitMs);
     bot.drivetrain.stop();
   }
 
   private void strafeBot() throws InterruptedException {
-    bot.drivetrain.setStrafe(0, -1, POWER);
+    bot.drivetrain.setStrafe(0, -1, schema.strafePower);
     Thread.sleep(250);
-    bot.drivetrain.setStrafe(1, 0, POWER);
+    bot.drivetrain.setStrafe(1, 0, schema.strafePower);
     Thread.sleep(500);
     bot.drivetrain.stop();
   }
@@ -54,15 +61,15 @@ public class LandTask implements Task {
 
       liftMotor.setMode(RunMode.STOP_AND_RESET_ENCODER);
       liftMotor.setMode(RunMode.RUN_TO_POSITION);
-      liftMotor.setTargetPosition(LAND_ENCODER_TICKS);
+      liftMotor.setTargetPosition(schema.landTicks);
       liftMotor.setPower(1);
-      while (liftMotor.getCurrentPosition() - LAND_ENCODER_TICKS > 10 && !Thread.interrupted());
+      while (liftMotor.getCurrentPosition() - schema.landTicks > 10 && !Thread.interrupted());
       liftMotor.setPower(0);
       liftMotor.setMode(RunMode.RUN_WITHOUT_ENCODER);
 
     } else {
       bot.hookArm.setLiftPower(-1.0);
-      Thread.sleep(LAND_WAIT);
+      Thread.sleep(schema.landWaitMs);
       bot.hookArm.setLiftPower(0);
     }
   }
@@ -72,7 +79,7 @@ public class LandTask implements Task {
       try {
         Thread.sleep(2000);
         bot.hookArm.setLiftPower(1.0);
-        Thread.sleep(LAND_WAIT);
+        Thread.sleep(schema.landWaitMs);
         bot.hookArm.setLiftPower(0);
 
         DcMotor liftMotor = bot.hookArm.liftMotor;
@@ -88,5 +95,14 @@ public class LandTask implements Task {
     });
 
     thread.start();
+  }
+
+  private void populateSchema() {
+    try {
+      schema = new ConfigSchema();
+      Configuration.fromPropertiesFile("land.properties").loadToSchema(schema);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 }

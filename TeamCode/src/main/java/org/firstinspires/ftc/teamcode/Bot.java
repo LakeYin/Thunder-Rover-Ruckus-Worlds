@@ -41,7 +41,7 @@ public class Bot {
   public final Arm leftArm, rightArm;
   public final SimpleArm hookArm;
 
-  public Bot(HardwareMap hardware,
+  protected Bot(HardwareMap hardware,
       Telemetry telemetry,
       Context context,
       OpMode opMode) throws IOException {

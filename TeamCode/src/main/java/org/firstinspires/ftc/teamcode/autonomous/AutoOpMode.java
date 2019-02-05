@@ -1,12 +1,9 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import android.util.Log;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Optional;
-import org.firstinspires.ftc.teamcode.autonomous.VuMarkDetector.Target;
 import org.firstinspires.ftc.teamcode.autonomous.tasks.LandTask;
 import org.firstinspires.ftc.teamcode.autonomous.tasks.SampleMineralTask;
 import org.firstinspires.ftc.teamcode.autonomous.tasks.Task;
@@ -43,15 +40,17 @@ public abstract class AutoOpMode extends LinearOpMode {
     while (!opModeIsActive() && !isStopRequested()) {
       telemetry.addData("Waiting in Init", System.currentTimeMillis());
       telemetry.update();
+      telemetry.clearAll();
     }
   }
 
   private void throwIfInterrupted() throws InterruptedException {
-    if (Thread.interrupted())
+    if (Thread.interrupted() || !opModeIsActive())
       throw new InterruptedException("OpMode stopped manually");
   }
 
   private void initFields() throws IOException {
+    telemetry.setAutoClear(false);
     VuforiaManager.initVuforia(hardwareMap);
     bot = new AutonomousBot(this);
     tasks = new TaskFactory(bot.drivetrain);
@@ -85,7 +84,6 @@ public abstract class AutoOpMode extends LinearOpMode {
 
   private final Runnable spamTelemetry = () -> {
     while (!Thread.interrupted()) {
-      telemetry.addData("Connection Keep-Alive", Math.random());
       telemetry.update();
     }
   };
