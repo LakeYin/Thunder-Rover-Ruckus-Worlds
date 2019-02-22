@@ -10,8 +10,8 @@ public class GamepadTrial implements Trial {
 
   @Override
   public void addPrerequisites(Telemetry telemetry) {
-    telemetry.addData("Gamepads 1 and 2", "Leave them at resting positions");
-  }
+      telemetry.addData("Gamepads 1 and 2", "Leave them at resting positions");
+}
 
   @Override
   public boolean runTrial(Telemetry telemetry, LinearOpMode opMode) {
@@ -57,7 +57,12 @@ public class GamepadTrial implements Trial {
   }
 
   private void assertFalse(boolean value, String valueName) {
-    assertEqual(false, value, valueName + "not false");
+    assertEqual(false, value, valueName + " not false");
+  }
+
+  private void assertEqual(double expected, double value, String message) {
+    if (Math.abs(value - expected) > 1e-5)
+      throw new RuntimeException(String.format("%.4f != %.4f: %s", value, expected, message));
   }
 
   private <T> void assertEqual(T expected, T value, String message) {

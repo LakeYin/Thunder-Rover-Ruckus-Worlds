@@ -345,6 +345,6 @@ public class MecanumDrive extends StrafingDriveTrain {
       varianceSum += Math.abs(motor.getMotor().getTargetPosition() - motor.getMotor().getCurrentPosition());
     }
 
-    return varianceSum / 4;
+    return varianceSum / 4.0;
   }
 }

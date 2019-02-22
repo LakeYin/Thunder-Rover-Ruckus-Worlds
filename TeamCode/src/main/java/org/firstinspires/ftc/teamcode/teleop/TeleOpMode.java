@@ -16,7 +16,7 @@ import static org.firstinspires.ftc.teamcode.teleop.ControlMode.getMicroAdjustCo
 public class TeleOpMode extends OpMode {
 
   private static final double HOOK_ADJUST_POWER = 1;
-  private static final double LIFT_POWER = 0.25;
+  private static final double LIFT_POWER = 0.35;
 
   private TeleOpBot bot;
   private ControlMapper controlMapper;
@@ -47,12 +47,18 @@ public class TeleOpMode extends OpMode {
         gamepad2.right_bumper);
     controlHookArm(gamepad2);
 
+    bot.leftArm.setExtenderPower(gamepad1.left_trigger * (gamepad1.left_bumper ? -1 : 1));
+    bot.rightArm.setExtenderPower(gamepad1.right_trigger * (gamepad1.right_bumper ? -1 : 1));
+
     telemetry.addData("Connection Keep-Alive", getRuntime());
+    addPowerDrawDebug();
   }
 
   private void controlArm(Arm arm, float rotationPower, float closeGrabberPower,
       boolean grabberOpen) {
+
     arm.setLiftPower(rotationPower * LIFT_POWER);
+
     if (grabberOpen) {
       arm.openGrabber();
     } else {
@@ -63,7 +69,8 @@ public class TeleOpMode extends OpMode {
   private void controlDrivetrain(Gamepad gamepad) {
     Coordinate strafe = getLeftDrivetrainTarget(gamepad)
         .add(getMicroAdjustCoord(gamepad).multiply(0.45));
-    bot.drivetrain.setStrafeAndRotation(strafe, gamepad.right_stick_x * 0.8,
+    double microRotatePower = (booleanToInt(gamepad.b) - booleanToInt(gamepad.x)) * 0.25;
+    bot.drivetrain.setStrafeAndRotation(strafe, gamepad.right_stick_x + microRotatePower,
         strafe.getPolarDistance());
   }
 
@@ -72,12 +79,8 @@ public class TeleOpMode extends OpMode {
   }
 
   private void controlHookArm(Gamepad gamepad) {
-    if (gamepad.a) {
-      controlMapper.cheer();
-    }
-
     int liftPower = booleanToInt(gamepad.dpad_down) - booleanToInt(gamepad.dpad_up);
-    if (liftPower != 0 && taskHost.isRunning()) {
+    if ((liftPower != 0 || gamepad.a) && taskHost.isRunning()) {
       taskHost.abort();
     }
     if (!taskHost.isRunning()) {
@@ -88,5 +91,10 @@ public class TeleOpMode extends OpMode {
     if (gamepad.y) {
       taskHost.beginAsync(TeleOpTaskHost.raiseHook);
     }
+  }
+
+  private void addPowerDrawDebug() {
+    telemetry.addData("Hub 2 total current draw", bot.hub2.getTotalModuleCurrentDraw());
+    telemetry.addData("Hub 7 total current draw", bot.hub7.getTotalModuleCurrentDraw());
   }
 }

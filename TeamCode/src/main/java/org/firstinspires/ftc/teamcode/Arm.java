@@ -1,15 +1,18 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Arm extends SimpleArm {
 
   private final Servo grabber;
+  private final CRServo extender;
 
-  public Arm(DcMotor liftMotor, Servo grabber, double openPos, double closedPos) {
+  public Arm(DcMotor liftMotor, Servo grabber, CRServo extender, double openPos, double closedPos) {
     super(liftMotor);
     this.grabber = grabber;
+    this.extender = extender;
 
     initScaleRange(openPos, closedPos);
   }
@@ -41,5 +44,9 @@ public class Arm extends SimpleArm {
 
   public double getGrabberPosition() {
     return grabber.getPosition();
+  }
+
+  public void setExtenderPower(double power) {
+    extender.setPower(power);
   }
 }

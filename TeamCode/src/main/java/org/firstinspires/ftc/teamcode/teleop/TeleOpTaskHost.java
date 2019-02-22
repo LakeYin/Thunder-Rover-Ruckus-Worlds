@@ -1,12 +1,8 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
-import android.util.Log;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import org.firstinspires.ftc.teamcode.Bot;
-import org.firstinspires.ftc.teamcode.autonomous.tasks.LandTask;
 
 public class TeleOpTaskHost {
   public static final Runnable raiseHook = () -> {

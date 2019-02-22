@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 import java.io.IOException;
 import org.firstinspires.ftc.teamcode.Bot;
-import org.firstinspires.ftc.teamcode.autonomous.tasks.SampleMineralTask.ConfigSchema;
 
 public class LandTask implements Task {
 
@@ -25,13 +24,6 @@ public class LandTask implements Task {
   }
 
   private Bot bot = Bot.getInstance();
-  private Thread positionReporter = new Thread(() -> {
-    while (!Thread.interrupted()) {
-      bot.telemetry
-          .addData("Hook position", bot.hookArm.liftMotor.getCurrentPosition());
-      bot.telemetry.update();
-    }
-  });
 
   @Override
   public void run() throws InterruptedException {
