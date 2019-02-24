@@ -4,6 +4,7 @@ import android.content.Context;
 import com.andoverrobotics.core.config.Configuration;
 import com.andoverrobotics.core.drivetrain.MecanumDrive;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
@@ -88,10 +89,12 @@ public class Bot {
     leftLift.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
     rightLift.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
 
+    CRServo leftExtender = hardware.crservo.get("leftExtender");
+    leftExtender.setDirection(Direction.REVERSE);
     leftArm = new Arm(
         leftLift,
         servoHw.get("leftGrabber"),
-        hardware.crservo.get("leftExtender"),
+        leftExtender,
         mainConfig.getDouble("leftClosed"),
         mainConfig.getDouble("leftOpen")
     );

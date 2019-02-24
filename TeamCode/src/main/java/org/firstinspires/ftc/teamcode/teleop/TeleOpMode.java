@@ -16,7 +16,7 @@ import static org.firstinspires.ftc.teamcode.teleop.ControlMode.getMicroAdjustCo
 public class TeleOpMode extends OpMode {
 
   private static final double HOOK_ADJUST_POWER = 1;
-  private static final double LIFT_POWER = 0.35;
+  private static final double LIFT_POWER = 0.38;
 
   private TeleOpBot bot;
   private ControlMapper controlMapper;

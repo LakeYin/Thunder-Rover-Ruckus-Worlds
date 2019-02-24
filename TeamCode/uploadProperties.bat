@@ -1,1 +1,1 @@
-%localappdata%\Android\Sdk\platform-tools\adb push C:\Users\Michael\code\Rover_Ruckus-2018-2019\TeamCode\config\mainConfig.properties /storage/self/primary/FIRST/config/
+%localappdata%\Android\Sdk\platform-tools\adb push C:\Users\Michael\code\Rover_Ruckus-2018-2019\TeamCode\config\auto-craterLeft.task /storage/self/primary/FIRST/config/
