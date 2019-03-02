@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import org.firstinspires.ftc.teamcode.autonomous.tasks.LandTask;
 import org.firstinspires.ftc.teamcode.autonomous.tasks.SampleMineralTask;
+import org.firstinspires.ftc.teamcode.autonomous.tasks.ScoreMineralTask;
 import org.firstinspires.ftc.teamcode.autonomous.tasks.Task;
 import org.firstinspires.ftc.teamcode.autonomous.tasks.TaskFactory;
 import org.firstinspires.ftc.teamcode.autonomous.tasks.TeamMarkerTask;
@@ -16,6 +17,17 @@ public abstract class AutoOpMode extends LinearOpMode {
 
   private AutonomousBot bot;
   private TaskFactory tasks;
+  private AutoAsyncTaskHost asyncTaskHost;
+
+  private Runnable extendArms = () -> {
+    int armPosition = bot.mainConfig.getInt("armUpPosition") + 100;
+    bot.leftArm.startRunningLiftToPosition(armPosition, 0.15);
+    while (bot.leftArm.isLiftRunningToPosition());
+
+    bot.leftArm.setExtenderPower(0.8);
+    AutonomousBot.sleep(13000);
+    bot.leftArm.setExtenderPower(0);
+  };
 
   @Override
   public abstract void runOpMode();
@@ -26,6 +38,7 @@ public abstract class AutoOpMode extends LinearOpMode {
       initFields();
       spamTelemetryAndWaitForStart();
       throwIfInterrupted();
+      asyncTaskHost.submit(extendArms);
       executeCommands(CONFIG_PATH + "auto-part1.task");
       executeCommands(CONFIG_PATH + part2Filename);
 
@@ -59,6 +72,8 @@ public abstract class AutoOpMode extends LinearOpMode {
     tasks.addCustomTask("sample_mineral", sampleMineralTask);
     tasks.addCustomTask("land", new LandTask(bot.mainConfig.getBoolean("landWithEncoder")));
     tasks.addCustomTask("drop_team_marker", new TeamMarkerTask());
+    tasks.addCustomTask("score_minerals", new ScoreMineralTask());
+    asyncTaskHost = new AutoAsyncTaskHost();
   }
 
   private void executeCommands(String filename) throws FileNotFoundException, InterruptedException {

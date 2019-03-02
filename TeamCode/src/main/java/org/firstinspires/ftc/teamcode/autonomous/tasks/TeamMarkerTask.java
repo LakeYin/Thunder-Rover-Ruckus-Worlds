@@ -12,10 +12,9 @@ public class TeamMarkerTask implements Task {
   @Override
   public void run() throws InterruptedException {
     Bot bot = Bot.getInstance();
+
+    bot.rightArm.startRunningLiftToPosition(-100, 0.3);
+    while (bot.rightArm.isLiftRunningToPosition() && AutonomousBot.isActive());
     bot.rightArm.openGrabber();
-    AutonomousBot.sleep(300);
-    bot.rightArm.setLiftPower(-0.3);
-    AutonomousBot.sleep(1100);
-    bot.rightArm.setLiftPower(0);
   }
 }

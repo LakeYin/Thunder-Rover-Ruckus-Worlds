@@ -29,6 +29,7 @@ public class SampleMineralTask implements Task {
   public SampleMineralTask(HardwareMap map) {
     tts = new AndroidTextToSpeech();
     tts.initialize();
+    tts.setLanguage("es");
     populateSchema();
     detector = new MineralDetector(map);
   }
@@ -92,7 +93,7 @@ public class SampleMineralTask implements Task {
   }
 
   private void knockMineral() {
-    tts.speak("Look, I found the right mineral to knock");
+    tts.speak("Bueno, yo encontré el mineral correcto.");
     final StrafingDriveTrain drive = Bot.getInstance().drivetrain;
     drive.driveBackwards(schema.knockDistance);
     drive.driveForwards(schema.knockDistance);

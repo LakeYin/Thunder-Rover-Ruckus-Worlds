@@ -20,5 +20,8 @@ public class TeleOpBot extends Bot {
       Telemetry telemetry, Context context,
       OpMode opMode) throws IOException {
     super(hardware, telemetry, context, opMode);
+
+    leftArm.liftMotor.setTargetPosition(leftArm.liftMotor.getCurrentPosition());
+    rightArm.liftMotor.setTargetPosition(rightArm.liftMotor.getCurrentPosition());
   }
 }

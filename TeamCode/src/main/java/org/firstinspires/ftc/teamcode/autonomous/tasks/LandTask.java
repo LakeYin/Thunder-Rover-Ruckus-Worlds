@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 import java.io.IOException;
 import org.firstinspires.ftc.teamcode.Bot;
+import org.firstinspires.ftc.teamcode.autonomous.AutonomousBot;
 
 public class LandTask implements Task {
 
@@ -52,10 +53,11 @@ public class LandTask implements Task {
       DcMotor liftMotor = bot.hookArm.liftMotor;
 
       liftMotor.setMode(RunMode.STOP_AND_RESET_ENCODER);
+      while (liftMotor.getCurrentPosition() != 0 && AutonomousBot.isActive());
       liftMotor.setMode(RunMode.RUN_TO_POSITION);
       liftMotor.setTargetPosition(schema.landTicks);
       liftMotor.setPower(1);
-      while (liftMotor.getCurrentPosition() - schema.landTicks > 10 && !Thread.interrupted());
+      while (liftMotor.getCurrentPosition() - schema.landTicks > 10 && AutonomousBot.isActive());
       liftMotor.setPower(0);
       liftMotor.setMode(RunMode.RUN_WITHOUT_ENCODER);
 
@@ -79,7 +81,7 @@ public class LandTask implements Task {
         liftMotor.setMode(RunMode.RUN_TO_POSITION);
         liftMotor.setTargetPosition(0);
         liftMotor.setPower(1);
-        while (liftMotor.getCurrentPosition() < -10 && !Thread.interrupted());
+        while (liftMotor.isBusy() && AutonomousBot.isActive());
         liftMotor.setPower(0);
         liftMotor.setMode(RunMode.RUN_WITHOUT_ENCODER);
 

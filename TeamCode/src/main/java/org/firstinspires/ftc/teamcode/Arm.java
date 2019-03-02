@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Arm extends SimpleArm {
@@ -47,6 +48,16 @@ public class Arm extends SimpleArm {
   }
 
   public void setExtenderPower(double power) {
-    extender.setPower(power);
+    extender.setPower(power * 0.5);
+  }
+
+  public void startRunningLiftToPosition(int newPosition, double speed) {
+    liftMotor.setMode(RunMode.RUN_TO_POSITION);
+    liftMotor.setTargetPosition(newPosition);
+    liftMotor.setPower(Math.abs(speed));
+  }
+
+  public boolean isLiftRunningToPosition() {
+    return liftMotor.isBusy();
   }
 }
