@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.autonomous.tasks;
 import com.andoverrobotics.core.config.Configuration;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
+import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
 import java.io.IOException;
 import org.firstinspires.ftc.teamcode.Bot;
 import org.firstinspires.ftc.teamcode.autonomous.AutonomousBot;
@@ -22,16 +23,29 @@ public class LandTask implements Task {
   public LandTask(boolean useEncoders) {
     this.useEncoders = useEncoders;
     populateSchema();
+    bot.hookArm.liftMotor.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
+    bot.hookArm.setLiftPower(0);
   }
 
   private Bot bot = Bot.getInstance();
 
   @Override
   public void run() throws InterruptedException {
+    raiseRightArm();
     lowerBot();
+    startLowerRightArm();
     exitHook();
     startLowerGrabber();
     strafeBot();
+  }
+
+  private void startLowerRightArm() {
+    bot.rightArm.startRunningLiftToPosition(-10, 0.08);
+  }
+
+  private void raiseRightArm() {
+    bot.rightArm.startRunningLiftToPosition(-240, 0.1);
+    while (bot.rightArm.liftMotor.getCurrentPosition() > -150 && AutonomousBot.isActive());
   }
 
   private void exitHook() throws InterruptedException {
@@ -80,7 +94,7 @@ public class LandTask implements Task {
 
         liftMotor.setMode(RunMode.RUN_TO_POSITION);
         liftMotor.setTargetPosition(0);
-        liftMotor.setPower(1);
+        liftMotor.setPower(0.7);
         while (liftMotor.isBusy() && AutonomousBot.isActive());
         liftMotor.setPower(0);
         liftMotor.setMode(RunMode.RUN_WITHOUT_ENCODER);

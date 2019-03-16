@@ -60,4 +60,10 @@ public class Arm extends SimpleArm {
   public boolean isLiftRunningToPosition() {
     return liftMotor.isBusy();
   }
+
+  public double angle() {
+    return -(liftMotor.getCurrentPosition() - Bot.getInstance().mainConfig
+        .getInt("armHorizontalPosition")) * Math.PI / Bot.getInstance().mainConfig
+        .getInt("armTicksPerPi");
+  }
 }

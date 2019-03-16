@@ -1,1 +1,1 @@
-%localappdata%\Android\Sdk\platform-tools\adb push C:\Users\Michael\code\Rover_Ruckus-2018-2019\TeamCode\config\land.properties /storage/self/primary/FIRST/config/
+for /r %%f in (C:\Users\Michael\code\Rover_Ruckus-2018-2019\TeamCode\config\*) do %localappdata%\Android\Sdk\platform-tools\adb push %%f /storage/self/primary/FIRST/config/; echo %%f

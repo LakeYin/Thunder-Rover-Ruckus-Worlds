@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
+import org.firstinspires.ftc.teamcode.Arm;
+import org.firstinspires.ftc.teamcode.teleop.TeleOpTaskHost;
 
 @Autonomous(name = "AlgorithmicLiftingDemo", group = "ARC Lightning")
 public class AlgorithmicLiftingDemo extends LinearOpMode {
@@ -23,7 +25,7 @@ public class AlgorithmicLiftingDemo extends LinearOpMode {
 
     waitForStart();
 
-    strategy2(leftLift, rightLift);
+    strategy3(leftLift, rightLift);
   }
 
   private void strategy1(DcMotorEx leftLift, DcMotorEx rightLift) {
@@ -65,6 +67,13 @@ public class AlgorithmicLiftingDemo extends LinearOpMode {
     rightLift.setPower(0);
     leftLift.setMode(RunMode.RUN_USING_ENCODER);
     rightLift.setMode(RunMode.RUN_USING_ENCODER);
+  }
+
+  private void strategy3(DcMotorEx leftLift, DcMotorEx rightLift) {
+    TeleOpTaskHost.getRaiseArm(new Arm(leftLift, null, null, 1, 0))
+        .run();
+    TeleOpTaskHost.getRaiseArm(new Arm(rightLift, null, null, 1, 0))
+        .run();
   }
 
   private void setupMotors(DcMotorEx leftLift, DcMotorEx rightLift) {

@@ -24,4 +24,8 @@ public class TeleOpBot extends Bot {
     leftArm.liftMotor.setTargetPosition(leftArm.liftMotor.getCurrentPosition());
     rightArm.liftMotor.setTargetPosition(rightArm.liftMotor.getCurrentPosition());
   }
+
+  public double secondsRemaining() {
+    return 120 - opMode.getRuntime();
+  }
 }
