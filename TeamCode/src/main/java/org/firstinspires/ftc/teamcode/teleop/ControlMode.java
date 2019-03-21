@@ -4,9 +4,7 @@ import com.andoverrobotics.core.utilities.Coordinate;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import org.firstinspires.ftc.teamcode.Arm;
 import org.firstinspires.ftc.teamcode.Bot;
-import org.firstinspires.ftc.teamcode.SimpleArm;
 
 public enum ControlMode implements IControlMode {
   DRIVE(g -> g.y, gamepad -> {

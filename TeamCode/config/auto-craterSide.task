@@ -1,0 +1,6 @@
+land
+move 4 1
+move 0 80
+rotate -40
+move -2 20
+drop_team_marker

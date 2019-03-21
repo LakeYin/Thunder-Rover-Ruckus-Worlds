@@ -14,9 +14,9 @@ public class AutonomousBot extends Bot {
     super(opMode.hardwareMap, opMode.telemetry, opMode.hardwareMap.appContext, opMode);
     currentOpMode = opMode;
 
-    leftArm.liftMotor.setMode(RunMode.STOP_AND_RESET_ENCODER);
-    rightArm.liftMotor.setMode(RunMode.STOP_AND_RESET_ENCODER);
-    while (leftArm.liftMotor.getCurrentPosition() != 0 || rightArm.liftMotor.getCurrentPosition() != 0 && isActive());
+   deposit.slideMotor.setMode(RunMode.STOP_AND_RESET_ENCODER);
+   hookLift.liftMotor.setMode(RunMode.STOP_AND_RESET_ENCODER);
+   intake.slideMotor.setMode(RunMode.STOP_AND_RESET_ENCODER);
   }
 
   public static boolean isActive() {

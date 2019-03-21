@@ -3,10 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import android.content.Context;
 import com.andoverrobotics.core.config.Configuration;
 import com.andoverrobotics.core.drivetrain.MecanumDrive;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -35,18 +33,19 @@ public class Bot {
 
   // Context
   public final Context context;
-  public final OpMode opMode;
+  public final LinearOpMode opMode;
   public final Telemetry telemetry;
 
   // Hardware
-  public final Arm leftArm, rightArm;
-  public final SimpleArm hookArm;
+  public final Intake intake;
+  public final DepositSystem deposit;
+  public final HookLift hookLift;
   public final ExpansionHubEx hub2, hub7;
 
   protected Bot(HardwareMap hardware,
       Telemetry telemetry,
       Context context,
-      OpMode opMode) throws IOException {
+      LinearOpMode opMode) throws IOException {
 
     mainConfig = Configuration.fromPropertiesFile("mainConfig.properties");
 
@@ -84,34 +83,21 @@ public class Bot {
       drivetrain.setDefaultDrivePower(mainConfig.getDouble("defaultDrivePower"));
 //    }
 
-    DcMotor leftLift = motorHw.get("leftLift");
-    DcMotor rightLift = motorHw.get("rightLift");
-    rightLift.setDirection(Direction.REVERSE);
-    leftLift.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
-    rightLift.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
-
-    CRServo leftExtender = hardware.crservo.get("leftExtender");
-    leftArm = new Arm(
-        leftLift,
-        servoHw.get("leftGrabber"),
-        leftExtender,
-        mainConfig.getDouble("leftClosed"),
-        mainConfig.getDouble("leftOpen")
+    intake = new Intake(
+        motorHw.get("intakeSlide"),
+        servoHw.get("intakeOrientator"),
+        hardware.crservo.get("intakeSweeper"));
+    deposit = new DepositSystem(
+        motorHw.get("depositSlide"),
+        servoHw.get("depositOrientator"),
+        this
     );
 
-    rightArm = new Arm(
-        rightLift,
-        servoHw.get("rightGrabber"),
-        hardware.crservo.get("rightExtender"),
-        mainConfig.getDouble("rightClosed"),
-        mainConfig.getDouble("rightOpen")
-    );
 
     DcMotor hookLift = motorHw.get("hookLift");
     hookLift.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
     hookLift.setDirection(Direction.REVERSE);
-
-    hookArm = new SimpleArm(hookLift);
+    this.hookLift = new HookLift(hookLift, this);
 
     instance = this;
   }
