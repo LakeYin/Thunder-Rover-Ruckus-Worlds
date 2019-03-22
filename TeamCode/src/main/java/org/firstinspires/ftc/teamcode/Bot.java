@@ -72,7 +72,7 @@ public class Bot {
       frontRight.setDirection(Direction.REVERSE);
       backRight.setDirection(Direction.REVERSE);
 
-      drivetrain = MecanumDrive.fromOctagonalMotors(
+      drivetrain = MecanumDrive.fromCrossedMotors(
           frontLeft,
           frontRight,
           backLeft,
