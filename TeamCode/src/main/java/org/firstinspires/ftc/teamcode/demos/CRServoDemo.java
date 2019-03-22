@@ -11,7 +11,7 @@ public class CRServoDemo extends OpMode {
 
   @Override
   public void init() {
-    servo = hardwareMap.crservo.get("leftExtender");
+    servo = hardwareMap.crservo.get("intakeSweeper");
   }
 
   @Override

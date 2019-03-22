@@ -7,12 +7,6 @@ import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
-import org.firstinspires.ftc.teamcode.autonomous.tasks.LandTask;
-import org.firstinspires.ftc.teamcode.autonomous.tasks.SampleMineralTask;
-import org.firstinspires.ftc.teamcode.autonomous.tasks.ScoreMineralTask;
-import org.firstinspires.ftc.teamcode.autonomous.tasks.Task;
-import org.firstinspires.ftc.teamcode.autonomous.tasks.TaskFactory;
-import org.firstinspires.ftc.teamcode.autonomous.tasks.TeamMarkerTask;
 
 public abstract class AutoOpMode extends LinearOpMode {
 

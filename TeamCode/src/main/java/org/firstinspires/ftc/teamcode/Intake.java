@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.andoverrobotics.core.config.Configuration;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
@@ -20,13 +21,15 @@ public class Intake {
   public final DcMotor slideMotor;
   public final Servo orientator;
   public final CRServo sweeper;
+  private LinearOpMode opMode;
   public ConfigSchema schema;
 
   public Intake(DcMotor slideMotor, Servo orientator,
-      CRServo sweeper) {
+      CRServo sweeper, LinearOpMode opMode) {
     this.slideMotor = slideMotor;
     this.orientator = orientator;
     this.sweeper = sweeper;
+    this.opMode = opMode;
     loadSchema();
     orientator.scaleRange(schema.orientatorRangeMin, schema.orientatorRangeMax);
   }
@@ -73,31 +76,30 @@ public class Intake {
   public void controlSlidesManually(double power) {
     slideMotor.setMode(RunMode.RUN_WITHOUT_ENCODER);
 
-    if (slideMotorWithinBoundaries())
-      slideMotor.setPower(power);
-    else
+    if (wouldPowerExceedBoundaries(power))
       slideMotor.setPower(0);
+    else
+      slideMotor.setPower(power);
   }
 
   public void runSweeperIn() {
     sweeper.setPower(0.85);
   }
 
-  public void runSweeperOut() {
-    sweeper.setPower(-0.85);
-  }
-
   public void stopSweeper() {
     sweeper.setPower(0);
   }
 
-  private boolean slideMotorWithinBoundaries() {
-    return slideMotor.getCurrentPosition() > 10 && slideMotor.getCurrentPosition() < schema.fullyExtendedTicks - 10;
+  private boolean wouldPowerExceedBoundaries(double power) {
+    return slideMotor.getCurrentPosition() <= 10 && power < 0 ||
+        slideMotor.getCurrentPosition() >= schema.fullyExtendedTicks - 10 && power > 0;
   }
 
   private void runToPosition(int position, double speed) {
     slideMotor.setMode(RunMode.RUN_TO_POSITION);
     slideMotor.setTargetPosition(position);
     slideMotor.setPower(Math.abs(speed));
+    while (slideMotor.isBusy() && opMode.opModeIsActive());
+    slideMotor.setPower(0);
   }
 }

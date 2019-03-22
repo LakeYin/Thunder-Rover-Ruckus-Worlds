@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.andoverrobotics.core.config.Configuration;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -20,19 +21,20 @@ public class DepositSystem {
 
   public final DcMotor slideMotor;
   public final Servo orientator;
-  private Bot bot;
+  private LinearOpMode opMode;
   public final ConfigSchema schema = new ConfigSchema();
 
-  public DepositSystem(DcMotor slideMotor, Servo orientator, Bot bot) {
+  public DepositSystem(DcMotor slideMotor, Servo orientator, LinearOpMode opMode) {
     this.slideMotor = slideMotor;
     this.orientator = orientator;
-    this.bot = bot;
+    this.opMode = opMode;
     loadSchema();
     orientator.scaleRange(schema.orientatorRangeMin, schema.orientatorRangeMax);
   }
 
   public void prepareToDeposit() {
     orientator.setPosition(schema.orientatorPreparationPos);
+    opMode.sleep(300);
   }
 
   public void deposit() {
@@ -40,27 +42,27 @@ public class DepositSystem {
     slideMotor.setTargetPosition(schema.fullyExtendedTicks);
     slideMotor.setPower(Math.abs(schema.slideSpeed));
 
-    while (slideMotor.isBusy() && TeleOpBot.isActive());
+    while (slideMotor.isBusy() && opMode.opModeIsActive());
 
     slideMotor.setPower(0);
 
     orientator.setPosition(schema.orientatorScorePos);
-    bot.opMode.sleep(schema.scoreDelayMs);
+    opMode.sleep(schema.scoreDelayMs);
   }
 
   public void retract() {
     if (Math.abs(slideMotor.getCurrentPosition()) > Math.abs(schema.fullyExtendedTicks * 0.2)) {
       orientator.setPosition(schema.orientatorTransitPos);
-      bot.opMode.sleep(400);
+      opMode.sleep(100);
     }
 
     slideMotor.setMode(RunMode.RUN_TO_POSITION);
     slideMotor.setTargetPosition(0);
     slideMotor.setPower(Math.abs(schema.slideSpeed));
 
-    while (slideMotorAboveFrame() && TeleOpBot.isActive());
+    while (slideMotorAboveFrame() && opMode.opModeIsActive());
     orientator.setPosition(schema.orientatorFlatPos);
-    while (slideMotor.isBusy() && TeleOpBot.isActive());
+    while (slideMotor.isBusy() && opMode.opModeIsActive());
 
     slideMotor.setPower(0);
   }

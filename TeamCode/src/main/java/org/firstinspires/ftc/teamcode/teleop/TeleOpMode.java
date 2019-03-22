@@ -12,9 +12,6 @@ import java.io.IOException;
 @TeleOp(name = "Main TeleOp", group = "ARC")
 public class TeleOpMode extends LinearOpMode {
 
-  private static final double kHookAdjustPower = 0.8;
-  private static final double kDeltaLiftPosition = 15;
-
   private TeleOpBot bot;
 
   @Override
@@ -24,7 +21,7 @@ public class TeleOpMode extends LinearOpMode {
     while (opModeIsActive()) {
 
       controlDrivetrain(gamepad1);
-
+      controlCycle(gamepad2);
 
       telemetry.addData("Connection Keep-Alive", getRuntime());
       addPowerDrawDebug();
@@ -47,6 +44,28 @@ public class TeleOpMode extends LinearOpMode {
     double microRotatePower = (booleanToInt(gamepad.b) - booleanToInt(gamepad.x)) * 0.22;
     bot.drivetrain.setStrafeAndRotation(strafe, gamepad.right_stick_x + microRotatePower,
         strafe.getPolarDistance());
+  }
+
+  private void controlCycle(Gamepad gamepad) {
+    if (gamepad.x) {
+      bot.deposit.retract();
+      bot.intake.extendFully();
+      bot.intake.orientToCollect();
+      bot.intake.runSweeperIn();
+
+    } else if (gamepad.y) {
+      bot.intake.stopSweeper();
+      bot.intake.orientToTransit();
+      bot.intake.retractFully();
+      bot.intake.orientToTransfer();
+
+    } else if (gamepad.b) {
+      bot.intake.orientToTransit();
+      bot.deposit.prepareToDeposit();
+
+    } else if (gamepad.a) {
+      bot.deposit.deposit();
+    }
   }
 
   private Coordinate getLeftDrivetrainTarget(Gamepad gamepad) {

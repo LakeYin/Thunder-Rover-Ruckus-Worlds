@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.andoverrobotics.core.config.Configuration;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
@@ -13,35 +14,32 @@ public class HookLift {
   }
 
   public final DcMotor liftMotor;
-  private final Bot bot;
+  private LinearOpMode opMode;
   private ConfigSchema schema;
 
-  public HookLift(DcMotor liftMotor, Bot bot) {
+  public HookLift(DcMotor liftMotor, LinearOpMode opMode) {
     this.liftMotor = liftMotor;
+    this.opMode = opMode;
     liftMotor.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
-    this.bot = bot;
     loadSchema();
   }
 
   public void liftToHook() {
     runToPosition(schema.topPosition, schema.runningSpeed);
-    while (liftMotor.isBusy());
-    liftMotor.setPower(0);
   }
 
   public void lowerToBottom() {
     runToPosition(0, schema.runningSpeed);
-    while (liftMotor.isBusy());
-    liftMotor.setPower(0);
   }
 
   public void adjust(double power) {
     liftMotor.setMode(RunMode.RUN_WITHOUT_ENCODER);
-    liftMotor.setPower(isLiftInsideBoundaries() ? power : 0);
+    liftMotor.setPower(wouldPowerExceedBoundaries(power) ? 0 : power);
   }
 
-  private boolean isLiftInsideBoundaries() {
-    return liftMotor.getCurrentPosition() > 10 && Math.abs(schema.topPosition - liftMotor.getCurrentPosition()) > 10;
+  private boolean wouldPowerExceedBoundaries(double power) {
+    return liftMotor.getCurrentPosition() <= 10 && power < 0 ||
+        Math.abs(schema.topPosition - liftMotor.getCurrentPosition()) <= 10 && power > 0;
   }
 
   private void loadSchema() {
@@ -57,5 +55,7 @@ public class HookLift {
     liftMotor.setMode(RunMode.RUN_TO_POSITION);
     liftMotor.setTargetPosition(pos);
     liftMotor.setPower(Math.abs(speed));
+    while (liftMotor.isBusy() && opMode.opModeIsActive());
+    liftMotor.setPower(0);
   }
 }
