@@ -32,7 +32,7 @@ public class TeleOpMode extends LinearOpMode {
     }
   }
 
-  private void initialize() {
+  protected void initialize() {
     try {
       bot = TeleOpBot.fromOpMode(this);
     } catch (IOException e) {
@@ -53,7 +53,7 @@ public class TeleOpMode extends LinearOpMode {
     return Coordinate.fromXY(gamepad.left_stick_x, -gamepad.left_stick_y);
   }
 
-  private void addPowerDrawDebug() {
+  protected void addPowerDrawDebug() {
     telemetry.addData("Hub 2 total current draw", bot.hub2.getTotalModuleCurrentDraw());
     telemetry.addData("Hub 7 total current draw", bot.hub7.getTotalModuleCurrentDraw());
   }
