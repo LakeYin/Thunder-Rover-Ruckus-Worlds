@@ -26,7 +26,7 @@ public class IntakeBot extends TeleOpMode {
   }
 
   private void controlIntake(Gamepad gamepad) {
-    Bot.getInstance().intake.controlSlidesManually((gamepad.dpad_left?1:0) - (gamepad.dpad_right?1:0));
+    Bot.getInstance().intake.controlSlidesManually((booleanToInt(gamepad.dpad_left) - booleanToInt(gamepad.dpad_right)));
     if(gamepad.a) {
       if(intakeIsExtended) {
         Bot.getInstance().intake.orientToTransit();

@@ -1,8 +1,5 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
-import static org.firstinspires.ftc.teamcode.teleop.ControlMode.booleanToInt;
-import static org.firstinspires.ftc.teamcode.teleop.ControlMode.getMicroAdjustCoord;
-
 import com.andoverrobotics.core.utilities.Coordinate;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -42,11 +39,14 @@ public class TeleOpMode extends LinearOpMode {
   }
 
   private void controlDrivetrain(Gamepad gamepad) {
-    Coordinate strafe = getLeftDrivetrainTarget(gamepad)
-        .add(getMicroAdjustCoord(gamepad).multiply(0.55));
+    Coordinate strafe = getLeftDrivetrainTarget(gamepad);
     double microRotatePower = (booleanToInt(gamepad.b) - booleanToInt(gamepad.x)) * 0.22;
     bot.drivetrain.setStrafeAndRotation(strafe, gamepad.right_stick_x + microRotatePower,
         strafe.getPolarDistance());
+  }
+
+  public static int booleanToInt(boolean in) {
+    return in ? 1 : 0;
   }
 
   private Coordinate getLeftDrivetrainTarget(Gamepad gamepad) {

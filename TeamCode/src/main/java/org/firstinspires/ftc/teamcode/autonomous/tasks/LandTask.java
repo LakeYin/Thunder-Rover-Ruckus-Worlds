@@ -23,29 +23,18 @@ public class LandTask implements Task {
   public LandTask(boolean useEncoders) {
     this.useEncoders = useEncoders;
     populateSchema();
-    bot.hookArm.liftMotor.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
-    bot.hookArm.setLiftPower(0);
+    bot.hookLift.liftMotor.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
+    bot.hookLift.adjust(0);
   }
 
   private Bot bot = Bot.getInstance();
 
   @Override
   public void run() throws InterruptedException {
-    raiseRightArm();
     lowerBot();
-    startLowerRightArm();
     exitHook();
     startLowerGrabber();
     strafeBot();
-  }
-
-  private void startLowerRightArm() {
-    bot.rightArm.startRunningLiftToPosition(-10, 0.08);
-  }
-
-  private void raiseRightArm() {
-    bot.rightArm.startRunningLiftToPosition(-240, 0.1);
-    while (bot.rightArm.liftMotor.getCurrentPosition() > -150 && AutonomousBot.isActive());
   }
 
   private void exitHook() throws InterruptedException {
@@ -64,7 +53,7 @@ public class LandTask implements Task {
 
   private void lowerBot() throws InterruptedException {
     if (useEncoders) {
-      DcMotor liftMotor = bot.hookArm.liftMotor;
+      DcMotor liftMotor = bot.hookLift.liftMotor;
 
       liftMotor.setMode(RunMode.STOP_AND_RESET_ENCODER);
       while (liftMotor.getCurrentPosition() != 0 && AutonomousBot.isActive());
@@ -76,9 +65,9 @@ public class LandTask implements Task {
       liftMotor.setMode(RunMode.RUN_WITHOUT_ENCODER);
 
     } else {
-      bot.hookArm.setLiftPower(-1.0);
+      bot.hookLift.adjust(-1.0);
       Thread.sleep(schema.landWaitMs);
-      bot.hookArm.setLiftPower(0);
+      bot.hookLift.adjust(0);
     }
   }
 
@@ -86,11 +75,11 @@ public class LandTask implements Task {
     Thread thread = new Thread(() -> {
       try {
         Thread.sleep(2000);
-        bot.hookArm.setLiftPower(1.0);
+        bot.hookLift.adjust(1.0);
         Thread.sleep(schema.landWaitMs);
-        bot.hookArm.setLiftPower(0);
+        bot.hookLift.adjust(0);
 
-        DcMotor liftMotor = bot.hookArm.liftMotor;
+        DcMotor liftMotor = bot.hookLift.liftMotor;
 
         liftMotor.setMode(RunMode.RUN_TO_POSITION);
         liftMotor.setTargetPosition(0);
