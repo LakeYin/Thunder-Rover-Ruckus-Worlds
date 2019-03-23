@@ -1,1 +1,1 @@
-~/Android/Sdk/platform-tools/adb push /home/daniv/Documents/Programs/Thunder-Rover-Ruckus-Worlds/TeamCode/config/* /storage/self/primary/FIRST/config/
+adb push /home/daniv/Documents/Programs/Thunder-Rover-Ruckus-Worlds/TeamCode/config/* /storage/self/primary/FIRST/config/

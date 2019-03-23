@@ -1,40 +1,50 @@
 package org.firstinspires.ftc.teamcode.teleop.chassis;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
-
-import org.firstinspires.ftc.teamcode.DepositSystem;
+import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "DepositTest", group = "ARC")
+public class DepositTest extends LinearOpMode {
 
-public class DepositTest extends TankDriveTester {
+    private final double SORTER_LOADING_POSITION = 0.4, SORTER_TRANSIT_POSITION = 0.2, SORTER_DEPOSIT_POSITION = 0.65;
+    private final double SORTER_DEFAULT_POSITION = SORTER_LOADING_POSITION;
 
-  private DepositSystem deposit;
+    private DcMotor slideMotor;
+    private Servo sorterServo;
 
-  @Override
-  protected void runLoop() {
-    while (opModeIsActive()) {
-      controlDeposit(gamepad1);
+    public void runOpMode() {
+        setup();
+        waitForStart();
+        while (opModeIsActive()) {
+            controlDeposit(gamepad1);
+        }
     }
-  }
 
-  private void controlDeposit(Gamepad gamepad) {
+    private void controlDeposit(Gamepad gamepad) {
+        if (gamepad1.right_trigger >= 0.25)
+            slideMotor.setPower(gamepad1.right_trigger);
+        else if (gamepad1.left_trigger >= 0.25)
+            slideMotor.setPower(-gamepad1.left_trigger);
+        else
+            slideMotor.setPower(0);
 
-    drivetrain.setMovementAndRotation(-gamepad.left_stick_y, gamepad.left_stick_x);
+        double sorterPosition = SORTER_DEFAULT_POSITION;
 
-    if (gamepad.b) {
-      deposit.retract();
+        if(gamepad1.x)
+            sorterPosition = SORTER_DEPOSIT_POSITION;
+        else if (gamepad1.b)
+            sorterPosition = SORTER_TRANSIT_POSITION;
+
+        sorterServo.setPosition(sorterPosition);
+
     }
-    if (gamepad.x || gamepad.a) {
-      deposit.prepareToDeposit();
-    }
-    if (gamepad.y) {
-      deposit.deposit();
-    }
-  }
 
-  protected void setup() {
-    deposit = new DepositSystem(hardwareMap.dcMotor.get("depositSlide"),
-        hardwareMap.servo.get("depositOrientator"), this);
-  }
+    protected void setup() {
+        slideMotor = hardwareMap.dcMotor.get("depositSlide");
+        slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        sorterServo = hardwareMap.servo.get("sorterServo");
+    }
 }
