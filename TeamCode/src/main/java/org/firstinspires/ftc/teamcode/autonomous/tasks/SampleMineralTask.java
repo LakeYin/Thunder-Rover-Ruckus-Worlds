@@ -18,8 +18,6 @@ public class SampleMineralTask implements Task {
     public double knockDistance;
     public double distanceBetweenMinerals;
     public int delayBeforeRecognition;
-    public int degreeBetweenMinerals;
-    public boolean useRotation;
   }
 
   private ConfigSchema schema;
@@ -45,17 +43,13 @@ public class SampleMineralTask implements Task {
 
   // Precondition: detector activated and phone facing minerals
   @Override
-  public void run() {
+  public void run() throws InterruptedException {
     detector.activate();
     runMineralCheck();
     detector.shutdown();
   }
 
-  public void shutdown() {
-    detector.shutdown();
-  }
-
-  private void runMineralCheck() {
+  private void runMineralCheck() throws InterruptedException {
     if (detectedGold()) {
       knockMineral();
       return;
@@ -69,34 +63,41 @@ public class SampleMineralTask implements Task {
       return;
     }
 
-    switchLeft();
-    switchLeft();
+    switchRight();
 
     knockMineral();
-    switchRight();
+
+    switchLeft();
+    switchLeft();
   }
 
   private void switchLeft() {
-    if (schema.useRotation) {
-      Bot.getInstance().drivetrain.rotateClockwise(schema.degreeBetweenMinerals);
-    } else {
-      Bot.getInstance().drivetrain.strafeLeft(schema.distanceBetweenMinerals);
-    }
+    Bot.getInstance().drivetrain.driveBackwards(schema.distanceBetweenMinerals);
   }
 
   private void switchRight() {
-    if (schema.useRotation) {
-      Bot.getInstance().drivetrain.rotateCounterClockwise(schema.degreeBetweenMinerals);
-    } else {
-      Bot.getInstance().drivetrain.strafeRight(schema.distanceBetweenMinerals);
-    }
+    Bot.getInstance().drivetrain.driveForwards(schema.distanceBetweenMinerals);
   }
 
-  private void knockMineral() {
+  private void knockMineral() throws InterruptedException {
     tts.speak("Bueno, yo encontré el mineral correcto.");
-    final StrafingDriveTrain drive = Bot.getInstance().drivetrain;
-    drive.driveBackwards(schema.knockDistance);
-    drive.driveForwards(schema.knockDistance);
+    Bot bot = Bot.getInstance();
+    bot.drivetrain.rotateCounterClockwise(90);
+
+    bot.intake.extend(schema.knockDistance, 0.8);
+    bot.intake.runSweeperIn();
+    Bot.sleep(800);
+    bot.intake.orientToTransit();
+    bot.intake.stopSweeper();
+    bot.intake.retractFully(0.8);
+    bot.intake.orientToTransfer();
+    bot.intake.runSweeperIn();
+    Bot.sleep(2000);
+    bot.intake.stopSweeper();
+    bot.deposit.prepareToDeposit();
+    bot.intake.extend(0.2, 0.4);
+
+    bot.drivetrain.rotateClockwise(90);
   }
 
   private boolean detectedGold() {

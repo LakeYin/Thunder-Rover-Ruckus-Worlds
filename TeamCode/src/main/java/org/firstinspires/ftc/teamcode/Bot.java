@@ -26,6 +26,14 @@ public class Bot {
     return instance;
   }
 
+  public static void sleep(long ms) {
+    try {
+      Thread.sleep(ms);
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+    }
+  }
+
   public final MecanumDrive drivetrain;
 
   // Configuration
@@ -86,18 +94,16 @@ public class Bot {
     intake = new Intake(
         motorHw.get("intakeSlide"),
         servoHw.get("intakeOrientator"),
-        hardware.crservo.get("intakeSweeper"));
+        hardware.crservo.get("intakeSweeper"), opMode);
     deposit = new DepositSystem(
         motorHw.get("depositSlide"),
-        servoHw.get("depositOrientator"),
-        this
-    );
+        servoHw.get("depositOrientator"), opMode);
 
 
     DcMotor hookLift = motorHw.get("hookLift");
     hookLift.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
     hookLift.setDirection(Direction.REVERSE);
-    this.hookLift = new HookLift(hookLift, this);
+    this.hookLift = new HookLift(hookLift, opMode);
 
     instance = this;
   }

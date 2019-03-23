@@ -9,19 +9,16 @@ import java.io.IOException;
 @TeleOp(name = "Main TeleOp", group = "ARC")
 public class TeleOpMode extends LinearOpMode {
 
-  private static final double kHookAdjustPower = 0.8;
-  private static final double kDeltaLiftPosition = 15;
-
   private TeleOpBot bot;
 
   @Override
-  public void runOpMode() {
+  public void runOpMode() throws InterruptedException {
     initialize();
     waitForStart();
     while (opModeIsActive()) {
 
       controlDrivetrain(gamepad1);
-
+      controlCycle(gamepad2);
 
       telemetry.addData("Connection Keep-Alive", getRuntime());
       addPowerDrawDebug();
@@ -29,7 +26,7 @@ public class TeleOpMode extends LinearOpMode {
     }
   }
 
-  protected void initialize() {
+  private void initialize() {
     try {
       bot = TeleOpBot.fromOpMode(this);
     } catch (IOException e) {
@@ -39,22 +36,51 @@ public class TeleOpMode extends LinearOpMode {
   }
 
   private void controlDrivetrain(Gamepad gamepad) {
-    Coordinate strafe = getLeftDrivetrainTarget(gamepad);
+    Coordinate strafe = getLeftDrivetrainTarget(gamepad)
+        .add(getMicroAdjustCoord(gamepad).multiply(0.55));
     double microRotatePower = (booleanToInt(gamepad.b) - booleanToInt(gamepad.x)) * 0.22;
     bot.drivetrain.setStrafeAndRotation(strafe, gamepad.right_stick_x + microRotatePower,
         strafe.getPolarDistance());
   }
 
-  public static int booleanToInt(boolean in) {
-    return in ? 1 : 0;
+  private void controlCycle(Gamepad gamepad) throws InterruptedException {
+    if (gamepad.x) {
+      bot.deposit.retract();
+      bot.intake.extendFully();
+      bot.intake.orientToCollect();
+      bot.intake.runSweeperIn();
+
+    } else if (gamepad.y) {
+      bot.intake.stopSweeper();
+      bot.intake.orientToTransit();
+      bot.intake.retractFully();
+      bot.intake.orientToTransfer();
+
+    } else if (gamepad.b) {
+      bot.intake.orientToTransit();
+      bot.deposit.prepareToDeposit();
+
+    } else if (gamepad.a) {
+      bot.deposit.deposit();
+    }
   }
 
   private Coordinate getLeftDrivetrainTarget(Gamepad gamepad) {
     return Coordinate.fromXY(gamepad.left_stick_x, -gamepad.left_stick_y);
   }
 
-  protected void addPowerDrawDebug() {
+  private void addPowerDrawDebug() {
     telemetry.addData("Hub 2 total current draw", bot.hub2.getTotalModuleCurrentDraw());
     telemetry.addData("Hub 7 total current draw", bot.hub7.getTotalModuleCurrentDraw());
+  }
+
+  private static Coordinate getMicroAdjustCoord(Gamepad gamepad) {
+    double x = booleanToInt(gamepad.dpad_right) - booleanToInt(gamepad.dpad_left);
+    double y = booleanToInt(gamepad.dpad_up) - booleanToInt(gamepad.dpad_down);
+    return Coordinate.fromXY(x * 1.4, y);
+  }
+
+  private static int booleanToInt(boolean bool) {
+    return bool ? 1 : 0;
   }
 }

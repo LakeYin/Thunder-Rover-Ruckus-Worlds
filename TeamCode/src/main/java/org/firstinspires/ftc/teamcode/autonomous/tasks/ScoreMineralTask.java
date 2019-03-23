@@ -10,13 +10,31 @@ public class ScoreMineralTask implements Task {
   @Override
   public void run() throws InterruptedException {
     Bot bot = Bot.getInstance();
-    int downPos = bot.mainConfig.getInt("armDownPosition"),
-        upPos = bot.mainConfig.getInt("armUpPosition");
 
-    while (AutonomousBot.secondsRemaining() > 3) {
-      // TODO Score minerals
+    while (AutonomousBot.secondsRemaining() > 4) {
+      new Thread(bot.deposit::retract).start();
+      bot.intake.extend(0.4, 0.7);
+      bot.intake.orientToCollect();
+      bot.intake.extend(0.6, 0.3);
+      bot.intake.orientToTransit();
+      Bot.sleep(500);
+      bot.intake.retractFully();
+      bot.intake.orientToTransfer();
+      Bot.sleep(600);
+      bot.intake.orientToTransit();
+      bot.deposit.prepareToDeposit();
+      bot.deposit.deposit();
+
+
+      if (AutonomousBot.secondsRemaining() < 4)
+        break;
+
+
+      // score
+      AutonomousBot.sleep(1000);
     }
 
-
+    bot.intake.orientToTransit();
+    bot.intake.extendFully();
   }
 }
