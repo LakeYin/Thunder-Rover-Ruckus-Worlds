@@ -1,1 +1,1 @@
-for /r %%f in (C:\Users\Michael\code\Rover_Ruckus-2018-2019\TeamCode\config\*) do %localappdata%\Android\Sdk\platform-tools\adb push %%f /storage/self/primary/FIRST/config/; echo %%f
+~/Android/Sdk/platform-tools/adb push /home/daniv/Documents/Programs/Thunder-Rover-Ruckus-Worlds/TeamCode/config/* /storage/self/primary/FIRST/config/
