@@ -10,35 +10,31 @@ public class ScoreMineralTask implements Task {
   @Override
   public void run() throws InterruptedException {
     Bot bot = Bot.getInstance();
-    int downPos = bot.mainConfig.getInt("armDownPosition"),
-        upPos = bot.mainConfig.getInt("armUpPosition");
 
-    while (AutonomousBot.secondsRemaining() > 3) {
-      runArmsToPosition(bot, downPos);
-      bot.drivetrain.strafeInches(1, 2, 0.2);
-      bot.leftArm.closeGrabber();
-      bot.rightArm.closeGrabber();
-      AutonomousBot.sleep(400);
+    while (AutonomousBot.secondsRemaining() > 4) {
+      new Thread(bot.deposit::retract).start();
+      bot.intake.extend(0.4, 0.7);
+      bot.intake.orientToCollect();
+      bot.intake.extend(0.6, 0.3);
+      bot.intake.orientToTransit();
+      Bot.sleep(500);
+      bot.intake.retractFully();
+      bot.intake.orientToTransfer();
+      Bot.sleep(600);
+      bot.intake.orientToTransit();
+      bot.deposit.prepareToDeposit();
+      bot.deposit.deposit();
+
 
       if (AutonomousBot.secondsRemaining() < 4)
         break;
 
-      runArmsToPosition(bot, upPos + 40);
-      bot.drivetrain.strafeInches(-1, -2, 0.4);
 
-      bot.leftArm.openGrabber();
-      bot.rightArm.openGrabber();
+      // score
       AutonomousBot.sleep(1000);
     }
 
-    runArmsToPosition(bot, downPos);
-  }
-
-  private void runArmsToPosition(Bot bot, int position) {
-    bot.leftArm.startRunningLiftToPosition(position, kRotationSpeed);
-    bot.rightArm.startRunningLiftToPosition(position, kRotationSpeed);
-    while (bot.leftArm.isLiftRunningToPosition() && bot.rightArm.isLiftRunningToPosition()
-        && AutonomousBot.isActive()) {
-    }
+    bot.intake.orientToTransit();
+    bot.intake.extendFully();
   }
 }

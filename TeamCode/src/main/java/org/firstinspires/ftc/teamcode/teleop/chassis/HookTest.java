@@ -1,11 +1,13 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.teleop.chassis;
+
+import org.firstinspires.ftc.teamcode.HookLift;
 
 public class HookTest extends TankDriveTester {
 
   private HookLift hookLift;
 
   @Override
-  protected void runLoop() {
+  protected void runLoop() throws InterruptedException {
     while (opModeIsActive()) {
       if (Math.abs(gamepad1.left_stick_y) > 0.1) {
         hookLift.adjust(-gamepad1.left_stick_y);

@@ -24,11 +24,11 @@ public class HookLift {
     loadSchema();
   }
 
-  public void liftToHook() {
+  public void liftToHook() throws InterruptedException {
     runToPosition(schema.topPosition, schema.runningSpeed);
   }
 
-  public void lowerToBottom() {
+  public void lowerToBottom() throws InterruptedException {
     runToPosition(0, schema.runningSpeed);
   }
 
@@ -51,11 +51,14 @@ public class HookLift {
     }
   }
 
-  private void runToPosition(int pos, double speed) {
+  private void runToPosition(int pos, double speed) throws InterruptedException {
     liftMotor.setMode(RunMode.RUN_TO_POSITION);
     liftMotor.setTargetPosition(pos);
     liftMotor.setPower(Math.abs(speed));
-    while (liftMotor.isBusy() && opMode.opModeIsActive());
+    while (liftMotor.isBusy() && opMode.opModeIsActive()) {
+      if (Thread.currentThread().isInterrupted())
+        throw new InterruptedException();
+    }
     liftMotor.setPower(0);
   }
 }

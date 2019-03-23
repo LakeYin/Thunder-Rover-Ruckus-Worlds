@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.teleop.chassis;
 
 import com.andoverrobotics.core.drivetrain.TankDrive;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -18,6 +18,6 @@ public abstract class TankDriveTester extends LinearOpMode {
     runLoop();
   }
 
-  protected abstract void runLoop();
+  protected abstract void runLoop() throws InterruptedException;
   protected abstract void setup();
 }

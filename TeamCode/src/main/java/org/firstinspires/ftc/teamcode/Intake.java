@@ -43,17 +43,24 @@ public class Intake {
     }
   }
 
-  public void extendFully() {
+  public void extendFully() throws InterruptedException {
     extendFully(schema.runningSpeed);
   }
-  public void extendFully(double speed) {
-    runToPosition(schema.fullyExtendedTicks, speed);
+  public void extendFully(double speed) throws InterruptedException {
+    extend(1, speed);
   }
 
-  public void retractFully() {
+  public void extend(double amount) throws InterruptedException {
+    extend(amount, schema.runningSpeed);
+  }
+  public void extend(double amount, double speed) throws InterruptedException {
+    runToPosition((int) (schema.fullyExtendedTicks * Math.max(Math.abs(amount), 1)), speed);
+  }
+
+  public void retractFully() throws InterruptedException {
     retractFully(schema.runningSpeed);
   }
-  public void retractFully(double speed) {
+  public void retractFully(double speed) throws InterruptedException {
     runToPosition(0, speed);
   }
 
@@ -95,11 +102,14 @@ public class Intake {
         slideMotor.getCurrentPosition() >= schema.fullyExtendedTicks - 10 && power > 0;
   }
 
-  private void runToPosition(int position, double speed) {
+  private void runToPosition(int position, double speed) throws InterruptedException {
     slideMotor.setMode(RunMode.RUN_TO_POSITION);
     slideMotor.setTargetPosition(position);
     slideMotor.setPower(Math.abs(speed));
-    while (slideMotor.isBusy() && opMode.opModeIsActive());
+    while (slideMotor.isBusy() && opMode.opModeIsActive()) {
+      if (Thread.interrupted())
+        throw new InterruptedException();
+    }
     slideMotor.setPower(0);
   }
 }

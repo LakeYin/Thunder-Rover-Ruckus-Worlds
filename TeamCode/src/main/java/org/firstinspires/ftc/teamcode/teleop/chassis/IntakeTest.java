@@ -1,4 +1,6 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.teleop.chassis;
+
+import org.firstinspires.ftc.teamcode.Intake;
 
 public class IntakeTest extends TankDriveTester {
 

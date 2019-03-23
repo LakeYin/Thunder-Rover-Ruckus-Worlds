@@ -1,8 +1,5 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
-import static org.firstinspires.ftc.teamcode.teleop.ControlMode.booleanToInt;
-import static org.firstinspires.ftc.teamcode.teleop.ControlMode.getMicroAdjustCoord;
-
 import com.andoverrobotics.core.utilities.Coordinate;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -15,7 +12,7 @@ public class TeleOpMode extends LinearOpMode {
   private TeleOpBot bot;
 
   @Override
-  public void runOpMode() {
+  public void runOpMode() throws InterruptedException {
     initialize();
     waitForStart();
     while (opModeIsActive()) {
@@ -46,7 +43,7 @@ public class TeleOpMode extends LinearOpMode {
         strafe.getPolarDistance());
   }
 
-  private void controlCycle(Gamepad gamepad) {
+  private void controlCycle(Gamepad gamepad) throws InterruptedException {
     if (gamepad.x) {
       bot.deposit.retract();
       bot.intake.extendFully();
@@ -75,5 +72,15 @@ public class TeleOpMode extends LinearOpMode {
   private void addPowerDrawDebug() {
     telemetry.addData("Hub 2 total current draw", bot.hub2.getTotalModuleCurrentDraw());
     telemetry.addData("Hub 7 total current draw", bot.hub7.getTotalModuleCurrentDraw());
+  }
+
+  private static Coordinate getMicroAdjustCoord(Gamepad gamepad) {
+    double x = booleanToInt(gamepad.dpad_right) - booleanToInt(gamepad.dpad_left);
+    double y = booleanToInt(gamepad.dpad_up) - booleanToInt(gamepad.dpad_down);
+    return Coordinate.fromXY(x * 1.4, y);
+  }
+
+  private static int booleanToInt(boolean bool) {
+    return bool ? 1 : 0;
   }
 }
