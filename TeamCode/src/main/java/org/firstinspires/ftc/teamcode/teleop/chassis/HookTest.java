@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleop.chassis;
 
+import com.qualcomm.robotcore.hardware.Gamepad;
+
 import org.firstinspires.ftc.teamcode.HookLift;
 
 public class HookTest extends TankDriveTester {
@@ -9,13 +11,17 @@ public class HookTest extends TankDriveTester {
   @Override
   protected void runLoop() throws InterruptedException {
     while (opModeIsActive()) {
-      if (Math.abs(gamepad1.left_stick_y) > 0.1) {
-        hookLift.adjust(-gamepad1.left_stick_y);
-      } else if (gamepad1.y) {
-        hookLift.liftToHook();
-      } else if (gamepad1.a) {
-        hookLift.lowerToBottom();
-      }
+      controlHookLift(gamepad1);
+    }
+  }
+
+  private void controlHookLift(Gamepad gamepad) throws InterruptedException {
+    if (Math.abs(gamepad.left_stick_y) > 0.1) {
+      hookLift.adjust(-gamepad.left_stick_y);
+    } else if (gamepad.y) {
+      hookLift.liftToHook();
+    } else if (gamepad.a) {
+      hookLift.lowerToBottom();
     }
   }
 

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleop.chassis;
 
+import com.qualcomm.robotcore.hardware.Gamepad;
+
 import org.firstinspires.ftc.teamcode.DepositSystem;
 
 public class DepositTest extends TankDriveTester {
@@ -9,17 +11,22 @@ public class DepositTest extends TankDriveTester {
   @Override
   protected void runLoop() {
     while (opModeIsActive()) {
-      drivetrain.setMovementAndRotation(-gamepad1.left_stick_y, gamepad1.left_stick_x);
+      controlDeposit(gamepad1);
+    }
+  }
 
-      if (gamepad1.b) {
-        deposit.retract();
-      }
-      if (gamepad1.x || gamepad1.a) {
-        deposit.prepareToDeposit();
-      }
-      if (gamepad1.y) {
-        deposit.deposit();
-      }
+  private void controlDeposit(Gamepad gamepad) {
+
+    drivetrain.setMovementAndRotation(-gamepad.left_stick_y, gamepad.left_stick_x);
+
+    if (gamepad.b) {
+      deposit.retract();
+    }
+    if (gamepad.x || gamepad.a) {
+      deposit.prepareToDeposit();
+    }
+    if (gamepad.y) {
+      deposit.deposit();
     }
   }
 
