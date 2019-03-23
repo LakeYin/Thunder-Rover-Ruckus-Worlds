@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.teleop.chassis;
 
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.DepositSystem;
+
+@TeleOp(name = "DepositTest", group = "ARC")
 
 public class DepositTest extends TankDriveTester {
 

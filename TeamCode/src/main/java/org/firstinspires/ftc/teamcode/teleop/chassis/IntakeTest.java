@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.teleop.chassis;
 
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.Intake;
 import org.firstinspires.ftc.teamcode.teleop.TeleOpMode;
 
+@TeleOp(name = "IntakeTest", group = "ARC")
 public class IntakeTest extends TankDriveTester {
 
   private Intake intake;

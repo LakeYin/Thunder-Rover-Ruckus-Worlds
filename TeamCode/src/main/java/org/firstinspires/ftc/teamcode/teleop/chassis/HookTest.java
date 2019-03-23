@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.teleop.chassis;
 
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.HookLift;
 
+@TeleOp(name = "HookTest", group = "ARC")
 public class HookTest extends TankDriveTester {
 
   private HookLift hookLift;
