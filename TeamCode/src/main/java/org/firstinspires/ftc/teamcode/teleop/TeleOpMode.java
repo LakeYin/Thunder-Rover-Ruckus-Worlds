@@ -1,5 +1,12 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import static org.firstinspires.ftc.teamcode.teleop.TeleOpState.CYCLE_COLLECT;
+import static org.firstinspires.ftc.teamcode.teleop.TeleOpState.CYCLE_DELIVER;
+import static org.firstinspires.ftc.teamcode.teleop.TeleOpState.CYCLE_SCORE;
+import static org.firstinspires.ftc.teamcode.teleop.TeleOpState.CYCLE_TRANSFER;
+import static org.firstinspires.ftc.teamcode.teleop.TeleOpState.ENDGAME;
+import static org.firstinspires.ftc.teamcode.teleop.TeleOpState.MANUAL;
+
 import com.andoverrobotics.core.utilities.Coordinate;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -10,6 +17,7 @@ import java.io.IOException;
 public class TeleOpMode extends LinearOpMode {
 
   private TeleOpBot bot;
+  private TeleOpState state = MANUAL;
 
   @Override
   public void runOpMode() throws InterruptedException {
@@ -44,25 +52,77 @@ public class TeleOpMode extends LinearOpMode {
   }
 
   private void controlCycle(Gamepad gamepad) throws InterruptedException {
-    if (gamepad.x) {
+    if (gamepad.x && (state == CYCLE_SCORE || state == MANUAL)) {
+      state = CYCLE_COLLECT;
       bot.deposit.retract();
       bot.intake.extendFully();
       bot.intake.orientToCollect();
       bot.intake.runSweeperIn();
 
-    } else if (gamepad.y) {
+    } else if (gamepad.a && state == CYCLE_COLLECT) {
+      state = CYCLE_TRANSFER;
       bot.intake.stopSweeper();
       bot.intake.orientToTransit();
       bot.intake.retractFully();
       bot.intake.orientToTransfer();
 
-    } else if (gamepad.b) {
+    } else if (gamepad.b && (state == CYCLE_TRANSFER || state == MANUAL)) {
+      state = CYCLE_DELIVER;
       bot.intake.orientToTransit();
       bot.deposit.prepareToDeposit();
+      bot.deposit.deliverToLander();
 
-    } else if (gamepad.a) {
+    } else if (gamepad.y && state == CYCLE_DELIVER) {
+      state = CYCLE_SCORE;
+      bot.deposit.deposit();
+    } else if (state == MANUAL) {
+      controlManually();
+    } else if (state == ENDGAME) {
+      controlEndgame();
+    }
+
+    if (gamepad.left_stick_button) {
+      state = MANUAL;
+    } else if (gamepad.right_stick_button) {
+      state = ENDGAME;
+    }
+  }
+
+  private Thread hookService;
+
+  private void controlEndgame() {
+    if (gamepad2.dpad_up && (hookService == null || !hookService.isAlive())) {
+      hookService = new Thread(() -> {
+        try {
+          bot.hookLift.liftToHook();
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+      });
+      hookService.start();
+    }
+
+    else if (Math.abs(gamepad2.left_stick_y) > 0.2) {
+      if (hookService != null && hookService.isAlive())
+        hookService.interrupt();
+      bot.hookLift.adjust(-gamepad2.left_stick_y * 0.2);
+    }
+  }
+
+  private void controlManually() {
+    bot.intake.controlSlidesManually(-gamepad2.left_stick_x);
+    bot.intake.orientManually(-gamepad2.left_stick_y);
+
+    if (gamepad2.dpad_down) {
+      bot.deposit.retract();
+    } else if (gamepad2.dpad_up) {
+      bot.deposit.deliverToLander();
+    }
+    if (gamepad2.dpad_left || gamepad2.dpad_right) {
       bot.deposit.deposit();
     }
+
+    bot.hookLift.adjust(-gamepad2.right_stick_y * 0.5);
   }
 
   private Coordinate getLeftDrivetrainTarget(Gamepad gamepad) {

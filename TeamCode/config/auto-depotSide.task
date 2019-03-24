@@ -1,0 +1,6 @@
+move 4 1
+rotate -90
+drop_team_marker
+move 80 0
+rotate 130
+

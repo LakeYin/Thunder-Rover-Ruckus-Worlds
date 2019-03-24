@@ -2,12 +2,14 @@ package org.firstinspires.ftc.teamcode.autonomous;
 
 import android.util.Log;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Arrays;
-import org.firstinspires.ftc.teamcode.autonomous.tasks.*;
+import org.firstinspires.ftc.teamcode.autonomous.tasks.LandTask;
+import org.firstinspires.ftc.teamcode.autonomous.tasks.SampleMineralTask;
+import org.firstinspires.ftc.teamcode.autonomous.tasks.ScoreMineralTask;
+import org.firstinspires.ftc.teamcode.autonomous.tasks.Task;
+import org.firstinspires.ftc.teamcode.autonomous.tasks.TaskFactory;
+import org.firstinspires.ftc.teamcode.autonomous.tasks.TeamMarkerTask;
 
 public abstract class AutoOpMode extends LinearOpMode {
 
@@ -15,19 +17,17 @@ public abstract class AutoOpMode extends LinearOpMode {
 
   private AutonomousBot bot;
   private TaskFactory tasks;
-  private AutoAsyncTaskHost asyncTaskHost;
 
   @Override
   public abstract void runOpMode();
 
-  protected void runOpMode(String part2Filename) {
+  protected void runOpMode(String filename) {
     try {
 
       initFields();
       spamTelemetryAndWaitForStart();
       throwIfInterrupted();
-      executeCommands(CONFIG_PATH + "auto-part1.task");
-      executeCommands(CONFIG_PATH + part2Filename);
+      executeCommands(CONFIG_PATH + filename);
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -61,7 +61,6 @@ public abstract class AutoOpMode extends LinearOpMode {
     tasks.addCustomTask("land", new LandTask());
     tasks.addCustomTask("drop_team_marker", new TeamMarkerTask());
     tasks.addCustomTask("score_minerals", new ScoreMineralTask());
-    asyncTaskHost = new AutoAsyncTaskHost();
   }
 
   private void executeCommands(String filename) throws FileNotFoundException, InterruptedException {

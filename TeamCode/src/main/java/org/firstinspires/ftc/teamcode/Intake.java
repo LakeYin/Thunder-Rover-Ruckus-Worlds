@@ -68,6 +68,10 @@ public class Intake {
     return slideMotor.isBusy();
   }
 
+  public void orientManually(float delta) {
+    orientator.setPosition(orientator.getPosition() + delta * 0.01);
+  }
+
   public void orientToCollect() {
     orientator.setPosition(schema.orientatorCollectionPos);
   }

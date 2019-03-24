@@ -16,7 +16,7 @@ public class CRServoDemo extends OpMode {
 
   @Override
   public void loop() {
-    servo.setPower(-0.85);
+    servo.setPower(gamepad1.left_stick_y);
     telemetry.addData("Runtime", getRuntime());
     telemetry.addData("getPower", servo.getPower());
   }

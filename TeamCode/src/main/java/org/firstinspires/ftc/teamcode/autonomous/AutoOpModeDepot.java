@@ -6,6 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 public class AutoOpModeDepot extends AutoOpMode {
   @Override
   public void runOpMode() {
-    runOpMode("auto-craterLeft.task");
+    runOpMode("auto-depotSide.task");
   }
 }

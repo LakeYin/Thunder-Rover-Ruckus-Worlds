@@ -37,7 +37,7 @@ public class DepositSystem {
     opMode.sleep(300);
   }
 
-  public void deposit() {
+  public void deliverToLander() {
     slideMotor.setMode(RunMode.RUN_TO_POSITION);
     slideMotor.setTargetPosition(schema.fullyExtendedTicks);
     slideMotor.setPower(Math.abs(schema.slideSpeed));
@@ -45,7 +45,9 @@ public class DepositSystem {
     while (slideMotor.isBusy() && opMode.opModeIsActive());
 
     slideMotor.setPower(0);
+  }
 
+  public void deposit() {
     orientator.setPosition(schema.orientatorScorePos);
     opMode.sleep(schema.scoreDelayMs);
   }

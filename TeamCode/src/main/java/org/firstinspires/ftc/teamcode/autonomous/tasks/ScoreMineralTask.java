@@ -23,6 +23,7 @@ public class ScoreMineralTask implements Task {
       Bot.sleep(600);
       bot.intake.orientToTransit();
       bot.deposit.prepareToDeposit();
+      bot.deposit.deliverToLander();
       bot.deposit.deposit();
 
 
