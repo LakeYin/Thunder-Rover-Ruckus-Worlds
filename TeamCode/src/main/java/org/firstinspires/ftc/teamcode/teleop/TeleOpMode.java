@@ -1,11 +1,6 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
-import static org.firstinspires.ftc.teamcode.teleop.TeleOpState.CYCLE_COLLECT;
-import static org.firstinspires.ftc.teamcode.teleop.TeleOpState.CYCLE_DELIVER;
-import static org.firstinspires.ftc.teamcode.teleop.TeleOpState.CYCLE_SCORE;
-import static org.firstinspires.ftc.teamcode.teleop.TeleOpState.CYCLE_TRANSFER;
-import static org.firstinspires.ftc.teamcode.teleop.TeleOpState.ENDGAME;
-import static org.firstinspires.ftc.teamcode.teleop.TeleOpState.MANUAL;
+import static org.firstinspires.ftc.teamcode.teleop.TeleOpState.*;
 
 import com.andoverrobotics.core.utilities.Coordinate;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -112,6 +107,11 @@ public class TeleOpMode extends LinearOpMode {
   private void controlManually() {
     bot.intake.controlSlidesManually(-gamepad2.left_stick_x);
     bot.intake.orientManually(-gamepad2.left_stick_y);
+
+    if (gamepad2.left_stick_button)
+      bot.intake.runSweeperIn();
+    else
+      bot.intake.stopSweeper();
 
     if (gamepad2.dpad_down) {
       bot.deposit.retract();

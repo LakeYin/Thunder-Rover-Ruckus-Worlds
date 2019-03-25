@@ -55,13 +55,15 @@ public abstract class AutoOpMode extends LinearOpMode {
     VuforiaManager.initVuforia(hardwareMap);
     bot = new AutonomousBot(this);
     tasks = new TaskFactory(bot.drivetrain);
-    SampleMineralTask sampleMineralTask = new SampleMineralTask(hardwareMap);
+    SampleMineralTask sampleMineralTask = getSampleMineralTask();
 
     tasks.addCustomTask("sample_mineral", sampleMineralTask);
     tasks.addCustomTask("land", new LandTask());
     tasks.addCustomTask("drop_team_marker", new TeamMarkerTask());
     tasks.addCustomTask("score_minerals", new ScoreMineralTask());
   }
+
+  protected abstract SampleMineralTask getSampleMineralTask();
 
   private void executeCommands(String filename) throws FileNotFoundException, InterruptedException {
     String[] commands = tasks.commandsInFile(filename);

@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.autonomous.AutonomousBot;
 import org.firstinspires.ftc.teamcode.autonomous.MineralDetector;
 import org.firstinspires.ftc.teamcode.autonomous.MineralDetector.Mineral;
 
-public class SampleMineralTask implements Task {
+public abstract class SampleMineralTask implements Task {
 
   // Fields and class need to be kept public (so that the schema can be loaded)
   public static class ConfigSchema {
@@ -20,9 +20,9 @@ public class SampleMineralTask implements Task {
     public int delayBeforeRecognition;
   }
 
-  private ConfigSchema schema;
-  private final MineralDetector detector;
-  private AndroidTextToSpeech tts;
+  protected ConfigSchema schema;
+  protected final MineralDetector detector;
+  protected AndroidTextToSpeech tts;
 
   public SampleMineralTask(HardwareMap map) {
     tts = new AndroidTextToSpeech();
@@ -49,37 +49,17 @@ public class SampleMineralTask implements Task {
     detector.shutdown();
   }
 
-  private void runMineralCheck() throws InterruptedException {
-    if (detectedGold()) {
-      knockMineral();
-      return;
-    }
+  protected abstract void runMineralCheck() throws InterruptedException;
 
-    switchRight();
-
-    if (detectedGold()) {
-      knockMineral();
-      switchLeft();
-      return;
-    }
-
-    switchRight();
-
-    knockMineral();
-
-    switchLeft();
-    switchLeft();
-  }
-
-  private void switchLeft() {
+  protected void switchLeft() {
     Bot.getInstance().drivetrain.driveBackwards(schema.distanceBetweenMinerals);
   }
 
-  private void switchRight() {
+  protected void switchRight() {
     Bot.getInstance().drivetrain.driveForwards(schema.distanceBetweenMinerals);
   }
 
-  private void knockMineral() throws InterruptedException {
+  protected void knockMineral() throws InterruptedException {
     tts.speak("Bueno, yo encontré el mineral correcto.");
     Bot bot = Bot.getInstance();
     bot.drivetrain.rotateCounterClockwise(90);
@@ -100,7 +80,7 @@ public class SampleMineralTask implements Task {
     bot.drivetrain.rotateClockwise(90);
   }
 
-  private boolean detectedGold() {
+  protected boolean detectedGold() {
     try {
       long startTime = System.currentTimeMillis();
       Optional<Mineral> recognition;
