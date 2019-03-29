@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import android.content.Context;
 import com.andoverrobotics.core.config.Configuration;
 import com.andoverrobotics.core.drivetrain.MecanumDrive;
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
@@ -49,6 +50,7 @@ public class Bot {
   public final DepositSystem deposit;
   public final HookLift hookLift;
   public final ExpansionHubEx hub2, hub7;
+  public final BNO055IMU imu;
 
   protected Bot(HardwareMap hardware,
       Telemetry telemetry,
@@ -64,6 +66,8 @@ public class Bot {
     RevExtensions2.init();
     hub2 = hardware.get(ExpansionHubEx.class, "Expansion Hub 2");
     hub7 = hardware.get(ExpansionHubEx.class, "Expansion Hub 7");
+    imu = hardware.get(BNO055IMU.class, "imu");
+    initializeImu();
 
     DeviceMapping<DcMotor> motorHw = hardware.dcMotor;
     DeviceMapping<Servo> servoHw = hardware.servo;
@@ -72,23 +76,23 @@ public class Bot {
 //      new SimulationRelay(mainConfig.getInt("simulationRelayPort"));
 //      drivetrain = new SimDriveTrain(opMode);
 //    } else {
-      DcMotor frontLeft = motorHw.get("motorFL"),
-          backLeft = motorHw.get("motorBL"),
-          frontRight = motorHw.get("motorFR"),
-          backRight = motorHw.get("motorBR");
+    DcMotor frontLeft = motorHw.get("motorFL"),
+        backLeft = motorHw.get("motorBL"),
+        frontRight = motorHw.get("motorFR"),
+        backRight = motorHw.get("motorBR");
 
-      frontRight.setDirection(Direction.REVERSE);
-      backRight.setDirection(Direction.REVERSE);
+    frontRight.setDirection(Direction.REVERSE);
+    backRight.setDirection(Direction.REVERSE);
 
-      drivetrain = MecanumDrive.fromCrossedMotors(
-          frontLeft,
-          frontRight,
-          backLeft,
-          backRight,
-          opMode, mainConfig.getInt("ticksPerInch"),
-          mainConfig.getInt("ticksPer360")
-      );
-      drivetrain.setDefaultDrivePower(mainConfig.getDouble("defaultDrivePower"));
+    drivetrain = MecanumDrive.fromCrossedMotors(
+        frontLeft,
+        frontRight,
+        backLeft,
+        backRight,
+        opMode, mainConfig.getInt("ticksPerInch"),
+        mainConfig.getInt("ticksPer360")
+    );
+    drivetrain.setDefaultDrivePower(mainConfig.getDouble("defaultDrivePower"));
 //    }
 
     intake = new Intake(
@@ -99,12 +103,18 @@ public class Bot {
         motorHw.get("depositSlide"),
         servoHw.get("depositOrientator"), opMode);
 
-
     DcMotor hookLift = motorHw.get("hookLift");
     hookLift.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
     hookLift.setDirection(Direction.REVERSE);
     this.hookLift = new HookLift(hookLift, opMode);
 
     instance = this;
+  }
+
+  private void initializeImu() {
+    BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+    parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+    parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+    imu.initialize(parameters);
   }
 }

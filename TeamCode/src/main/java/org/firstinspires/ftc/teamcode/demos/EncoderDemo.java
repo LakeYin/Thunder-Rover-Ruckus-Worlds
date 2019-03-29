@@ -12,9 +12,8 @@ import java.util.stream.Stream;
 public class EncoderDemo extends LinearOpMode {
 
   // Change these values to your liking
-  private static final double kPower = 0;
   private static final String[] kMotorsToTest = {
-      "leftLift"
+      "hookLift"
   };
 
   @Override
@@ -24,32 +23,21 @@ public class EncoderDemo extends LinearOpMode {
         hardwareMap.dcMotor.get(motorName)).toArray(DcMotor[]::new);
 
     telemetry.addData("Testing motors", Arrays.asList(kMotorsToTest));
-    telemetry.addData("Power/speed", kPower);
     telemetry.update();
 
     waitForStart();
 
-    for (DcMotor motor : motors) {
-      while (opModeIsActive() && gamepad1.y);
-      motor.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
-      motor.setMode(RunMode.STOP_AND_RESET_ENCODER);
-      while (opModeIsActive() && motor.getCurrentPosition() != 0);
-      motor.setMode(RunMode.RUN_USING_ENCODER);
-
-      motor.setPower(kPower);
-
-      while (opModeIsActive() && !isStopRequested() && !gamepad1.y) {
-        telemetry.addData("Position", motor.getCurrentPosition());
-        telemetry.addData("Press Y", "to stop");
-        telemetry.update();
+    while (opModeIsActive()) {
+      for (DcMotor motor : motors) {
+        motor.setMode(RunMode.RUN_WITHOUT_ENCODER);
+        motor.setPower(-gamepad1.left_stick_y);
       }
-      motor.setPower(0);
-    }
 
-    telemetry.addData("Time passed", getRuntime());
-    for (DcMotor motor : motors)
-      telemetry.addData("motor positions", motor.getCurrentPosition());
-    telemetry.update();
+      telemetry.addData("Time passed", getRuntime());
+      for (DcMotor motor : motors)
+        telemetry.addData("motor positions", motor.getCurrentPosition());
+      telemetry.update();
+    }
 
     while (!isStopRequested() && opModeIsActive());
   }

@@ -12,7 +12,7 @@ public class RunToPositionDemo extends LinearOpMode {
 
   @Override
   public void runOpMode() throws InterruptedException {
-    DcMotorEx testMotor = hardwareMap.get(DcMotorEx.class, "leftLift");
+    DcMotorEx testMotor = hardwareMap.get(DcMotorEx.class, "hookLift");
 
     waitForStart();
 
