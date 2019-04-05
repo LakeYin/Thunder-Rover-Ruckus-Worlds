@@ -56,6 +56,10 @@ public class TaskFactory {
         case "move":
           double dx = Double.parseDouble(tokens[1]),
               dy = Double.parseDouble(tokens[2]);
+
+          if (tokens.length > 3) {
+            return new MoveTask(drivetrain, Coordinate.fromXY(dx, dy), Double.parseDouble(tokens[3]));
+          }
           return new MoveTask(drivetrain, Coordinate.fromXY(dx, dy));
 
         case "rotate":

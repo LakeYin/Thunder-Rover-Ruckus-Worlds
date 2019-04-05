@@ -24,6 +24,7 @@ public class TeleOpMode extends LinearOpMode {
       controlCycle(gamepad2);
 
       telemetry.addData("Connection Keep-Alive", getRuntime());
+      telemetry.addData("State", state);
       addPowerDrawDebug();
       telemetry.update();
     }
@@ -50,7 +51,7 @@ public class TeleOpMode extends LinearOpMode {
     if (gamepad.x && (state == CYCLE_SCORE || state == MANUAL)) {
       state = CYCLE_COLLECT;
       bot.deposit.retract();
-      bot.intake.extendFully();
+      bot.intake.extend(0.5);
       bot.intake.orientToCollect();
       bot.intake.runSweeperIn();
 
@@ -82,6 +83,27 @@ public class TeleOpMode extends LinearOpMode {
       state = ENDGAME;
     }
   }
+
+  private void adjustByState() {
+    switch (state) {
+      case CYCLE_COLLECT:
+
+        break;
+      case CYCLE_TRANSFER:
+        break;
+      case CYCLE_DELIVER:
+        break;
+      case CYCLE_SCORE:
+        break;
+      case MANUAL:
+        controlManually();
+        break;
+      case ENDGAME:
+        controlEndgame();
+        break;
+    }
+  }
+
 
   private Thread hookService;
 

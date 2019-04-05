@@ -38,7 +38,7 @@ public class AutoPathDemo extends LinearOpMode {
         motorBR,
         this,
         63,
-        5400
+        5230
     );
     dt.setDefaultDrivePower(0.9);
     VuforiaManager.initVuforia(hardwareMap);
@@ -69,11 +69,11 @@ public class AutoPathDemo extends LinearOpMode {
 
     lift.liftToHook();
     dt.setMovementPower(1);
-    sleep(100);
+    sleep(200);
     dt.setStrafe(-1, 0);
-    sleep(450);
+    sleep(650);
     dt.setStrafe(0, -1);
-    sleep(230);
+    sleep(270);
     dt.stop();
 
     new Thread(() -> {
@@ -84,24 +84,26 @@ public class AutoPathDemo extends LinearOpMode {
       }
     }).start();
 
+    runCraterPath(dt);
 
-    sleep(1000);
+    dt.strafeInches(5, 40);
+
+
+    sleep(700);
     if (isGoldDetected(detector)) {
       knock(dt);
       return;
     }
 
-    dt.driveForwards(17);
-    sleep(1000);
+    dt.driveForwards(19);
+    sleep(700);
     if (isGoldDetected(detector)) {
       knock(dt);
-      dt.driveBackwards(17);
       return;
     }
 
-    dt.driveBackwards(34);
+    dt.driveForwards(19);
     knock(dt);
-    dt.driveForwards(17);
   }
 
   private boolean isGoldDetected(MineralDetector detector) {
@@ -109,18 +111,18 @@ public class AutoPathDemo extends LinearOpMode {
   }
 
   private void knock(StrafingDriveTrain dt) {
-    dt.strafeLeft(30);
-    dt.strafeRight(30);
+    dt.rotateCounterClockwise(90);
+    dt.driveForwards(20);
+    dt.driveBackwards(20);
   }
 
   private void runCraterPath(StrafingDriveTrain dt) {
-    dt.strafeInches(4, 1);
-    dt.strafeInches(0, -70);
-    dt.rotateClockwise(125);
-    dt.strafeRight(5, 0.3);
-    dt.strafeInches(-1, 10);
+    dt.strafeInches(-7, 1);
+    dt.strafeInches(0, -63);
+    dt.rotateClockwise(135);
+    dt.strafeRight(9);
+    dt.strafeInches(-0.3, 4);
     sleep(2000);
-    dt.rotateCounterClockwise(180);
-    dt.strafeInches(0, 10);
+    dt.rotateCounterClockwise(135);
   }
 }

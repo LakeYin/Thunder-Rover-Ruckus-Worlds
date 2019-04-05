@@ -25,12 +25,10 @@ public class MotorDemo extends LinearOpMode {
 
     waitForStart();
 
-    for (Map.Entry<String, DcMotor> entry : motors.entrySet()) {
-      entry.getValue().setPower(0.5);
-      telemetry.addData("Power=0.5", entry.getKey());
-      telemetry.update();
-      sleep(2000);
-      entry.getValue().setPower(0);
+    while (opModeIsActive()) {
+      for (Map.Entry<String, DcMotor> entry : motors.entrySet()) {
+        entry.getValue().setPower(-gamepad1.left_stick_y);
+      }
     }
   }
 }

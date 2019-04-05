@@ -10,7 +10,7 @@ public class TeamMarkerTask implements Task {
     Bot bot = Bot.getInstance();
 
     bot.intake.extendFully();
-    bot.intake.orientToCollect();
+    bot.intake.orientToTransfer();
     Bot.sleep(2000);
     bot.intake.orientToTransit();
     bot.intake.retractFully();

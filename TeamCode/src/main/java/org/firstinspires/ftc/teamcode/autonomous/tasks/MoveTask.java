@@ -7,31 +7,37 @@ import com.andoverrobotics.core.utilities.Coordinate;
 public class MoveTask implements Task {
   private final DriveTrain drivetrain;
   private final Coordinate offset;
+  private final double speed;
+
+  public MoveTask(DriveTrain drivetrain, Coordinate offset) {
+    this(drivetrain, offset, drivetrain.getDefaultDrivePower());
+  }
 
   public MoveTask(DriveTrain drivetrain,
-      Coordinate offset) {
+      Coordinate offset, double speed) {
     this.drivetrain = drivetrain;
     this.offset = offset;
+    this.speed = speed;
   }
 
   @Override
   public void run() {
     if (drivetrain instanceof StrafingDriveTrain)
-      ((StrafingDriveTrain)drivetrain).strafeInches(offset);
+      ((StrafingDriveTrain)drivetrain).strafeInches(offset, speed);
     else {
       int degrees = (int)Math.round(90 - offset.getPolarDirection());
 
       if (degrees > 0)
-        drivetrain.rotateClockwise(degrees);
+        drivetrain.rotateClockwise(degrees, speed);
       else
-        drivetrain.rotateCounterClockwise(-degrees);
+        drivetrain.rotateCounterClockwise(-degrees, speed);
 
-      drivetrain.driveForwards(offset.getPolarDistance());
+      drivetrain.driveForwards(offset.getPolarDistance(), speed);
 
       if (degrees > 0)
-        drivetrain.rotateCounterClockwise(degrees);
+        drivetrain.rotateCounterClockwise(degrees, speed);
       else
-        drivetrain.rotateClockwise(-degrees);
+        drivetrain.rotateClockwise(-degrees, speed);
     }
   }
 }

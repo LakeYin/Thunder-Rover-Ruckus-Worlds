@@ -20,9 +20,9 @@ public class TurnWithIMUDemo extends LinearOpMode {
     while (Math.abs(heading - 180) > 5 && opModeIsActive()) {
       for (DcMotor motor : hardwareMap.getAll(DcMotor.class)) {
         heading = imu.getAngularOrientation().toAngleUnit(
-            org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES).firstAngle;
+            org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES).firstAngle + 180;
         motor.setMode(RunMode.RUN_USING_ENCODER);
-        motor.setPower(Math.abs(heading - 180) / 200.0 + 0.2);
+        motor.setPower(Math.abs(heading) / -180.0);
 
       }
     }

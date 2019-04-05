@@ -185,7 +185,7 @@ public class MecanumDrive extends StrafingDriveTrain {
       motor.startRunToPosition(rightOffset, rightPower);
     }
 
-    while (isBusy() && opModeIsActive() && meanVarianceFromTargetPosition() > 10) {
+    while (opModeIsActive() && meanVarianceFromTargetPosition() > 20) {
     }
 
     stop();
@@ -214,7 +214,7 @@ public class MecanumDrive extends StrafingDriveTrain {
       motor.startRunToPosition((int) rotationTicks, clippedPower);
     }
 
-    while (isBusy() && opModeIsActive() && meanVarianceFromTargetPosition() > 10) {
+    while (opModeIsActive() && meanVarianceFromTargetPosition() > 20) {
     }
 
     stop();
