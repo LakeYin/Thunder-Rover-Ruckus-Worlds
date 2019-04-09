@@ -33,17 +33,11 @@ public class LandTask implements Task {
     bot.drivetrain.stop();
   }
 
-  private void lowerBot() throws InterruptedException {
+  private void lowerBot() {
     bot.hookLift.liftToHook();
   }
 
   private void startLoweringHook() {
-    new Thread(() -> {
-      try {
-        bot.hookLift.lowerToBottom();
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
-    }).start();
+    bot.hookLift.lowerToBottom().begin();
   }
 }

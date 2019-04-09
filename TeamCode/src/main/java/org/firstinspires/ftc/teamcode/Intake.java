@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
+import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
+import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 import com.qualcomm.robotcore.hardware.Servo;
 import java.io.IOException;
 
@@ -27,6 +29,10 @@ public class Intake {
   public Intake(DcMotor slideMotor, Servo orientator,
       CRServo sweeper, LinearOpMode opMode) {
     this.slideMotor = slideMotor;
+
+    this.slideMotor.setDirection(Direction.REVERSE);
+    this.slideMotor.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
+
     this.orientator = orientator;
     this.sweeper = sweeper;
     this.opMode = opMode;
@@ -43,25 +49,26 @@ public class Intake {
     }
   }
 
-  public void extendFully() throws InterruptedException {
-    extendFully(schema.runningSpeed);
+  public RunToPosition extendFully() {
+    return extendFully(schema.runningSpeed);
   }
-  public void extendFully(double speed) throws InterruptedException {
-    extend(1, speed);
-  }
-
-  public void extend(double amount) throws InterruptedException {
-    extend(amount, schema.runningSpeed);
-  }
-  public void extend(double amount, double speed) throws InterruptedException {
-    runToPosition((int) (schema.fullyExtendedTicks * Math.max(Math.abs(amount), 1)), speed);
+  public RunToPosition extendFully(double speed) {
+    return extend(1, speed);
   }
 
-  public void retractFully() throws InterruptedException {
-    retractFully(schema.runningSpeed);
+  public RunToPosition extend(double amount) {
+    return extend(amount, schema.runningSpeed);
   }
-  public void retractFully(double speed) throws InterruptedException {
-    runToPosition(0, speed);
+  public RunToPosition extend(double amount, double speed) {
+    return new RunToPosition(slideMotor,
+        (int) (schema.fullyExtendedTicks * Math.max(Math.abs(amount), 1)), speed);
+  }
+
+  public RunToPosition retractFully() {
+    return retractFully(schema.runningSpeed);
+  }
+  public RunToPosition retractFully(double speed) {
+    return new RunToPosition(slideMotor, 0, speed * 0.4);
   }
 
   public boolean isSlideRunning() {
@@ -69,7 +76,7 @@ public class Intake {
   }
 
   public void orientManually(float delta) {
-    orientator.setPosition(orientator.getPosition() + delta * 0.01);
+    orientator.setPosition(orientator.getPosition() + delta * 0.012);
   }
 
   public void orientToCollect() {
@@ -94,7 +101,7 @@ public class Intake {
   }
 
   public void runSweeperIn() {
-    sweeper.setPower(0.85);
+    sweeper.setPower(0.8);
   }
 
   public void stopSweeper() {
@@ -104,16 +111,5 @@ public class Intake {
   private boolean wouldPowerExceedBoundaries(double power) {
     return slideMotor.getCurrentPosition() <= 10 && power < 0 ||
         slideMotor.getCurrentPosition() >= schema.fullyExtendedTicks - 10 && power > 0;
-  }
-
-  private void runToPosition(int position, double speed) throws InterruptedException {
-    slideMotor.setMode(RunMode.RUN_TO_POSITION);
-    slideMotor.setTargetPosition(position);
-    slideMotor.setPower(Math.abs(speed));
-    while (slideMotor.isBusy() && opMode.opModeIsActive()) {
-      if (Thread.interrupted())
-        throw new InterruptedException();
-    }
-    slideMotor.setPower(0);
   }
 }

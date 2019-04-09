@@ -20,9 +20,9 @@ public abstract class SampleMineralTask implements Task {
     public int delayBeforeRecognition;
   }
 
-  protected ConfigSchema schema;
-  protected final MineralDetector detector;
-  protected AndroidTextToSpeech tts;
+  private ConfigSchema schema;
+  private final MineralDetector detector;
+  private AndroidTextToSpeech tts;
 
   public SampleMineralTask(HardwareMap map) {
     tts = new AndroidTextToSpeech();
@@ -64,18 +64,17 @@ public abstract class SampleMineralTask implements Task {
     Bot bot = Bot.getInstance();
     bot.drivetrain.rotateCounterClockwise(90);
 
-    bot.intake.extend(schema.knockDistance, 0.8);
+    bot.intake.extend(schema.knockDistance, 0.8).begin().waitUntilDone();
     bot.intake.runSweeperIn();
     Bot.sleep(800);
     bot.intake.orientToTransit();
     bot.intake.stopSweeper();
-    bot.intake.retractFully(0.8);
+    bot.intake.retractFully(0.8).begin().waitUntilDone();
     bot.intake.orientToTransfer();
-    bot.intake.runSweeperIn();
     Bot.sleep(2000);
     bot.intake.stopSweeper();
-    bot.deposit.prepareToDeposit();
-    bot.intake.extend(0.2, 0.4);
+    bot.intake.orientToTransit();
+    bot.intake.extend(0.2, 0.4).begin();
 
     bot.drivetrain.rotateClockwise(90);
   }

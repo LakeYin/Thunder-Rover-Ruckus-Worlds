@@ -16,7 +16,7 @@ public class SecondChassisDemo extends LinearOpMode {
   @Override
   public void runOpMode() throws InterruptedException {
     intakeSlides = hardwareMap.dcMotor.get("intake");
-    depositSlides = hardwareMap.dcMotor.get("deposit");
+    depositSlides = hardwareMap.dcMotor.get("score");
     bucket = hardwareMap.servo.get("bucket");
     bucket.setPosition(0.5);
     sorter = hardwareMap.servo.get("sorter");

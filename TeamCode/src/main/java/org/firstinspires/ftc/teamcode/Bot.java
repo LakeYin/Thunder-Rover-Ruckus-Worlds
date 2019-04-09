@@ -81,10 +81,10 @@ public class Bot {
         frontRight = motorHw.get("motorFR"),
         backRight = motorHw.get("motorBR");
 
-    frontRight.setDirection(Direction.REVERSE);
-    backRight.setDirection(Direction.REVERSE);
+    frontLeft.setDirection(Direction.REVERSE);
+    backLeft.setDirection(Direction.REVERSE);
 
-    drivetrain = MecanumDrive.fromCrossedMotors(
+    drivetrain = MecanumDrive.fromOctagonalMotors(
         frontLeft,
         frontRight,
         backLeft,
@@ -105,8 +105,7 @@ public class Bot {
 
     DcMotor hookLift = motorHw.get("hookLift");
     hookLift.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
-    hookLift.setDirection(Direction.REVERSE);
-    this.hookLift = new HookLift(hookLift, opMode);
+    this.hookLift = new HookLift(hookLift);
 
     instance = this;
   }

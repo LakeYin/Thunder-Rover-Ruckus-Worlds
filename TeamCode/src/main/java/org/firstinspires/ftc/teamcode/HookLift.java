@@ -14,22 +14,20 @@ public class HookLift {
   }
 
   public final DcMotor liftMotor;
-  private LinearOpMode opMode;
   private ConfigSchema schema;
 
-  public HookLift(DcMotor liftMotor, LinearOpMode opMode) {
+  public HookLift(DcMotor liftMotor) {
     this.liftMotor = liftMotor;
-    this.opMode = opMode;
     liftMotor.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
     loadSchema();
   }
 
-  public void liftToHook() throws InterruptedException {
-    runToPosition(schema.topPosition, schema.runningSpeed);
+  public RunToPosition liftToHook() {
+    return new RunToPosition(liftMotor, schema.topPosition, schema.runningSpeed);
   }
 
-  public void lowerToBottom() throws InterruptedException {
-    runToPosition(0, schema.runningSpeed);
+  public RunToPosition lowerToBottom() {
+    return new RunToPosition(liftMotor, 0, schema.runningSpeed);
   }
 
   public void adjust(double power) {
@@ -49,16 +47,5 @@ public class HookLift {
     } catch (IOException e) {
       throw new IllegalArgumentException(e);
     }
-  }
-
-  private void runToPosition(int pos, double speed) throws InterruptedException {
-    liftMotor.setMode(RunMode.RUN_TO_POSITION);
-    liftMotor.setTargetPosition(pos);
-    liftMotor.setPower(Math.abs(speed));
-    while (liftMotor.isBusy() && opMode.opModeIsActive()) {
-      if (Thread.currentThread().isInterrupted())
-        throw new InterruptedException();
-    }
-    liftMotor.setPower(0);
   }
 }

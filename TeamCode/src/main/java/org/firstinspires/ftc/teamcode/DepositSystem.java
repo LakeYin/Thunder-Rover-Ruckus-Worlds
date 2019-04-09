@@ -37,36 +37,36 @@ public class DepositSystem {
     opMode.sleep(300);
   }
 
-  public void deliverToLander() {
-    slideMotor.setMode(RunMode.RUN_TO_POSITION);
-    slideMotor.setTargetPosition(schema.fullyExtendedTicks);
-    slideMotor.setPower(Math.abs(schema.slideSpeed));
-
-    while (slideMotor.isBusy() && opMode.opModeIsActive());
-
-    slideMotor.setPower(0);
+  public RunToPosition deliverToLander() {
+    return new RunToPosition(slideMotor, schema.fullyExtendedTicks, schema.slideSpeed);
   }
 
-  public void deposit() {
+  public void score() {
     orientator.setPosition(schema.orientatorScorePos);
     opMode.sleep(schema.scoreDelayMs);
   }
 
-  public void retract() {
+  public Thread retract() {
     if (Math.abs(slideMotor.getCurrentPosition()) > Math.abs(schema.fullyExtendedTicks * 0.2)) {
       orientator.setPosition(schema.orientatorTransitPos);
-      opMode.sleep(100);
+      opMode.sleep(200);
     }
 
     slideMotor.setMode(RunMode.RUN_TO_POSITION);
     slideMotor.setTargetPosition(0);
     slideMotor.setPower(Math.abs(schema.slideSpeed));
 
-    while (slideMotorAboveFrame() && opMode.opModeIsActive());
-    orientator.setPosition(schema.orientatorFlatPos);
-    while (slideMotor.isBusy() && opMode.opModeIsActive());
+    Thread thread = new Thread(() -> {
+      while (slideMotorAboveFrame() && opMode.opModeIsActive())
+        ;
+      orientator.setPosition(schema.orientatorFlatPos);
+      while (slideMotor.isBusy() && opMode.opModeIsActive())
+        ;
 
-    slideMotor.setPower(0);
+      slideMotor.setPower(0);
+    });
+    thread.start();
+    return thread;
   }
 
   private boolean slideMotorAboveFrame() {
