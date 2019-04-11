@@ -16,7 +16,7 @@ public class HookLiftDemo extends LinearOpMode {
     while (hookLift.getCurrentPosition() != 0 && opModeIsActive()) {
       ;
     }
-    HookLift lift = new HookLift(hookLift, this);
+    HookLift lift = new HookLift(hookLift);
 
     waitForStart();
 

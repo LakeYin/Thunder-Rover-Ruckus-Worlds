@@ -1,11 +1,6 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
-import static org.firstinspires.ftc.teamcode.teleop.TeleOpState.CYCLE_COLLECT;
-import static org.firstinspires.ftc.teamcode.teleop.TeleOpState.CYCLE_DELIVER;
-import static org.firstinspires.ftc.teamcode.teleop.TeleOpState.CYCLE_SCORE;
-import static org.firstinspires.ftc.teamcode.teleop.TeleOpState.CYCLE_TRANSFER;
-import static org.firstinspires.ftc.teamcode.teleop.TeleOpState.ENDGAME;
-import static org.firstinspires.ftc.teamcode.teleop.TeleOpState.MANUAL;
+import static org.firstinspires.ftc.teamcode.teleop.TeleOpState.*;
 
 import com.andoverrobotics.core.utilities.Coordinate;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -20,7 +15,7 @@ public class TeleOpMode extends LinearOpMode {
   private TeleOpState state = MANUAL;
 
   @Override
-  public void runOpMode() {
+  public void runOpMode() throws InterruptedException {
     initialize();
     waitForStart();
     while (opModeIsActive()) {
@@ -28,12 +23,25 @@ public class TeleOpMode extends LinearOpMode {
       controlDrivetrain(gamepad1);
       controlCycle(gamepad2);
       adjustByState(gamepad2);
+      if (gamepad2.back) {
+        stopAllMotion();
+      }
 
       telemetry.addData("Connection Keep-Alive", getRuntime());
       telemetry.addData("State", state);
       addPowerDrawDebug();
       telemetry.update();
     }
+  }
+
+  private void stopAllMotion() {
+    bot.intake.controlSlidesManually(0);
+    bot.deposit.adjust(0);
+    bot.hookLift.adjust(0);
+    bot.intake.stopSweeper();
+    bot.drivetrain.stop();
+    bot.hub2.setLedColor(255, 0, 0);
+    bot.hub7.setLedColor(255, 0, 0);
   }
 
   private void initialize() {
@@ -51,6 +59,12 @@ public class TeleOpMode extends LinearOpMode {
     double microRotatePower = (booleanToInt(gamepad.b) - booleanToInt(gamepad.x)) * 0.35;
     bot.drivetrain.setStrafeAndRotation(strafe, gamepad.right_stick_x + microRotatePower,
         strafe.getPolarDistance());
+
+    if (gamepad.start) {
+      bot.drivetrain.memorizeCurrentPosition();
+    } else if (gamepad.back) {
+      bot.drivetrain.goToMemorizedPosition(0.6);
+    }
   }
 
   private void controlCycle(Gamepad gamepad) {
@@ -94,14 +108,20 @@ public class TeleOpMode extends LinearOpMode {
   private void adjustByState(Gamepad cycleGamepad) {
     switch (state) {
       case CYCLE_COLLECT:
-        bot.intake.controlSlidesManually(-cycleGamepad.left_stick_x);
+        if (!bot.intake.isSlideRunningToPosition()) {
+          bot.intake.controlSlidesManually(-cycleGamepad.left_stick_x);
+        }
         bot.intake.orientManually(cycleGamepad.left_stick_y);
         break;
       case CYCLE_TRANSFER:
-        bot.intake.controlSlidesManually(-cycleGamepad.left_stick_x * 0.4);
+        if (!bot.intake.isSlideRunningToPosition()) {
+          bot.intake.controlSlidesManually(-cycleGamepad.left_stick_x * 0.4);
+        }
         break;
       case CYCLE_DELIVER:
-        // Empty for no adjustment mappings applicable in DELIVER state
+        if (!bot.deposit.isRunningToPosition()) {
+          bot.deposit.adjust(gamepad2.right_stick_x);
+        }
         break;
       case CYCLE_SCORE:
         bot.deposit.orientator.setPosition(bot.deposit.orientator.getPosition() + cycleGamepad.right_stick_x * 0.07);
@@ -115,12 +135,13 @@ public class TeleOpMode extends LinearOpMode {
     }
   }
 
+
   private void controlEndgame() {
     if (gamepad2.dpad_up) {
       bot.hookLift.liftToHook().begin();
     }
 
-    else if (Math.abs(gamepad2.left_stick_y) > 0.01) {
+    else if (!bot.hookLift.liftMotor.isBusy()) {
       bot.hookLift.adjust(-gamepad2.left_stick_y);
     }
   }
@@ -137,6 +158,7 @@ public class TeleOpMode extends LinearOpMode {
     if (gamepad2.dpad_down) {
       bot.deposit.retract();
     } else if (gamepad2.dpad_up) {
+      bot.deposit.prepareToDeposit();
       bot.deposit.deliverToLander().begin();
     }
     if (gamepad2.dpad_left || gamepad2.dpad_right) {
@@ -144,6 +166,10 @@ public class TeleOpMode extends LinearOpMode {
     }
 
     bot.hookLift.adjust(-gamepad2.right_stick_y * 0.5);
+
+    if (!bot.deposit.isRunningToPosition()) {
+      bot.deposit.adjust(gamepad2.right_stick_x);
+    }
   }
 
   private Coordinate getLeftDrivetrainTarget(Gamepad gamepad) {

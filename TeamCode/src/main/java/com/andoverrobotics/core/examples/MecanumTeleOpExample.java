@@ -19,7 +19,6 @@ public class MecanumTeleOpExample extends LinearOpMode {
   private MecanumDrive mecanumDrive;
   private BNO055IMU imu;
   private HookLift lift;
-  private Thread liftThread;
 
   @Override
   public void runOpMode() {
@@ -33,7 +32,7 @@ public class MecanumTeleOpExample extends LinearOpMode {
 
     mecanumDrive = MecanumDrive.fromOctagonalMotors(
         motorFL, motorFR, motorBL, motorBR, this, TICKS_PER_INCH, TICKS_PER_360);
-    lift = new HookLift(hardwareMap.dcMotor.get("hookLift"), this);
+    lift = new HookLift(hardwareMap.dcMotor.get("hookLift"));
 
     setupIMU();
     waitForStart();
@@ -41,32 +40,14 @@ public class MecanumTeleOpExample extends LinearOpMode {
       mecanumDrive.setStrafeAndRotation(
           Coordinate.fromXY(gamepad1.left_stick_x, -gamepad1.left_stick_y),
           gamepad1.right_stick_x, 1);
-      if (gamepad1.y && (liftThread == null || !liftThread.isAlive())) {
-        liftThread = new Thread(() -> {
-          try {
-            lift.liftToHook();
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-        });
-        liftThread.start();
+      if (gamepad1.y) {
+        lift.liftToHook().begin();
       }
-      else if (gamepad1.a && (liftThread == null || !liftThread.isAlive())) {
-        liftThread = new Thread(() -> {
-          try {
-            lift.lowerToBottom();
-          } catch (Exception e) {
-            e.printStackTrace();
-          }
-        });
-        liftThread.start();
+      else if (gamepad1.a) {
+        lift.lowerToBottom().begin();
       }
-      if (gamepad1.x && liftThread != null && liftThread.isAlive()) {
-        liftThread.interrupt();
+      if (gamepad1.x) {
         lift.adjust(0);
-      }
-      if (liftThread == null || !liftThread.isAlive()) {
-        lift.adjust(gamepad1.right_trigger - gamepad1.left_trigger);
       }
 
 

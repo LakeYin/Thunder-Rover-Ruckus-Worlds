@@ -29,6 +29,6 @@ public class HookTest extends TankDriveTester {
 
   @Override
   protected void setup() {
-    hookLift = new HookLift(hardwareMap.dcMotor.get("hookLift"), this);
+    hookLift = new HookLift(hardwareMap.dcMotor.get("hookLift"));
   }
 }

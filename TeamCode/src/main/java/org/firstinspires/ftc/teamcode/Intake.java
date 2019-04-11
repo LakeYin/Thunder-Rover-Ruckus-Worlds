@@ -71,12 +71,12 @@ public class Intake {
     return new RunToPosition(slideMotor, 0, speed * 0.4);
   }
 
-  public boolean isSlideRunning() {
+  public boolean isSlideRunningToPosition() {
     return slideMotor.isBusy();
   }
 
   public void orientManually(float delta) {
-    orientator.setPosition(orientator.getPosition() + delta * 0.012);
+    orientator.setPosition(orientator.getPosition() + delta * 0.014);
   }
 
   public void orientToCollect() {

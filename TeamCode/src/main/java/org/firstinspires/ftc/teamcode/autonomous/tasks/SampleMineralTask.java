@@ -81,6 +81,7 @@ public abstract class SampleMineralTask implements Task {
 
   protected boolean detectedGold() {
     try {
+      Bot bot = Bot.getInstance();
       long startTime = System.currentTimeMillis();
       Optional<Mineral> recognition;
 
@@ -90,15 +91,25 @@ public abstract class SampleMineralTask implements Task {
         if (Thread.interrupted())
           throw new InterruptedException("Interrupted while waiting for mineral recognition");
 
-        Bot.getInstance().opMode.telemetry.addData("Seen", recognition);
-        Bot.getInstance().opMode.telemetry.update();
+        bot.opMode.telemetry.addData("Seen", recognition);
+        bot.opMode.telemetry.update();
       }
 
+      updateLed(bot, recognition);
       return recognition.orElse(Mineral.SILVER) == Mineral.GOLD;
 
     } catch (InterruptedException e) {
       e.printStackTrace();
       return false;
     }
+  }
+
+  private void updateLed(Bot bot, Optional<Mineral> recognition) {
+    int[] values = recognition
+        .map(mineral -> (mineral.equals(Mineral.SILVER) ? new int[]{255, 255, 255} :
+            new int[]{255, 223, 0})).orElseGet(() -> new int[]{255, 0, 0});
+
+    bot.hub2.setLedColor(values[0], values[1], values[2]);
+    bot.hub7.setLedColor(values[0], values[1], values[2]);
   }
 }

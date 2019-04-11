@@ -9,6 +9,7 @@ import java.io.IOException;
 import org.firstinspires.ftc.teamcode.teleop.TeleOpBot;
 
 public class DepositSystem {
+
   public static class ConfigSchema {
     public int fullyExtendedTicks;
     public double slideSpeed;
@@ -46,6 +47,15 @@ public class DepositSystem {
     opMode.sleep(schema.scoreDelayMs);
   }
 
+  public void adjust(double power) {
+    slideMotor.setMode(RunMode.RUN_WITHOUT_ENCODER);
+    slideMotor.setPower(power / 2);
+  }
+
+  public boolean isRunningToPosition() {
+    return slideMotor.isBusy();
+  }
+
   public Thread retract() {
     if (Math.abs(slideMotor.getCurrentPosition()) > Math.abs(schema.fullyExtendedTicks * 0.2)) {
       orientator.setPosition(schema.orientatorTransitPos);
@@ -60,10 +70,6 @@ public class DepositSystem {
       while (slideMotorAboveFrame() && opMode.opModeIsActive())
         ;
       orientator.setPosition(schema.orientatorFlatPos);
-      while (slideMotor.isBusy() && opMode.opModeIsActive())
-        ;
-
-      slideMotor.setPower(0);
     });
     thread.start();
     return thread;

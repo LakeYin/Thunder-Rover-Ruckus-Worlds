@@ -1,5 +1,6 @@
 package com.andoverrobotics.core.drivetrain;
 
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
 
@@ -260,6 +261,29 @@ public class MecanumDrive extends StrafingDriveTrain {
     for (MotorAdapter motor : allMotors()) {
       motor.setPower(clippedPower);
     }
+  }
+
+  private int[] memoPosition = {0, 0, 0, 0};
+
+  public void memorizeCurrentPosition() {
+    MotorAdapter[] motors = allMotors();
+
+    for (int i = 0; i < 4; i++) {
+      memoPosition[i] = motors[i].getMotor().getCurrentPosition();
+    }
+  }
+
+  public void goToMemorizedPosition(double power) {
+    MotorAdapter[] motors = allMotors();
+
+    for (int i = 0; i < 4; i++) {
+      DcMotor motor = motors[i].getMotor();
+      motor.setMode(RUN_TO_POSITION);
+      motor.setTargetPosition(memoPosition[i]);
+      motor.setPower(Math.abs(power));
+    }
+
+    while (isBusy());
   }
 
   @Override

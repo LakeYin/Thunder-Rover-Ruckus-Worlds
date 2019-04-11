@@ -48,7 +48,7 @@ public class AutoPathDemo extends LinearOpMode {
     while (hookLift.getCurrentPosition() != 0 && opModeIsActive()) {
       ;
     }
-    HookLift lift = new HookLift(hookLift, this);
+    HookLift lift = new HookLift(hookLift);
 
     waitForStart();
 
@@ -76,13 +76,7 @@ public class AutoPathDemo extends LinearOpMode {
     sleep(270);
     dt.stop();
 
-    new Thread(() -> {
-      try {
-        lift.lowerToBottom();
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
-    }).start();
+    lift.lowerToBottom().begin();
 
     runCraterPath(dt);
 
