@@ -146,6 +146,7 @@ public abstract class DriveTrain {
    */
   public void stop() {
     for (IMotor motor : getMotors()) {
+      motor.setMode(RunMode.RUN_WITHOUT_ENCODER);
       motor.setPower(0);
     }
   }

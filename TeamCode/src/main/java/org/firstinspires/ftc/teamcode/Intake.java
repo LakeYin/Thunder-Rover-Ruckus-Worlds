@@ -8,9 +8,11 @@ import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 import java.io.IOException;
 
 public class Intake {
+
   public static class ConfigSchema {
 
     public int fullyExtendedTicks;
@@ -76,7 +78,7 @@ public class Intake {
   }
 
   public void orientManually(float delta) {
-    orientator.setPosition(orientator.getPosition() + delta * 0.014);
+    orientator.setPosition(Range.clip(orientator.getPosition(), 0, 1) + delta * 0.05);
   }
 
   public void orientToCollect() {
@@ -102,6 +104,10 @@ public class Intake {
 
   public void runSweeperIn() {
     sweeper.setPower(0.8);
+  }
+
+  public void runSweeperOut() {
+    sweeper.setPower(-0.8);
   }
 
   public void stopSweeper() {

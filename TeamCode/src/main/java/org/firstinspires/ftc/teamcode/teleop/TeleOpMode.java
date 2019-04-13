@@ -15,21 +15,26 @@ public class TeleOpMode extends LinearOpMode {
   private TeleOpState state = MANUAL;
 
   @Override
-  public void runOpMode() throws InterruptedException {
+  public void runOpMode() {
     initialize();
     waitForStart();
+    long prevTime = System.nanoTime();
     while (opModeIsActive()) {
 
       controlDrivetrain(gamepad1);
-      controlCycle(gamepad2);
+      // TODO enable
+      //controlCycle(gamepad2);
       adjustByState(gamepad2);
-      if (gamepad2.back) {
+      if (gamepad2.back || gamepad1.left_bumper || gamepad1.right_bumper) {
         stopAllMotion();
       }
 
       telemetry.addData("Connection Keep-Alive", getRuntime());
       telemetry.addData("State", state);
       addPowerDrawDebug();
+      long time = System.nanoTime();
+      telemetry.addData("Cycle Rate", "%dns/cycle", time - prevTime);
+      prevTime = time;
       telemetry.update();
     }
   }
@@ -54,16 +59,18 @@ public class TeleOpMode extends LinearOpMode {
   }
 
   private void controlDrivetrain(Gamepad gamepad) {
-    Coordinate strafe = getLeftDrivetrainTarget(gamepad)
-        .add(getMicroAdjustCoord(gamepad).multiply(0.7));
-    double microRotatePower = (booleanToInt(gamepad.b) - booleanToInt(gamepad.x)) * 0.35;
-    bot.drivetrain.setStrafeAndRotation(strafe, gamepad.right_stick_x + microRotatePower,
-        strafe.getPolarDistance());
+    if (!bot.drivetrain.isRunningToPosition()) {
+      Coordinate strafe = getLeftDrivetrainTarget(gamepad)
+          .add(getMicroAdjustCoord(gamepad).multiply(0.5));
+      double microRotatePower = (booleanToInt(gamepad.b) - booleanToInt(gamepad.x)) * 0.35;
+      bot.drivetrain.setStrafeAndRotation(strafe, gamepad.right_stick_x + microRotatePower,
+          strafe.getPolarDistance());
 
-    if (gamepad.start) {
-      bot.drivetrain.memorizeCurrentPosition();
-    } else if (gamepad.back) {
-      bot.drivetrain.goToMemorizedPosition(0.6);
+      if (gamepad.start) {
+        bot.drivetrain.memorizeCurrentPosition();
+      } else if (gamepad.back) {
+        bot.drivetrain.startGoingToMemorizedPosition(0.6);
+      }
     }
   }
 
@@ -120,7 +127,7 @@ public class TeleOpMode extends LinearOpMode {
         break;
       case CYCLE_DELIVER:
         if (!bot.deposit.isRunningToPosition()) {
-          bot.deposit.adjust(gamepad2.right_stick_x);
+          bot.deposit.adjust(cycleGamepad.right_stick_x);
         }
         break;
       case CYCLE_SCORE:
@@ -140,6 +147,9 @@ public class TeleOpMode extends LinearOpMode {
     if (gamepad2.dpad_up) {
       bot.hookLift.liftToHook().begin();
     }
+    if (gamepad2.dpad_down) {
+      bot.hookLift.lowerToBottom().begin();
+    }
 
     else if (!bot.hookLift.liftMotor.isBusy()) {
       bot.hookLift.adjust(-gamepad2.left_stick_y);
@@ -148,21 +158,26 @@ public class TeleOpMode extends LinearOpMode {
 
   private void controlManually() {
     bot.intake.controlSlidesManually(-gamepad2.left_stick_x);
-    bot.intake.orientManually(-gamepad2.left_stick_y);
+    bot.intake.orientManually(gamepad2.left_stick_y);
 
     if (gamepad2.left_bumper)
       bot.intake.runSweeperIn();
     else if (gamepad2.right_bumper)
+      bot.intake.runSweeperOut();
+    else
       bot.intake.stopSweeper();
 
-    if (gamepad2.dpad_down) {
-      bot.deposit.retract();
-    } else if (gamepad2.dpad_up) {
-      bot.deposit.prepareToDeposit();
-      bot.deposit.deliverToLander().begin();
-    }
-    if (gamepad2.dpad_left || gamepad2.dpad_right) {
-      bot.deposit.score();
+    // TODO enable
+    if (false) {
+      if (gamepad2.dpad_down) {
+        bot.deposit.retract();
+      } else if (gamepad2.dpad_up) {
+        bot.deposit.prepareToDeposit();
+        bot.deposit.deliverToLander().begin();
+      }
+      if (gamepad2.dpad_left || gamepad2.dpad_right) {
+        bot.deposit.score();
+      }
     }
 
     bot.hookLift.adjust(-gamepad2.right_stick_y * 0.5);
@@ -170,6 +185,8 @@ public class TeleOpMode extends LinearOpMode {
     if (!bot.deposit.isRunningToPosition()) {
       bot.deposit.adjust(gamepad2.right_stick_x);
     }
+
+    bot.deposit.orientator.setPosition(bot.deposit.orientator.getPosition() + (gamepad2.left_trigger - gamepad2.right_trigger) * 0.05);
   }
 
   private Coordinate getLeftDrivetrainTarget(Gamepad gamepad) {

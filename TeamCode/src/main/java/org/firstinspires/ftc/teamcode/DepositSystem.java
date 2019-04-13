@@ -49,7 +49,7 @@ public class DepositSystem {
 
   public void adjust(double power) {
     slideMotor.setMode(RunMode.RUN_WITHOUT_ENCODER);
-    slideMotor.setPower(power / 2);
+    slideMotor.setPower(power);
   }
 
   public boolean isRunningToPosition() {

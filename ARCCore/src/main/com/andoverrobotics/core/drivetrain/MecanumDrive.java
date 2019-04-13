@@ -273,7 +273,7 @@ public class MecanumDrive extends StrafingDriveTrain {
     }
   }
 
-  public void goToMemorizedPosition(double power) {
+  public void startGoingToMemorizedPosition(double power) {
     MotorAdapter[] motors = allMotors();
 
     for (int i = 0; i < 4; i++) {
@@ -283,7 +283,7 @@ public class MecanumDrive extends StrafingDriveTrain {
       motor.setPower(Math.abs(power));
     }
 
-    while (isBusy());
+    while (!isRunningToPosition());
   }
 
   @Override
@@ -370,5 +370,9 @@ public class MecanumDrive extends StrafingDriveTrain {
     }
 
     return varianceSum / 4.0;
+  }
+
+  public boolean isRunningToPosition() {
+    return isBusy();
   }
 }
