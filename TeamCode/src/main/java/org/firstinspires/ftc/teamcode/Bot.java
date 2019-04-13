@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap.DeviceMapping;
 import com.qualcomm.robotcore.hardware.Servo;
 import java.io.IOException;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.teleop.Diagnosable;
 import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.RevExtensions2;
 
@@ -108,6 +109,10 @@ public class Bot {
     this.hookLift = new HookLift(hookLift);
 
     instance = this;
+  }
+
+  public void addAllDiagnosableData() {
+    Diagnosable.addAll(telemetry, deposit, hookLift, intake);
   }
 
   private void initializeImu() {

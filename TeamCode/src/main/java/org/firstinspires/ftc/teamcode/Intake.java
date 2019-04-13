@@ -10,8 +10,10 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 import java.io.IOException;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.teleop.Diagnosable;
 
-public class Intake {
+public class Intake extends Diagnosable {
 
   public static class ConfigSchema {
 
@@ -117,5 +119,11 @@ public class Intake {
   private boolean wouldPowerExceedBoundaries(double power) {
     return slideMotor.getCurrentPosition() <= 10 && power < 0 ||
         slideMotor.getCurrentPosition() >= schema.fullyExtendedTicks - 10 && power > 0;
+  }
+
+  public void addData(Telemetry telemetry) {
+    addMotorData(telemetry, "intakeSlides", slideMotor);
+    addServoData(telemetry, "bucketRotation", orientator);
+    telemetry.addData("sweeper", "power=%.3f", sweeper.getPower());
   }
 }

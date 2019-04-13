@@ -6,9 +6,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 import com.qualcomm.robotcore.hardware.Servo;
 import java.io.IOException;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.teleop.Diagnosable;
 import org.firstinspires.ftc.teamcode.teleop.TeleOpBot;
 
-public class DepositSystem {
+public class DepositSystem extends Diagnosable {
 
   public static class ConfigSchema {
     public int fullyExtendedTicks;
@@ -85,5 +87,10 @@ public class DepositSystem {
     } catch (IOException e) {
       throw new IllegalArgumentException(e);
     }
+  }
+
+  public void addData(Telemetry telemetry) {
+    addMotorData(telemetry, "depositSlides", slideMotor);
+    addServoData(telemetry, "sorterRotation", orientator);
   }
 }

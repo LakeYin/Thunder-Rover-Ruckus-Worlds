@@ -22,8 +22,7 @@ public class TeleOpMode extends LinearOpMode {
     while (opModeIsActive()) {
 
       controlDrivetrain(gamepad1);
-      // TODO enable
-      //controlCycle(gamepad2);
+      controlCycle(gamepad2);
       adjustByState(gamepad2);
       if (gamepad2.back || gamepad1.left_bumper || gamepad1.right_bumper) {
         stopAllMotion();
@@ -34,6 +33,7 @@ public class TeleOpMode extends LinearOpMode {
       addPowerDrawDebug();
       long time = System.nanoTime();
       telemetry.addData("Cycle Rate", "%dns/cycle", time - prevTime);
+      bot.addAllDiagnosableData();
       prevTime = time;
       telemetry.update();
     }
@@ -75,7 +75,8 @@ public class TeleOpMode extends LinearOpMode {
   }
 
   private void controlCycle(Gamepad gamepad) {
-    if (gamepad.x && (state == CYCLE_SCORE || state == MANUAL)) {
+    // TODO enable
+    /*if (gamepad.x && (state == CYCLE_SCORE || state == MANUAL)) {
       state = CYCLE_COLLECT;
       bot.deposit.retract();
       bot.intake.extend(0.5).begin().whenDone(() -> {
@@ -99,11 +100,7 @@ public class TeleOpMode extends LinearOpMode {
       state = CYCLE_SCORE;
       bot.deposit.score();
 
-    } else if (state == MANUAL) {
-      controlManually();
-    } else if (state == ENDGAME) {
-      controlEndgame();
-    }
+    } */
 
     if (gamepad.left_stick_button) {
       state = MANUAL;
