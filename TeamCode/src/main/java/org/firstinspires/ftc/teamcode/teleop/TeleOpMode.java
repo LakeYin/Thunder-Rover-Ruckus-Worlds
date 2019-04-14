@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import java.io.IOException;
+import java.util.Arrays;
 
 @TeleOp(name = "Main TeleOp", group = "ARC")
 public class TeleOpMode extends LinearOpMode {
@@ -31,10 +32,13 @@ public class TeleOpMode extends LinearOpMode {
       telemetry.addData("Connection Keep-Alive", getRuntime());
       telemetry.addData("State", state);
       addPowerDrawDebug();
+
       long time = System.nanoTime();
       telemetry.addData("Cycle Rate", "%dns/cycle", time - prevTime);
       bot.addAllDiagnosableData();
       prevTime = time;
+
+      telemetry.addData("memoPos", Arrays.toString(bot.drivetrain.getMemorizedPosition()));
       telemetry.update();
     }
   }

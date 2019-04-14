@@ -12,6 +12,7 @@ import com.andoverrobotics.core.utilities.MotorPair;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
+import java.util.Arrays;
 import java.util.stream.Stream;
 
 /**
@@ -284,6 +285,10 @@ public class MecanumDrive extends StrafingDriveTrain {
     }
 
     while (!isRunningToPosition());
+  }
+
+  public int[] getMemorizedPosition() {
+    return Arrays.copyOf(memoPosition, memoPosition.length);
   }
 
   @Override

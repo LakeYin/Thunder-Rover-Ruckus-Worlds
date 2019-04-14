@@ -9,10 +9,12 @@ public class TeamMarkerTask implements Task {
   public void run() throws InterruptedException {
     Bot bot = Bot.getInstance();
 
-    bot.intake.extendFully().begin().waitUntilDone();
+    bot.intake.extend(0.7).begin().waitUntilDone();
     bot.intake.orientToTransfer();
+    bot.intake.runSweeperIn();
     Bot.sleep(2000);
     bot.intake.orientToTransit();
+    bot.intake.stopSweeper();
     bot.intake.retractFully().begin().waitUntilDone();
   }
 }

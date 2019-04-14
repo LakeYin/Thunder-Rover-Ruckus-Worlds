@@ -64,12 +64,14 @@ public abstract class SampleMineralTask implements Task {
     Bot bot = Bot.getInstance();
     bot.drivetrain.rotateCounterClockwise(90);
 
-    bot.intake.extend(schema.knockDistance, 0.8).begin().waitUntilDone();
+    bot.intake.extend(schema.knockDistance).begin().waitUntilDone();
+    bot.intake.orientToCollect();
     bot.intake.runSweeperIn();
     Bot.sleep(800);
     bot.intake.orientToTransit();
     bot.intake.stopSweeper();
-    bot.intake.retractFully(0.8).begin().waitUntilDone();
+    bot.intake.retractFully().begin().waitUntilDone();
+    bot.intake.runSweeperIn();
     bot.intake.orientToTransfer();
     Bot.sleep(2000);
     bot.intake.stopSweeper();
