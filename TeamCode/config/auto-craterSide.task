@@ -1,5 +1,5 @@
 land
-move -7 1
+move -20 1
 move 0 -63
 rotate 135
 move 9 0 0.8
