@@ -282,9 +282,9 @@ public class MecanumDrive extends StrafingDriveTrain {
       motor.setMode(RUN_TO_POSITION);
       motor.setTargetPosition(memoPosition[i]);
       motor.setPower(Math.abs(power));
-    }
 
-    while (!isRunningToPosition());
+      while (!motor.isBusy());
+    }
   }
 
   public int[] getMemorizedPosition() {

@@ -34,7 +34,7 @@ public class LandTask implements Task {
   }
 
   private void lowerBot() {
-    bot.hookLift.liftToHook();
+    bot.hookLift.liftToHook().begin().waitUntilDone();
   }
 
   private void startLoweringHook() {

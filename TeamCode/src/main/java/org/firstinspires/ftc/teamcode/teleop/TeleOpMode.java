@@ -19,7 +19,7 @@ public class TeleOpMode extends LinearOpMode {
   public void runOpMode() {
     initialize();
     waitForStart();
-    long prevTime = System.nanoTime();
+    long prevTime = System.currentTimeMillis();
     while (opModeIsActive()) {
 
       controlDrivetrain(gamepad1);
@@ -33,8 +33,8 @@ public class TeleOpMode extends LinearOpMode {
       telemetry.addData("State", state);
       addPowerDrawDebug();
 
-      long time = System.nanoTime();
-      telemetry.addData("Cycle Rate", "%dns/cycle", time - prevTime);
+      long time = System.currentTimeMillis();
+      telemetry.addData("Cycle Rate", "%dms/cycle", time - prevTime);
       bot.addAllDiagnosableData();
       prevTime = time;
 
