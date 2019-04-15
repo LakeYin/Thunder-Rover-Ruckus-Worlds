@@ -65,7 +65,7 @@ public class TeleOpMode extends LinearOpMode {
   private void controlDrivetrain(Gamepad gamepad) {
     if (!bot.drivetrain.isRunningToPosition()) {
       Coordinate strafe = getLeftDrivetrainTarget(gamepad)
-          .add(getMicroAdjustCoord(gamepad).multiply(0.5));
+          .add(getMicroAdjustCoord(gamepad).multiply(0.7));
       double microRotatePower = (booleanToInt(gamepad.b) - booleanToInt(gamepad.x)) * 0.35;
       bot.drivetrain.setStrafeAndRotation(strafe, gamepad.right_stick_x + microRotatePower,
           strafe.getPolarDistance());
