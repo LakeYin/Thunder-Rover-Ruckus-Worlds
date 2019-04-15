@@ -1,6 +1,6 @@
 land
 move -5 0
-rotate -90
+rotate -96
 drop_team_marker
 move 70 0
 rotate 130
