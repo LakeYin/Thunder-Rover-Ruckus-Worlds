@@ -1,14 +1,15 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
-import org.firstinspires.ftc.teamcode.Bot;
-
 import java.io.IOException;
+import java.util.Optional;
+import org.firstinspires.ftc.teamcode.Bot;
+import org.firstinspires.ftc.teamcode.autonomous.MineralDetector.Mineral;
 
 public class AutonomousBot extends Bot {
   private static LinearOpMode currentOpMode;
+  public static Optional<Mineral> initialMineral;
 
   public AutonomousBot(LinearOpMode opMode) throws IOException {
     super(opMode.hardwareMap, opMode.telemetry, opMode.hardwareMap.appContext, opMode);

@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.autonomous.tasks;
 
 import com.andoverrobotics.core.config.Configuration;
-import com.andoverrobotics.core.drivetrain.StrafingDriveTrain;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import java.io.IOException;
 import java.util.Optional;
@@ -21,7 +20,7 @@ public abstract class SampleMineralTask implements Task {
   }
 
   private ConfigSchema schema;
-  private final MineralDetector detector;
+  public static MineralDetector detector;
   private AndroidTextToSpeech tts;
 
   public SampleMineralTask(HardwareMap map) {

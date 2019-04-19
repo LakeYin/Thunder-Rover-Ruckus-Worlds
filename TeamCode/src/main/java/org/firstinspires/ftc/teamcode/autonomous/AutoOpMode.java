@@ -27,6 +27,7 @@ public abstract class AutoOpMode extends LinearOpMode {
       initFields();
       spamTelemetryAndWaitForStart();
       throwIfInterrupted();
+      readMineralInitially();
       executeCommands(CONFIG_PATH + filename);
 
     } catch (Exception e) {
@@ -36,6 +37,9 @@ public abstract class AutoOpMode extends LinearOpMode {
     }
   }
 
+  private void readMineralInitially() {
+    AutonomousBot.initialMineral = SampleMineralTask.detector.currentRecognition();
+  }
 
   private void spamTelemetryAndWaitForStart() {
     while (!opModeIsActive() && !isStopRequested()) {

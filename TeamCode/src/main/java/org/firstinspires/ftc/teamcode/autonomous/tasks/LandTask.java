@@ -16,7 +16,6 @@ public class LandTask implements Task {
     lowerBot();
     exitHook();
     strafeBot();
-    startLoweringHook();
   }
 
   private void exitHook() throws InterruptedException {
@@ -35,9 +34,5 @@ public class LandTask implements Task {
 
   private void lowerBot() {
     bot.hookLift.liftToHook().begin().waitUntilDone();
-  }
-
-  private void startLoweringHook() {
-    bot.hookLift.lowerToBottom().begin();
   }
 }

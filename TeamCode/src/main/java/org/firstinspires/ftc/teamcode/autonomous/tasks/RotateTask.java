@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode.autonomous.tasks;
 import com.andoverrobotics.core.drivetrain.DriveTrain;
 
 public class RotateTask implements Task {
-  private final DriveTrain drivetrain;
-  private final int degrees;
+  protected final DriveTrain drivetrain;
+  protected final int degrees;
 
   public RotateTask(DriveTrain drivetrain, int degrees) {
     this.drivetrain = drivetrain;

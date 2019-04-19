@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
-import static org.firstinspires.ftc.teamcode.teleop.TeleOpState.*;
+import static org.firstinspires.ftc.teamcode.teleop.TeleOpState.ENDGAME;
+import static org.firstinspires.ftc.teamcode.teleop.TeleOpState.MANUAL;
 
 import com.andoverrobotics.core.utilities.Coordinate;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -63,18 +64,16 @@ public class TeleOpMode extends LinearOpMode {
   }
 
   private void controlDrivetrain(Gamepad gamepad) {
-    if (!bot.drivetrain.isRunningToPosition()) {
-      Coordinate strafe = getLeftDrivetrainTarget(gamepad)
-          .add(getMicroAdjustCoord(gamepad).multiply(0.7));
-      double microRotatePower = (booleanToInt(gamepad.b) - booleanToInt(gamepad.x)) * 0.35;
-      bot.drivetrain.setStrafeAndRotation(strafe, gamepad.right_stick_x + microRotatePower,
-          strafe.getPolarDistance());
+    Coordinate strafe = getLeftDrivetrainTarget(gamepad)
+        .add(getMicroAdjustCoord(gamepad).multiply(0.7));
+    double microRotatePower = (booleanToInt(gamepad.b) - booleanToInt(gamepad.x)) * 0.35;
+    bot.drivetrain.setStrafeAndRotation(strafe, gamepad.right_stick_x + microRotatePower,
+        strafe.getPolarDistance());
 
-      if (gamepad.start) {
-        bot.drivetrain.memorizeCurrentPosition();
-      } else if (gamepad.back) {
-        bot.drivetrain.startGoingToMemorizedPosition(0.6);
-      }
+    if (gamepad.start) {
+      bot.drivetrain.memorizeCurrentPosition();
+    } else if (gamepad.back) {
+      bot.drivetrain.startGoingToMemorizedPosition(0.6);
     }
   }
 
@@ -184,10 +183,10 @@ public class TeleOpMode extends LinearOpMode {
     bot.hookLift.adjust(-gamepad2.right_stick_y * 0.5);
 
     if (!bot.deposit.isRunningToPosition()) {
-      bot.deposit.adjust(gamepad2.right_stick_x);
+      bot.deposit.adjust(gamepad2.right_stick_x * 0.8);
     }
 
-    bot.deposit.orientator.setPosition(bot.deposit.orientator.getPosition() + (gamepad2.left_trigger - gamepad2.right_trigger) * 0.05);
+    bot.deposit.orientator.setPosition(bot.deposit.orientator.getPosition() + (gamepad2.left_trigger - gamepad2.right_trigger) * 0.1);
   }
 
   private Coordinate getLeftDrivetrainTarget(Gamepad gamepad) {

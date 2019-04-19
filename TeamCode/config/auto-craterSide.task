@@ -1,11 +1,10 @@
 land
-move -13 1
-move 0 -56
-rotate 130
-move 4 0 0.2
-move 0 15
+move -20 1
+move -6 -50
+rotate 125
+move 6 0 0.5
 drop_team_marker
-move 0 -10
+move 0 -23
 rotate -135
 move 5 40
 sample_mineral

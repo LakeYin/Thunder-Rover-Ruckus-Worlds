@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.autonomous.tasks;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import org.firstinspires.ftc.teamcode.autonomous.AutonomousBot;
+import org.firstinspires.ftc.teamcode.autonomous.MineralDetector.Mineral;
 
 public class CraterSideSampleMineralTask extends SampleMineralTask {
 
@@ -17,7 +19,7 @@ public class CraterSideSampleMineralTask extends SampleMineralTask {
 
     switchRight();
 
-    if (detectedGold()) {
+    if (AutonomousBot.initialMineral.orElse(Mineral.SILVER) == Mineral.GOLD) {
       knockMineral();
       switchLeft();
       return;

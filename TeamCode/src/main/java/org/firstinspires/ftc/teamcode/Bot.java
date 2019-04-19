@@ -96,16 +96,20 @@ public class Bot {
     drivetrain.setDefaultDrivePower(mainConfig.getDouble("defaultDrivePower"));
 //    }
 
+    DcMotor intakeSlide = motorHw.get("intakeSlide");
     intake = new Intake(
-        motorHw.get("intakeSlide"),
+        intakeSlide,
         servoHw.get("intakeOrientator"),
-        hardware.crservo.get("intakeSweeper"), opMode);
+        hardware.crservo.get("intakeSweeper"));
+    DcMotor depositSlide = motorHw.get("depositSlide");
+    depositSlide.setDirection(Direction.REVERSE);
     deposit = new DepositSystem(
-        motorHw.get("depositSlide"),
+        depositSlide,
         servoHw.get("depositOrientator"), opMode);
 
     DcMotor hookLift = motorHw.get("hookLift");
     hookLift.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
+    hookLift.setDirection(Direction.REVERSE);
     this.hookLift = new HookLift(hookLift);
 
     instance = this;
