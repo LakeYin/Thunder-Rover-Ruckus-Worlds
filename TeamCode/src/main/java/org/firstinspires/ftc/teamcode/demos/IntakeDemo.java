@@ -25,7 +25,7 @@ public class IntakeDemo extends OpMode {
     else
       intake.stopSweeper();
     intake.controlSlidesManually(-gamepad1.left_stick_x);
-    intake.orientManually(-gamepad1.right_stick_y);
+    //intake.orientManually(-gamepad1.right_stick_y);
     telemetry.addData("pos", intake.orientator.getPosition());
   }
 }

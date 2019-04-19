@@ -55,10 +55,10 @@ public class RotateByIMUTask extends RotateTask {
         heading = initialHeading;
     for (; heading != targetHeading; heading = readHeading()) {
       int pError = error(heading, targetHeading),
-          dError = prevError - pError;
+          dError = (pError - prevError) * 10;
       prevError = pError;
 
-      drivetrain.setRotationPower(pError * Kp + Kd / dError);
+      drivetrain.setRotationPower(pError * Kp + dError * Kd);
     }
   }
 }

@@ -167,17 +167,11 @@ public class TeleOpMode extends LinearOpMode {
     else
       bot.intake.stopSweeper();
 
-    // TODO enable
-    if (false) {
-      if (gamepad2.dpad_down) {
-        bot.deposit.retract();
-      } else if (gamepad2.dpad_up) {
-        bot.deposit.prepareToDeposit();
-        bot.deposit.deliverToLander().begin();
-      }
-      if (gamepad2.dpad_left || gamepad2.dpad_right) {
-        bot.deposit.score();
-      }
+    if (gamepad2.dpad_up) {
+      bot.deposit.orientToTransit();
+    }
+    if (gamepad2.dpad_right) {
+      bot.deposit.orientToLevel();
     }
 
     bot.hookLift.adjust(-gamepad2.right_stick_y * 0.5);

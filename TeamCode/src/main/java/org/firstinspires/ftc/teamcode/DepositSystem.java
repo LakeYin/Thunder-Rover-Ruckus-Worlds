@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import java.io.IOException;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.teleop.Diagnosable;
-import org.firstinspires.ftc.teamcode.teleop.TeleOpBot;
 
 public class DepositSystem extends Diagnosable {
 
@@ -75,6 +74,14 @@ public class DepositSystem extends Diagnosable {
     });
     thread.start();
     return thread;
+  }
+
+  public void orientToTransit() {
+    orientator.setPosition(schema.orientatorTransitPos);
+  }
+
+  public void orientToLevel() {
+    orientator.setPosition(schema.orientatorFlatPos);
   }
 
   private boolean slideMotorAboveFrame() {
