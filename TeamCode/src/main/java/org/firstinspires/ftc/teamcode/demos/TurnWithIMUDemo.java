@@ -3,16 +3,26 @@ package org.firstinspires.ftc.teamcode.demos;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import org.firstinspires.ftc.teamcode.Bot;
+import org.firstinspires.ftc.teamcode.autonomous.tasks.RotateByIMUTask;
+import org.firstinspires.ftc.teamcode.autonomous.tasks.Task;
 
 @Autonomous(name = "Turn with IMU", group = "ARC")
 public class TurnWithIMUDemo extends LinearOpMode {
 
   private BNO055IMU imu;
+  private Bot bot;
 
   @Override
   public void runOpMode() throws InterruptedException {
     setupIMU();
+    bot = new Bot(hardwareMap, telemetry, context, this);
     waitForStart();
+
+    Task task = new RotateByIMUTask(bot.drivetrain, 90);
+    task.run();
+
+    while (opModeIsActive());
   }
 
   private void setupIMU() {
