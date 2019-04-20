@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.demos;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
 import org.firstinspires.ftc.teamcode.Intake;
 
 @TeleOp(name = "IntakeDemo", group = "ARC")
@@ -24,6 +27,8 @@ public class IntakeDemo extends OpMode {
       intake.runSweeperOut();
     else
       intake.stopSweeper();
+    if (gamepad1.dpad_down)
+      intake.orientator.setPosition(gamepad1.left_trigger);
     intake.controlSlidesManually(-gamepad1.left_stick_x);
     //intake.orientManually(-gamepad1.right_stick_y);
     telemetry.addData("pos", intake.orientator.getPosition());

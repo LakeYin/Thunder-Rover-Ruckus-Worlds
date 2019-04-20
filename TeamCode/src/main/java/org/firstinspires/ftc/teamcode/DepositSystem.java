@@ -50,30 +50,20 @@ public class DepositSystem extends Diagnosable {
 
   public void adjust(double power) {
     slideMotor.setMode(RunMode.RUN_WITHOUT_ENCODER);
-    slideMotor.setPower(power);
+    slideMotor.setPower(wouldPowerExceedLimit(power) ? 0 : power);
   }
 
   public boolean isRunningToPosition() {
-    return slideMotor.isBusy();
+    return slideMotor.getMode() == RunMode.RUN_TO_POSITION && slideMotor.isBusy();
   }
 
-  public Thread retract() {
+  public void retract() {
     if (Math.abs(slideMotor.getCurrentPosition()) > Math.abs(schema.fullyExtendedTicks * 0.2)) {
       orientator.setPosition(schema.orientatorTransitPos);
-      opMode.sleep(200);
     }
 
-    slideMotor.setMode(RunMode.RUN_TO_POSITION);
-    slideMotor.setTargetPosition(0);
-    slideMotor.setPower(Math.abs(schema.slideSpeed));
-
-    Thread thread = new Thread(() -> {
-      while (slideMotorAboveFrame() && opMode.opModeIsActive())
-        ;
-      orientator.setPosition(schema.orientatorFlatPos);
-    });
-    thread.start();
-    return thread;
+    new RunToPosition(slideMotor, 0, schema.slideSpeed).begin()
+            .whenDone(() -> orientator.setPosition(schema.orientatorFlatPos));
   }
 
   public void orientToTransit() {
@@ -84,8 +74,17 @@ public class DepositSystem extends Diagnosable {
     orientator.setPosition(schema.orientatorFlatPos);
   }
 
+  public void orientToScore() {
+    orientator.setPosition(schema.orientatorScorePos);
+  }
+
   private boolean slideMotorAboveFrame() {
-    return Math.abs(slideMotor.getTargetPosition() - slideMotor.getCurrentPosition()) > Math.abs(schema.fullyExtendedTicks * 0.2);
+    return Math.abs(slideMotor.getTargetPosition() - slideMotor.getCurrentPosition()) > Math.abs(schema.fullyExtendedTicks * 0.1);
+  }
+
+  private boolean wouldPowerExceedLimit(double power) {
+    return (power < 0 && slideMotor.getCurrentPosition() < 10) ||
+            (power > 0 && slideMotor.getCurrentPosition() > schema.fullyExtendedTicks * .98);
   }
 
   private void loadSchema() {

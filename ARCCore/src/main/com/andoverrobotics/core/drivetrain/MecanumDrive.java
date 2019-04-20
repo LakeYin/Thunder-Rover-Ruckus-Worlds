@@ -378,6 +378,6 @@ public class MecanumDrive extends StrafingDriveTrain {
   }
 
   public boolean isRunningToPosition() {
-    return isBusy();
+    return motorFL.getMotor().getMode() == RUN_TO_POSITION && isBusy();
   }
 }

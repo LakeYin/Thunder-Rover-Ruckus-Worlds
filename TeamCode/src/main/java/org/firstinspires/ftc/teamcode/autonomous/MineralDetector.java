@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
+import com.vuforia.Vuforia;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -86,6 +88,7 @@ public class MineralDetector {
 
   public void shutdown() {
     detector.shutdown();
+    VuforiaManager.setFrontFlashlight(false);
   }
 
   private void initTensorFlowIfNeeded(HardwareMap hardwareMap) {

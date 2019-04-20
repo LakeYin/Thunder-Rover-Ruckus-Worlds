@@ -7,6 +7,8 @@ import org.firstinspires.ftc.teamcode.Bot;
 import org.firstinspires.ftc.teamcode.autonomous.tasks.RotateByIMUTask;
 import org.firstinspires.ftc.teamcode.autonomous.tasks.Task;
 
+import java.io.IOException;
+
 @Autonomous(name = "Turn with IMU", group = "ARC")
 public class TurnWithIMUDemo extends LinearOpMode {
 
@@ -16,7 +18,11 @@ public class TurnWithIMUDemo extends LinearOpMode {
   @Override
   public void runOpMode() throws InterruptedException {
     setupIMU();
-    bot = new Bot(hardwareMap, telemetry, context, this);
+    try {
+      bot = new Bot(hardwareMap, telemetry, hardwareMap.appContext, this);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
     waitForStart();
 
     Task task = new RotateByIMUTask(bot.drivetrain, 90);

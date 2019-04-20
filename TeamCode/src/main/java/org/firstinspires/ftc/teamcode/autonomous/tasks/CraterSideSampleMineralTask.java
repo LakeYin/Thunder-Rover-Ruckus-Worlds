@@ -13,21 +13,21 @@ public class CraterSideSampleMineralTask extends SampleMineralTask {
   @Override
   protected void runMineralCheck() throws InterruptedException {
     if (detectedGold()) {
-      knockMineral();
+      knockCenterMineral();
       return;
     }
 
     switchRight();
 
-    if (AutonomousBot.initialMineral.orElse(Mineral.SILVER) == Mineral.GOLD) {
-      knockMineral();
+    if (AutonomousBot.centerMineral.orElse(Mineral.SILVER) == Mineral.GOLD) {
+      knockCenterMineral();
       switchLeft();
       return;
     }
 
     switchRight();
 
-    knockMineral();
+    knockCenterMineral();
 
     switchLeft();
     switchLeft();

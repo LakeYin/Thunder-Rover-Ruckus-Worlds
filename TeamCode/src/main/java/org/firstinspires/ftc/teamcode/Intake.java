@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.util.Log;
+
 import com.andoverrobotics.core.config.Configuration;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -41,6 +43,7 @@ public class Intake extends Diagnosable {
     this.sweeper = sweeper;
     loadSchema();
     orientator.scaleRange(schema.orientatorRangeMin, schema.orientatorRangeMax);
+    orientator.setPosition(schema.orientatorTransitPos);
   }
 
   private void loadSchema() {
@@ -127,6 +130,7 @@ public class Intake extends Diagnosable {
       while (Math.abs(pos - position) > 1e-2) {
         pos += Math.abs(increment) > Math.abs(position - pos) ? (position - pos) : increment;
         orientator.setPosition(pos);
+        Log.d("intakeOrientatorPos", Double.toString(pos));
         try {
           Thread.sleep(20);
         } catch (InterruptedException e) {

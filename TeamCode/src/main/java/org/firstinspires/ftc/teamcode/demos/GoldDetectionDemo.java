@@ -29,5 +29,7 @@ public class GoldDetectionDemo extends LinearOpMode {
           .map(Enum::name).orElse("none"));
       telemetry.update();
     }
+
+    detector.shutdown();
   }
 }

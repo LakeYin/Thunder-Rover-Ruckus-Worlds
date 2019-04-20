@@ -15,7 +15,7 @@ public abstract class SampleMineralTask implements Task {
   // Fields and class need to be kept public (so that the schema can be loaded)
   public static class ConfigSchema {
     public double knockDistance;
-    public double distanceBetweenMinerals;
+    public int degreesBetweenMinerals;
     public int delayBeforeRecognition;
   }
 
@@ -43,39 +43,47 @@ public abstract class SampleMineralTask implements Task {
   // Precondition: detector activated and phone facing minerals
   @Override
   public void run() throws InterruptedException {
-    detector.activate();
     runMineralCheck();
-    detector.shutdown();
   }
 
   protected abstract void runMineralCheck() throws InterruptedException;
 
   protected void switchLeft() {
-    Bot.getInstance().drivetrain.driveBackwards(schema.distanceBetweenMinerals);
+    Bot.getInstance().drivetrain.rotateCounterClockwise(schema.degreesBetweenMinerals);
   }
 
   protected void switchRight() {
-    Bot.getInstance().drivetrain.driveForwards(schema.distanceBetweenMinerals);
+    Bot.getInstance().drivetrain.rotateClockwise(schema.degreesBetweenMinerals);
   }
 
-  protected void knockMineral() throws InterruptedException {
+  protected void knockCenterMineral() {
+    Bot.getInstance().drivetrain.driveBackwards(5);
+    knockMineral(0.65);
+    Bot.getInstance().drivetrain.driveForwards(5);
+  }
+
+  protected void knockSideMineral() {
+    knockMineral(1);
+  }
+
+  protected void knockMineral(double extension) {
     tts.speak("Bueno, yo encontré el mineral correcto.");
     Bot bot = Bot.getInstance();
     bot.drivetrain.rotateCounterClockwise(90);
 
-    bot.intake.extend(schema.knockDistance * 0.7).begin().waitUntilDone();
+    bot.intake.extend(schema.knockDistance * 0.5 * extension).begin().waitUntilDone();
     bot.intake.orientToCollect();
-    bot.intake.runSweeperIn();
-    bot.intake.extend(schema.knockDistance, 0.3).begin().waitUntilDone();
+    bot.intake.extend(schema.knockDistance * extension, 0.3).begin().waitUntilDone();
     bot.intake.orientToTransit();
     bot.intake.stopSweeper();
     bot.intake.retractFully().begin().waitUntilDone();
-    bot.intake.runSweeperIn();
+    // Following done if collect gold mineral
+    /*bot.intake.runSweeperIn();
     bot.intake.orientToTransfer();
     Bot.sleep(2000);
     bot.intake.stopSweeper();
     bot.intake.orientToTransit();
-    bot.intake.extend(0.2, 0.4).begin();
+    bot.intake.extend(0.2, 0.4).begin();*/
 
     bot.drivetrain.rotateClockwise(90);
   }

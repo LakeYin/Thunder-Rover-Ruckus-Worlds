@@ -4,6 +4,8 @@ import android.util.Log;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+
+import org.firstinspires.ftc.teamcode.Bot;
 import org.firstinspires.ftc.teamcode.autonomous.tasks.LandTask;
 import org.firstinspires.ftc.teamcode.autonomous.tasks.SampleMineralTask;
 import org.firstinspires.ftc.teamcode.autonomous.tasks.ScoreMineralTask;
@@ -26,19 +28,24 @@ public abstract class AutoOpMode extends LinearOpMode {
 
       initFields();
       spamTelemetryAndWaitForStart();
+      startSpammingTelemetry();
       throwIfInterrupted();
       readMineralInitially();
       executeCommands(CONFIG_PATH + filename);
 
     } catch (Exception e) {
       e.printStackTrace();
-      stopSpammingTelemetry();
       //cleanup();
+    } finally {
+      stopSpammingTelemetry();
     }
   }
 
   private void readMineralInitially() {
-    AutonomousBot.initialMineral = SampleMineralTask.detector.currentRecognition();
+    SampleMineralTask.detector.activate();
+    Bot.sleep(1000);
+    AutonomousBot.centerMineral = SampleMineralTask.detector.currentRecognition();
+    Log.d("Minerals", "Center = " + AutonomousBot.centerMineral);
   }
 
   private void spamTelemetryAndWaitForStart() {
@@ -55,7 +62,6 @@ public abstract class AutoOpMode extends LinearOpMode {
   }
 
   private void initFields() throws IOException {
-    telemetry.setAutoClear(false);
     VuforiaManager.initVuforia(hardwareMap);
     bot = new AutonomousBot(this);
     tasks = new TaskFactory(bot.drivetrain);
