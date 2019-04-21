@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.autonomous.tasks;
 
+import android.util.Log;
 import com.andoverrobotics.core.drivetrain.DriveTrain;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
@@ -51,14 +52,18 @@ public class RotateByIMUTask extends RotateTask {
 
   @Override
   public void run() {
-    int prevError = error(initialHeading, targetHeading),
-        heading = initialHeading;
+    double prevError = error(initialHeading, targetHeading);
+    int heading = initialHeading;
     for (; heading != targetHeading; heading = readHeading()) {
-      int pError = error(heading, targetHeading),
-          dError = (pError - prevError) * 10;
+      double pError = error(heading, targetHeading),
+          dError = (pError - prevError) / 0.05;
       prevError = pError;
 
-      drivetrain.setRotationPower(pError * Kp + dError * Kd);
+      double output = pError * Kp + dError * Kd;
+      drivetrain.setRotationPower(output);
+
+      Log.d("PID Controller", String.format("pError=%.2f dError=%.2f output=%.2f", pError, dError, output));
+      Bot.sleep(50);
     }
   }
 }
