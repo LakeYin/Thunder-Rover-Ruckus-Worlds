@@ -6,5 +6,5 @@ rotate -135
 move 6 6 0.5
 drop_team_marker
 rotate -180
-move 0 58
+move 0 12
 park
