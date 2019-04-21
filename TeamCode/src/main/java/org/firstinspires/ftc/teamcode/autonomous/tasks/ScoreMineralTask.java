@@ -36,6 +36,6 @@ public class ScoreMineralTask implements Task {
     }
 
     bot.intake.orientToTransit();
-    bot.intake.extendFully();
+    bot.intake.extendFully().begin();
   }
 }

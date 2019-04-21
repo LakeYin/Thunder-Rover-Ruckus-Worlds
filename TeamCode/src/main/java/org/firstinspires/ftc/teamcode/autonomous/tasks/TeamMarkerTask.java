@@ -17,7 +17,6 @@ public class TeamMarkerTask implements Task {
     Bot.sleep(1500);
     bot.intake.stopSweeper();
     bot.intake.orientToTransit();
-    Bot.sleep(500);
     bot.intake.retractFully().begin().waitUntilDone();
   }
 }

@@ -6,12 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.firstinspires.ftc.teamcode.Bot;
-import org.firstinspires.ftc.teamcode.autonomous.tasks.LandTask;
-import org.firstinspires.ftc.teamcode.autonomous.tasks.SampleMineralTask;
-import org.firstinspires.ftc.teamcode.autonomous.tasks.ScoreMineralTask;
-import org.firstinspires.ftc.teamcode.autonomous.tasks.Task;
-import org.firstinspires.ftc.teamcode.autonomous.tasks.TaskFactory;
-import org.firstinspires.ftc.teamcode.autonomous.tasks.TeamMarkerTask;
+import org.firstinspires.ftc.teamcode.autonomous.tasks.*;
 
 public abstract class AutoOpMode extends LinearOpMode {
 
@@ -27,10 +22,11 @@ public abstract class AutoOpMode extends LinearOpMode {
     try {
 
       initFields();
+      SampleMineralTask.detector.activate();
       spamTelemetryAndWaitForStart();
       startSpammingTelemetry();
       throwIfInterrupted();
-      readMineralInitially();
+      readCenterMineral();
       executeCommands(CONFIG_PATH + filename);
 
     } catch (Exception e) {
@@ -41,11 +37,9 @@ public abstract class AutoOpMode extends LinearOpMode {
     }
   }
 
-  private void readMineralInitially() {
-    SampleMineralTask.detector.activate();
-    Bot.sleep(1000);
+  private void readCenterMineral() {
     AutonomousBot.centerMineral = SampleMineralTask.detector.currentRecognition();
-    Log.d("Minerals", "Center = " + AutonomousBot.centerMineral);
+    Log.d("Minerals", "Center: " + AutonomousBot.centerMineral);
   }
 
   private void spamTelemetryAndWaitForStart() {
@@ -65,15 +59,13 @@ public abstract class AutoOpMode extends LinearOpMode {
     VuforiaManager.initVuforia(hardwareMap);
     bot = new AutonomousBot(this);
     tasks = new TaskFactory(bot.drivetrain);
-    SampleMineralTask sampleMineralTask = getSampleMineralTask();
 
-    tasks.addCustomTask("sample_mineral", sampleMineralTask);
+    tasks.addCustomTask("sample_mineral", new SampleMineralTask(hardwareMap));
     tasks.addCustomTask("land", new LandTask());
     tasks.addCustomTask("drop_team_marker", new TeamMarkerTask());
     tasks.addCustomTask("score_minerals", new ScoreMineralTask());
+    tasks.addCustomTask("park", new ParkTask());
   }
-
-  protected abstract SampleMineralTask getSampleMineralTask();
 
   private void executeCommands(String filename) throws FileNotFoundException, InterruptedException {
     String[] commands = tasks.commandsInFile(filename);

@@ -78,7 +78,7 @@ public class Intake extends Diagnosable {
   }
 
   public boolean isSlideRunningToPosition() {
-    return slideMotor.isBusy();
+    return slideMotor.getMode() == RunMode.RUN_TO_POSITION && slideMotor.isBusy();
   }
 
   public void orientManually(float delta) {

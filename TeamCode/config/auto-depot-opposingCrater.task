@@ -1,9 +1,6 @@
 land
-rotate -90
-drop_team_marker
-rotate 90
 sample_mineral
+drop_team_marker
 move -50 0
 rotate -130
-move 5 0 0.2
-move 0 24
+park

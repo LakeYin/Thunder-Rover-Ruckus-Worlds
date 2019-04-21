@@ -64,6 +64,14 @@ public class MineralDetector {
         .map(Mineral::byLabel);
   }
 
+  public Optional<Mineral> rightmostRecognition() {
+    return detector.getRecognitions()
+        .stream()
+        .max((r1, r2) -> Float.compare(r1.getLeft(), r2.getLeft()))
+        .map(Recognition::getLabel)
+        .map(Mineral::byLabel);
+  }
+
   public Optional<GoldPosition> goldPosition() {
     if (!isTrackingEnoughObjects()) {
       return Optional.empty();

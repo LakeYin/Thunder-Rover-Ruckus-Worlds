@@ -30,7 +30,7 @@ public class LandTask implements Task {
   private void rotateToReadRightMineral() {
     bot.drivetrain.rotateClockwise(42);
     Bot.sleep(1000);
-    AutonomousBot.rightMineral = SampleMineralTask.detector.currentRecognition();
+    AutonomousBot.rightMineral = SampleMineralTask.detector.rightmostRecognition();
     Log.d("Minerals", "Right: " + AutonomousBot.rightMineral);
     SampleMineralTask.detector.shutdown();
     bot.drivetrain.rotateCounterClockwise(42);
