@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.FRONT;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.vuforia.CameraDevice;
 import com.vuforia.Vuforia;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -35,7 +36,7 @@ public class VuforiaManager {
 
   static void setFrontFlashlight(boolean lit) {
     try {
-      //CameraDevice.getInstance().setFlashTorchMode(lit);
+      CameraDevice.getInstance().setFlashTorchMode(lit);
     } catch (Exception e) {
       e.printStackTrace();
     }

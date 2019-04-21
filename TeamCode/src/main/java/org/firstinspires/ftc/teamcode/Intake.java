@@ -1,16 +1,22 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.util.Log;
+
 import com.andoverrobotics.core.config.Configuration;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
-import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.teleop.Diagnosable;
 
-public class Intake {
+public class Intake extends Diagnosable {
+
   public static class ConfigSchema {
 
     public int fullyExtendedTicks;
@@ -20,24 +26,24 @@ public class Intake {
     public double orientatorCollectionPos, orientatorTransitPos, orientatorTransferPos, orientatorClearBotPos;
   }
 
+  private static final ExecutorService executor = Executors.newSingleThreadExecutor();
+
   public final DcMotor slideMotor;
   public final Servo orientator;
   public final CRServo sweeper;
-  private LinearOpMode opMode;
   public ConfigSchema schema;
 
   public Intake(DcMotor slideMotor, Servo orientator,
-      CRServo sweeper, LinearOpMode opMode) {
+      CRServo sweeper) {
     this.slideMotor = slideMotor;
 
-    this.slideMotor.setDirection(Direction.REVERSE);
     this.slideMotor.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
 
     this.orientator = orientator;
     this.sweeper = sweeper;
-    this.opMode = opMode;
     loadSchema();
     orientator.scaleRange(schema.orientatorRangeMin, schema.orientatorRangeMax);
+    orientator.setPosition(schema.orientatorTransitPos);
   }
 
   private void loadSchema() {
@@ -61,7 +67,7 @@ public class Intake {
   }
   public RunToPosition extend(double amount, double speed) {
     return new RunToPosition(slideMotor,
-        (int) (schema.fullyExtendedTicks * Math.max(Math.abs(amount), 1)), speed);
+        (int) (schema.fullyExtendedTicks * Math.min(Math.abs(amount), 1)), speed);
   }
 
   public RunToPosition retractFully() {
@@ -72,23 +78,23 @@ public class Intake {
   }
 
   public boolean isSlideRunningToPosition() {
-    return slideMotor.isBusy();
+    return slideMotor.getMode() == RunMode.RUN_TO_POSITION && slideMotor.isBusy();
   }
 
   public void orientManually(float delta) {
-    orientator.setPosition(orientator.getPosition() + delta * 0.014);
+    orientator.setPosition(Range.clip(orientator.getPosition(), 0, 1) + delta * 0.1);
   }
 
   public void orientToCollect() {
-    orientator.setPosition(schema.orientatorCollectionPos);
+    incrementallyOrientTo(schema.orientatorCollectionPos);
   }
 
   public void orientToTransit() {
-    orientator.setPosition(schema.orientatorTransitPos);
+    incrementallyOrientTo(schema.orientatorTransitPos);
   }
 
   public void orientToTransfer() {
-    orientator.setPosition(schema.orientatorTransferPos);
+    incrementallyOrientTo(schema.orientatorTransferPos);
   }
 
   public void controlSlidesManually(double power) {
@@ -104,6 +110,10 @@ public class Intake {
     sweeper.setPower(0.8);
   }
 
+  public void runSweeperOut() {
+    sweeper.setPower(-0.8);
+  }
+
   public void stopSweeper() {
     sweeper.setPower(0);
   }
@@ -111,5 +121,29 @@ public class Intake {
   private boolean wouldPowerExceedBoundaries(double power) {
     return slideMotor.getCurrentPosition() <= 10 && power < 0 ||
         slideMotor.getCurrentPosition() >= schema.fullyExtendedTicks - 10 && power > 0;
+  }
+
+  private void incrementallyOrientTo(double position) {
+    executor.submit(() -> {
+      double pos = orientator.getPosition(),
+          increment = Math.copySign(0.05, position - pos);
+      while (Math.abs(pos - position) > 1e-2) {
+        pos += Math.abs(increment) > Math.abs(position - pos) ? (position - pos) : increment;
+        orientator.setPosition(pos);
+        Log.d("intakeOrientatorPos", Double.toString(pos));
+        try {
+          Thread.sleep(20);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+          break;
+        }
+      }
+    });
+  }
+
+  public void addData(Telemetry telemetry) {
+    addMotorData(telemetry, "intakeSlides", slideMotor);
+    addServoData(telemetry, "bucketRotation", orientator);
+    telemetry.addData("sweeper", "power=%.3f", sweeper.getPower());
   }
 }

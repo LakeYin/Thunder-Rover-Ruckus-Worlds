@@ -1,12 +1,15 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
-import static org.firstinspires.ftc.teamcode.teleop.TeleOpState.*;
+import static org.firstinspires.ftc.teamcode.teleop.TeleOpState.ENDGAME;
+import static org.firstinspires.ftc.teamcode.teleop.TeleOpState.MANUAL;
 
 import com.andoverrobotics.core.utilities.Coordinate;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import java.io.IOException;
+import java.util.Arrays;
 
 @TeleOp(name = "Main TeleOp", group = "ARC")
 public class TeleOpMode extends LinearOpMode {
@@ -15,21 +18,31 @@ public class TeleOpMode extends LinearOpMode {
   private TeleOpState state = MANUAL;
 
   @Override
-  public void runOpMode() throws InterruptedException {
+  public void runOpMode() {
     initialize();
+    telemetry.addData("Initialization", "Complete");
+    telemetry.update();
     waitForStart();
+    long prevTime = System.currentTimeMillis();
     while (opModeIsActive()) {
 
       controlDrivetrain(gamepad1);
       controlCycle(gamepad2);
       adjustByState(gamepad2);
-      if (gamepad2.back) {
+      if (gamepad2.back || gamepad1.right_bumper) {
         stopAllMotion();
       }
 
       telemetry.addData("Connection Keep-Alive", getRuntime());
       telemetry.addData("State", state);
       addPowerDrawDebug();
+
+      long time = System.currentTimeMillis();
+      telemetry.addData("Cycle Rate", "%dms/cycle", time - prevTime);
+      bot.addAllDiagnosableData();
+      prevTime = time;
+
+      telemetry.addData("memoPos", Arrays.toString(bot.drivetrain.getMemorizedPosition()));
       telemetry.update();
     }
   }
@@ -54,21 +67,24 @@ public class TeleOpMode extends LinearOpMode {
   }
 
   private void controlDrivetrain(Gamepad gamepad) {
-    Coordinate strafe = getLeftDrivetrainTarget(gamepad)
-        .add(getMicroAdjustCoord(gamepad).multiply(0.7));
-    double microRotatePower = (booleanToInt(gamepad.b) - booleanToInt(gamepad.x)) * 0.35;
-    bot.drivetrain.setStrafeAndRotation(strafe, gamepad.right_stick_x + microRotatePower,
-        strafe.getPolarDistance());
+    if (!bot.drivetrain.isRunningToPosition()) {
+      Coordinate strafe = getLeftDrivetrainTarget(gamepad)
+              .add(getMicroAdjustCoord(gamepad).multiply(0.7));
+      double microRotatePower = (booleanToInt(gamepad.b) - booleanToInt(gamepad.x)) * 0.35;
+      bot.drivetrain.setStrafeAndRotation(strafe, gamepad.right_stick_x + microRotatePower,
+              strafe.getPolarDistance());
 
-    if (gamepad.start) {
-      bot.drivetrain.memorizeCurrentPosition();
-    } else if (gamepad.back) {
-      bot.drivetrain.goToMemorizedPosition(0.6);
+      if (gamepad.start) {
+        bot.drivetrain.memorizeCurrentPosition();
+      } else if (gamepad.left_bumper) {
+        bot.drivetrain.startGoingToMemorizedPosition(0.6);
+      }
     }
   }
 
   private void controlCycle(Gamepad gamepad) {
-    if (gamepad.x && (state == CYCLE_SCORE || state == MANUAL)) {
+    // TODO enable
+    /*if (gamepad.x && (state == CYCLE_SCORE || state == MANUAL)) {
       state = CYCLE_COLLECT;
       bot.deposit.retract();
       bot.intake.extend(0.5).begin().whenDone(() -> {
@@ -92,11 +108,7 @@ public class TeleOpMode extends LinearOpMode {
       state = CYCLE_SCORE;
       bot.deposit.score();
 
-    } else if (state == MANUAL) {
-      controlManually();
-    } else if (state == ENDGAME) {
-      controlEndgame();
-    }
+    } */
 
     if (gamepad.left_stick_button) {
       state = MANUAL;
@@ -120,7 +132,7 @@ public class TeleOpMode extends LinearOpMode {
         break;
       case CYCLE_DELIVER:
         if (!bot.deposit.isRunningToPosition()) {
-          bot.deposit.adjust(gamepad2.right_stick_x);
+          bot.deposit.adjust(cycleGamepad.right_stick_x);
         }
         break;
       case CYCLE_SCORE:
@@ -140,36 +152,57 @@ public class TeleOpMode extends LinearOpMode {
     if (gamepad2.dpad_up) {
       bot.hookLift.liftToHook().begin();
     }
+    if (gamepad2.dpad_down) {
+      bot.hookLift.lowerToBottom().begin();
+    }
 
-    else if (!bot.hookLift.liftMotor.isBusy()) {
+    else if (bot.hookLift.liftMotor.getMode() != DcMotor.RunMode.RUN_TO_POSITION ||
+            !bot.hookLift.liftMotor.isBusy()) {
       bot.hookLift.adjust(-gamepad2.left_stick_y);
     }
   }
 
   private void controlManually() {
     bot.intake.controlSlidesManually(-gamepad2.left_stick_x);
-    bot.intake.orientManually(-gamepad2.left_stick_y);
+    bot.intake.orientManually(gamepad2.left_stick_y);
 
     if (gamepad2.left_bumper)
       bot.intake.runSweeperIn();
     else if (gamepad2.right_bumper)
+      bot.intake.runSweeperOut();
+    else
       bot.intake.stopSweeper();
 
-    if (gamepad2.dpad_down) {
-      bot.deposit.retract();
-    } else if (gamepad2.dpad_up) {
-      bot.deposit.prepareToDeposit();
-      bot.deposit.deliverToLander().begin();
+    if (gamepad2.y) {
+      bot.deposit.orientToTransit();
     }
-    if (gamepad2.dpad_left || gamepad2.dpad_right) {
-      bot.deposit.score();
+    if (gamepad2.b) {
+      bot.deposit.orientToLevel();
+    }
+    if (gamepad2.a) {
+      bot.deposit.orientToScore();
+    }
+    if (gamepad2.dpad_up) {
+      bot.intake.orientToTransfer();
+    }
+    if (gamepad2.dpad_right) {
+      bot.intake.orientToTransit();
+    }
+    if (gamepad2.dpad_down) {
+      bot.intake.orientToCollect();
+    }
+    if (gamepad2.x) {
+      bot.deposit.retract();
     }
 
     bot.hookLift.adjust(-gamepad2.right_stick_y * 0.5);
 
     if (!bot.deposit.isRunningToPosition()) {
-      bot.deposit.adjust(gamepad2.right_stick_x);
+      float depositControl = gamepad2.right_stick_x;
+      bot.deposit.adjust(depositControl > 0 ? depositControl * 0.8 : depositControl * 0.2);
     }
+
+    bot.deposit.orientator.setPosition(bot.deposit.orientator.getPosition() + (gamepad2.left_trigger - gamepad2.right_trigger) * 0.1);
   }
 
   private Coordinate getLeftDrivetrainTarget(Gamepad gamepad) {

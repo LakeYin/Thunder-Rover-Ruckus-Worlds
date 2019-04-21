@@ -6,8 +6,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
 import java.io.IOException;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.teleop.Diagnosable;
 
-public class HookLift {
+public class HookLift extends Diagnosable {
   public static class ConfigSchema {
     public int topPosition;
     public double runningSpeed;
@@ -47,5 +49,9 @@ public class HookLift {
     } catch (IOException e) {
       throw new IllegalArgumentException(e);
     }
+  }
+
+  public void addData(Telemetry telemetry) {
+    addMotorData(telemetry, "hookLift", liftMotor);
   }
 }

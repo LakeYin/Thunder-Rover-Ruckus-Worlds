@@ -20,8 +20,8 @@ public class RunToPosition {
   }
 
   public RunToPosition begin() {
-    motor.setMode(RunMode.RUN_TO_POSITION);
     motor.setTargetPosition(targetPosition);
+    motor.setMode(RunMode.RUN_TO_POSITION);
     motor.setPower(Math.abs(speed));
     return this;
   }

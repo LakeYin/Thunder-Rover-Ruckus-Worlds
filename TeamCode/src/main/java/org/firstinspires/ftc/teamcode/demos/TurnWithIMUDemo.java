@@ -3,29 +3,32 @@ package org.firstinspires.ftc.teamcode.demos;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
+import org.firstinspires.ftc.teamcode.Bot;
+import org.firstinspires.ftc.teamcode.autonomous.tasks.RotateByIMUTask;
+import org.firstinspires.ftc.teamcode.autonomous.tasks.Task;
+
+import java.io.IOException;
 
 @Autonomous(name = "Turn with IMU", group = "ARC")
 public class TurnWithIMUDemo extends LinearOpMode {
 
   private BNO055IMU imu;
+  private Bot bot;
 
   @Override
   public void runOpMode() throws InterruptedException {
     setupIMU();
+    try {
+      bot = new Bot(hardwareMap, telemetry, hardwareMap.appContext, this);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
     waitForStart();
 
-    float heading = 0;
-    while (Math.abs(heading - 180) > 5 && opModeIsActive()) {
-      for (DcMotor motor : hardwareMap.getAll(DcMotor.class)) {
-        heading = imu.getAngularOrientation().toAngleUnit(
-            org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES).firstAngle + 180;
-        motor.setMode(RunMode.RUN_USING_ENCODER);
-        motor.setPower(Math.abs(heading) / -180.0);
+    Task task = new RotateByIMUTask(bot.drivetrain, 90);
+    task.run();
 
-      }
-    }
+    while (opModeIsActive());
   }
 
   private void setupIMU() {

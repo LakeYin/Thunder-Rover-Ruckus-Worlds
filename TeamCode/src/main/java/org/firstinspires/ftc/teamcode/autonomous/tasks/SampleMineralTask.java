@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.autonomous.tasks;
 
 import com.andoverrobotics.core.config.Configuration;
-import com.andoverrobotics.core.drivetrain.StrafingDriveTrain;
+import com.andoverrobotics.core.drivetrain.MecanumDrive;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import java.io.IOException;
 import java.util.Optional;
@@ -11,17 +11,20 @@ import org.firstinspires.ftc.teamcode.autonomous.AutonomousBot;
 import org.firstinspires.ftc.teamcode.autonomous.MineralDetector;
 import org.firstinspires.ftc.teamcode.autonomous.MineralDetector.Mineral;
 
-public abstract class SampleMineralTask implements Task {
+import static org.firstinspires.ftc.teamcode.autonomous.MineralDetector.Mineral.GOLD;
+import static org.firstinspires.ftc.teamcode.autonomous.MineralDetector.Mineral.SILVER;
+
+public class SampleMineralTask implements Task {
 
   // Fields and class need to be kept public (so that the schema can be loaded)
   public static class ConfigSchema {
     public double knockDistance;
-    public double distanceBetweenMinerals;
+    public int distanceBetweenMinerals;
     public int delayBeforeRecognition;
   }
 
   private ConfigSchema schema;
-  private final MineralDetector detector;
+  public static MineralDetector detector;
   private AndroidTextToSpeech tts;
 
   public SampleMineralTask(HardwareMap map) {
@@ -41,42 +44,74 @@ public abstract class SampleMineralTask implements Task {
     }
   }
 
-  // Precondition: detector activated and phone facing minerals
+  // Precondition: phone facing minerals
+  // Post-condition: front facing minerals, center
   @Override
-  public void run() throws InterruptedException {
-    detector.activate();
-    runMineralCheck();
-    detector.shutdown();
+  public void run() {
+
+    detectAsNecessary();
+    Bot.getInstance().drivetrain.rotateCounterClockwise(90);
+
+    if (AutonomousBot.centerMineral.orElse(SILVER) == GOLD) {
+      knockMineral();
+      return;
+    }
+
+    if (AutonomousBot.rightMineral.orElse(SILVER) == GOLD) {
+      switchRight();
+      knockMineral();
+      switchLeft();
+    } else {
+      switchLeft();
+      knockMineral();
+      switchRight();
+    }
   }
 
-  protected abstract void runMineralCheck() throws InterruptedException;
+  private void detectAsNecessary() {
+    MecanumDrive drive = Bot.getInstance().drivetrain;
 
-  protected void switchLeft() {
-    Bot.getInstance().drivetrain.driveBackwards(schema.distanceBetweenMinerals);
+    if (!AutonomousBot.centerMineral.isPresent()) {
+      detector.activate();
+      AutonomousBot.centerMineral = Optional.of(detectedGold() ? GOLD : SILVER);
+      detector.shutdown();
+    }
+
+    if (!AutonomousBot.rightMineral.isPresent()) {
+      detector.activate();
+      drive.rotateClockwise(40);
+      AutonomousBot.rightMineral = Optional.of(detectedGold() ? GOLD : SILVER);
+      detector.shutdown();
+      drive.rotateCounterClockwise(40);
+    }
   }
 
-  protected void switchRight() {
-    Bot.getInstance().drivetrain.driveForwards(schema.distanceBetweenMinerals);
+  private void switchLeft() {
+    Bot.getInstance().drivetrain.strafeLeft(schema.distanceBetweenMinerals);
   }
 
-  protected void knockMineral() throws InterruptedException {
+  private void switchRight() {
+    Bot.getInstance().drivetrain.strafeRight(schema.distanceBetweenMinerals);
+  }
+
+  private void knockMineral() {
     tts.speak("Bueno, yo encontré el mineral correcto.");
     Bot bot = Bot.getInstance();
-    bot.drivetrain.rotateCounterClockwise(90);
 
-    bot.intake.extend(schema.knockDistance, 0.8).begin().waitUntilDone();
-    bot.intake.runSweeperIn();
-    Bot.sleep(800);
+    bot.intake.extend(schema.knockDistance * 0.7).begin().waitUntilDone();
+    bot.intake.orientToCollect();
+    bot.intake.extend(schema.knockDistance * 1, 0.5).begin().waitUntilDone();
     bot.intake.orientToTransit();
     bot.intake.stopSweeper();
-    bot.intake.retractFully(0.8).begin().waitUntilDone();
+    bot.intake.retractFully().begin().waitUntilDone();
+    // Following done if collect gold mineral
+    /*bot.intake.runSweeperIn();
     bot.intake.orientToTransfer();
     Bot.sleep(2000);
     bot.intake.stopSweeper();
     bot.intake.orientToTransit();
-    bot.intake.extend(0.2, 0.4).begin();
+    bot.intake.extend(0.2, 0.4).begin();*/
 
-    bot.drivetrain.rotateClockwise(90);
   }
 
   protected boolean detectedGold() {
@@ -87,7 +122,7 @@ public abstract class SampleMineralTask implements Task {
 
       AutonomousBot.sleep(schema.delayBeforeRecognition);
       while (!(recognition = detector.currentRecognition()).isPresent() &&
-          System.currentTimeMillis() < startTime + 200) {
+          System.currentTimeMillis() < startTime + 500) {
         if (Thread.interrupted())
           throw new InterruptedException("Interrupted while waiting for mineral recognition");
 

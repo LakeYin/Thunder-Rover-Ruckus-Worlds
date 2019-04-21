@@ -1,7 +1,14 @@
 package org.firstinspires.ftc.teamcode.autonomous.tasks;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
+
 import org.firstinspires.ftc.teamcode.Bot;
+import org.firstinspires.ftc.teamcode.autonomous.AutonomousBot;
+
+import static org.firstinspires.ftc.teamcode.autonomous.MineralDetector.Mineral.GOLD;
+import static org.firstinspires.ftc.teamcode.autonomous.MineralDetector.Mineral.SILVER;
 
 public class LandTask implements Task {
 
@@ -16,28 +23,34 @@ public class LandTask implements Task {
     lowerBot();
     exitHook();
     strafeBot();
-    startLoweringHook();
+    if (AutonomousBot.centerMineral.orElse(SILVER) != GOLD)
+      rotateToReadRightMineral();
+  }
+
+  private void rotateToReadRightMineral() {
+    bot.drivetrain.rotateClockwise(42);
+    Bot.sleep(1000);
+    AutonomousBot.rightMineral = SampleMineralTask.detector.rightmostRecognition();
+    Log.d("Minerals", "Right: " + AutonomousBot.rightMineral);
+    SampleMineralTask.detector.shutdown();
+    bot.drivetrain.rotateCounterClockwise(42);
   }
 
   private void exitHook() throws InterruptedException {
     bot.drivetrain.setStrafe(0, 1, 1);
-    Thread.sleep(180);
+    Thread.sleep(130);
     bot.drivetrain.stop();
   }
 
   private void strafeBot() throws InterruptedException {
     bot.drivetrain.setStrafe(-1, 0, 1);
-    Thread.sleep(650);
+    Thread.sleep(400);
     bot.drivetrain.setStrafe(0, -1, 1);
-    Thread.sleep(250);
+    Thread.sleep(220);
     bot.drivetrain.stop();
   }
 
   private void lowerBot() {
-    bot.hookLift.liftToHook();
-  }
-
-  private void startLoweringHook() {
-    bot.hookLift.lowerToBottom().begin();
+    bot.hookLift.liftToHook().begin().waitUntilDone();
   }
 }

@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
+import com.vuforia.Vuforia;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -62,6 +64,14 @@ public class MineralDetector {
         .map(Mineral::byLabel);
   }
 
+  public Optional<Mineral> rightmostRecognition() {
+    return detector.getRecognitions()
+        .stream()
+        .max((r1, r2) -> Float.compare(r1.getLeft(), r2.getLeft()))
+        .map(Recognition::getLabel)
+        .map(Mineral::byLabel);
+  }
+
   public Optional<GoldPosition> goldPosition() {
     if (!isTrackingEnoughObjects()) {
       return Optional.empty();
@@ -86,6 +96,7 @@ public class MineralDetector {
 
   public void shutdown() {
     detector.shutdown();
+    VuforiaManager.setFrontFlashlight(false);
   }
 
   private void initTensorFlowIfNeeded(HardwareMap hardwareMap) {

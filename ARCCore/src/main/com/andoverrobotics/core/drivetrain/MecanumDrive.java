@@ -12,6 +12,7 @@ import com.andoverrobotics.core.utilities.MotorPair;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
+import java.util.Arrays;
 import java.util.stream.Stream;
 
 /**
@@ -273,7 +274,7 @@ public class MecanumDrive extends StrafingDriveTrain {
     }
   }
 
-  public void goToMemorizedPosition(double power) {
+  public void startGoingToMemorizedPosition(double power) {
     MotorAdapter[] motors = allMotors();
 
     for (int i = 0; i < 4; i++) {
@@ -281,9 +282,13 @@ public class MecanumDrive extends StrafingDriveTrain {
       motor.setMode(RUN_TO_POSITION);
       motor.setTargetPosition(memoPosition[i]);
       motor.setPower(Math.abs(power));
-    }
 
-    while (isBusy());
+      while (!motor.isBusy());
+    }
+  }
+
+  public int[] getMemorizedPosition() {
+    return Arrays.copyOf(memoPosition, memoPosition.length);
   }
 
   @Override
@@ -370,5 +375,9 @@ public class MecanumDrive extends StrafingDriveTrain {
     }
 
     return varianceSum / 4.0;
+  }
+
+  public boolean isRunningToPosition() {
+    return motorFL.getMotor().getMode() == RUN_TO_POSITION && isBusy();
   }
 }
