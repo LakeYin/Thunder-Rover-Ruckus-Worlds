@@ -29,7 +29,7 @@ public class TeleOpMode extends LinearOpMode {
       controlDrivetrain(gamepad1);
       controlCycle(gamepad2);
       adjustByState(gamepad2);
-      if (gamepad2.back || gamepad1.right_bumper) {
+      if (gamepad2.start || gamepad1.right_bumper) {
         stopAllMotion();
       }
 

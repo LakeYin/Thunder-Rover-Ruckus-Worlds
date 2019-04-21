@@ -103,9 +103,9 @@ public class Bot {
         hardware.crservo.get("intakeSweeper"));
     DcMotor depositSlide = motorHw.get("depositSlide");
     depositSlide.setDirection(Direction.REVERSE);
+    Servo depositOrientator = servoHw.get("depositOrientator");
     deposit = new DepositSystem(
-        depositSlide,
-        servoHw.get("depositOrientator"), opMode);
+        depositSlide, depositOrientator, opMode);
 
     DcMotor hookLift = motorHw.get("hookLift");
     hookLift.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);

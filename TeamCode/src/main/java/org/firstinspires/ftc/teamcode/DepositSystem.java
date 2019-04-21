@@ -19,6 +19,8 @@ public class DepositSystem extends Diagnosable {
     public double orientatorFlatPos, orientatorPreparationPos,
         orientatorTransitPos, orientatorScorePos;
     public int scoreDelayMs;
+
+    public int ticksWhenBelowFrame;
   }
 
   public final DcMotor slideMotor;
@@ -58,12 +60,16 @@ public class DepositSystem extends Diagnosable {
   }
 
   public void retract() {
-    if (Math.abs(slideMotor.getCurrentPosition()) > Math.abs(schema.fullyExtendedTicks * 0.2)) {
+    if (slideMotorAboveFrame()) {
       orientator.setPosition(schema.orientatorTransitPos);
     }
 
-    new RunToPosition(slideMotor, 0, schema.slideSpeed).begin()
-            .whenDone(() -> orientator.setPosition(schema.orientatorFlatPos));
+    new RunToPosition(slideMotor, 0, schema.slideSpeed).begin();
+
+    new Thread(() -> {
+      while (slideMotorAboveFrame() && !Thread.interrupted());
+      orientToLevel();
+    }).start();
   }
 
   public void orientToTransit() {
@@ -79,7 +85,7 @@ public class DepositSystem extends Diagnosable {
   }
 
   private boolean slideMotorAboveFrame() {
-    return Math.abs(slideMotor.getTargetPosition() - slideMotor.getCurrentPosition()) > Math.abs(schema.fullyExtendedTicks * 0.1);
+    return slideMotor.getCurrentPosition() > schema.ticksWhenBelowFrame;
   }
 
   private boolean wouldPowerExceedLimit(double power) {

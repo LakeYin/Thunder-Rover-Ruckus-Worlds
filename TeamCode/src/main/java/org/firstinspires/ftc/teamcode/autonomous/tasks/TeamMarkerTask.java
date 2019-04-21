@@ -5,13 +5,22 @@ import org.firstinspires.ftc.teamcode.RunToPosition;
 
 public class TeamMarkerTask implements Task {
 
+  private double extension;
+
+  public TeamMarkerTask(double extension) {
+    this.extension = extension;
+  }
+
+  public TeamMarkerTask() {
+    this(1);
+  }
+
   @Override
-  public void run() throws InterruptedException {
+  public void run() {
     Bot bot = Bot.getInstance();
 
     bot.intake.orientToTransit();
-    RunToPosition intakeOut = bot.intake.extend(0.9).begin();
-    bot.drivetrain.driveForwards(6);
+    RunToPosition intakeOut = bot.intake.extend(0.5 * extension).begin();
     intakeOut.waitUntilDone();
     bot.intake.runSweeperOut();
     Bot.sleep(1500);

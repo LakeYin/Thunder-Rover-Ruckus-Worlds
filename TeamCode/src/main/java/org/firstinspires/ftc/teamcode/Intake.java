@@ -23,7 +23,8 @@ public class Intake extends Diagnosable {
     public double runningSpeed;
 
     public double orientatorRangeMin, orientatorRangeMax;
-    public double orientatorCollectionPos, orientatorTransitPos, orientatorTransferPos, orientatorClearBotPos;
+    public double orientatorCollectionPos, orientatorTransitPos, orientatorTransferPos,
+      orientatorKnockMineralPos;
   }
 
   private static final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -95,6 +96,10 @@ public class Intake extends Diagnosable {
 
   public void orientToTransfer() {
     incrementallyOrientTo(schema.orientatorTransferPos);
+  }
+
+  public void orientToKnockMineral() {
+    incrementallyOrientTo(schema.orientatorKnockMineralPos);
   }
 
   public void controlSlidesManually(double power) {

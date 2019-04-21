@@ -7,7 +7,6 @@ public class ParkTask implements Task {
   public void run() throws InterruptedException {
     Bot bot = Bot.getInstance();
 
-    bot.intake.orientToTransit();
-    bot.intake.extend(0.7).begin();
+    bot.drivetrain.driveForwards(10, 0.6);
   }
 }

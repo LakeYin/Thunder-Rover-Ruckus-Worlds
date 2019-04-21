@@ -5,6 +5,8 @@ import com.andoverrobotics.core.drivetrain.MecanumDrive;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import java.io.IOException;
 import java.util.Optional;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.android.AndroidTextToSpeech;
 import org.firstinspires.ftc.teamcode.Bot;
 import org.firstinspires.ftc.teamcode.autonomous.AutonomousBot;
@@ -49,15 +51,15 @@ public class SampleMineralTask implements Task {
   @Override
   public void run() {
 
+    tellemReadMinerals();
     detectAsNecessary();
+    tellemReadMinerals();
+
     Bot.getInstance().drivetrain.rotateCounterClockwise(90);
 
     if (AutonomousBot.centerMineral.orElse(SILVER) == GOLD) {
       knockMineral();
-      return;
-    }
-
-    if (AutonomousBot.rightMineral.orElse(SILVER) == GOLD) {
+    } else if (AutonomousBot.rightMineral.orElse(SILVER) == GOLD) {
       switchRight();
       knockMineral();
       switchLeft();
@@ -68,7 +70,15 @@ public class SampleMineralTask implements Task {
     }
   }
 
-  private void detectAsNecessary() {
+  protected void tellemReadMinerals() {
+    Telemetry telemetry = Bot.getInstance().telemetry;
+
+    telemetry.addData("center mineral", AutonomousBot.centerMineral);
+    telemetry.addData("right mineral", AutonomousBot.rightMineral);
+    telemetry.update();
+  }
+
+  protected void detectAsNecessary() {
     MecanumDrive drive = Bot.getInstance().drivetrain;
 
     if (!AutonomousBot.centerMineral.isPresent()) {
@@ -86,31 +96,20 @@ public class SampleMineralTask implements Task {
     }
   }
 
-  private void switchLeft() {
+  protected void switchLeft() {
     Bot.getInstance().drivetrain.strafeLeft(schema.distanceBetweenMinerals);
   }
 
-  private void switchRight() {
+  protected void switchRight() {
     Bot.getInstance().drivetrain.strafeRight(schema.distanceBetweenMinerals);
   }
 
-  private void knockMineral() {
+  protected void knockMineral() {
     tts.speak("Bueno, yo encontré el mineral correcto.");
     Bot bot = Bot.getInstance();
 
-    bot.intake.extend(schema.knockDistance * 0.7).begin().waitUntilDone();
-    bot.intake.orientToCollect();
-    bot.intake.extend(schema.knockDistance * 1, 0.5).begin().waitUntilDone();
-    bot.intake.orientToTransit();
-    bot.intake.stopSweeper();
-    bot.intake.retractFully().begin().waitUntilDone();
-    // Following done if collect gold mineral
-    /*bot.intake.runSweeperIn();
-    bot.intake.orientToTransfer();
-    Bot.sleep(2000);
-    bot.intake.stopSweeper();
-    bot.intake.orientToTransit();
-    bot.intake.extend(0.2, 0.4).begin();*/
+    bot.drivetrain.driveForwards(15);
+    bot.drivetrain.driveBackwards(15);
 
   }
 

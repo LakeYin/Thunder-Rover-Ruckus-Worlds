@@ -1,6 +1,6 @@
 land
-sample_mineral
-drop_team_marker
+depot_sample_mineral
+move 0 10
 move -50 0
-rotate -130
-park
+rotate -140
+move 0 30

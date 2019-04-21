@@ -61,6 +61,7 @@ public abstract class AutoOpMode extends LinearOpMode {
     tasks = new TaskFactory(bot.drivetrain);
 
     tasks.addCustomTask("sample_mineral", new SampleMineralTask(hardwareMap));
+    tasks.addCustomTask("depot_sample_mineral", new SampleMineralDepotSideTask(hardwareMap));
     tasks.addCustomTask("land", new LandTask());
     tasks.addCustomTask("drop_team_marker", new TeamMarkerTask());
     tasks.addCustomTask("score_minerals", new ScoreMineralTask());

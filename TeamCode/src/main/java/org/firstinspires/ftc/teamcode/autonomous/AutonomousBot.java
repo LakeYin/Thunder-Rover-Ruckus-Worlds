@@ -9,7 +9,8 @@ import org.firstinspires.ftc.teamcode.autonomous.MineralDetector.Mineral;
 
 public class AutonomousBot extends Bot {
   private static LinearOpMode currentOpMode;
-  public static Optional<Mineral> centerMineral, rightMineral;
+  public static Optional<Mineral> centerMineral = Optional.empty(),
+          rightMineral = Optional.empty();
 
   public AutonomousBot(LinearOpMode opMode) throws IOException {
     super(opMode.hardwareMap, opMode.telemetry, opMode.hardwareMap.appContext, opMode);
