@@ -47,10 +47,29 @@ public class RotateByIMUTask extends RotateTask {
     return (int) orientation.toAngleUnit(AngleUnit.DEGREES).firstAngle;
   }
 
+
+  // Start P controller
+  public void run() {
+    int heading, error;
+    do {
+      heading = readHeading();
+      error = error(heading, targetHeading);
+
+      drivetrain.setRotationPower(powerByError(error));
+
+    } while (Math.abs(error) > 2);
+  }
+
+  private double powerByError(int error) {
+    if (Math.abs(error) > 20) return Math.copySign(0.8, error);
+    double mag = 0.8 * Math.sin(error / (4 * Math.PI));
+    return Math.copySign(mag, error);
+  }
+
+  // Start PD controller
   private static final double Kp = 0.8 / 30, Kd = 0.1;
 
-  @Override
-  public void run() {
+  public void runIMU() {
     int prevError = error(initialHeading, targetHeading),
         heading = initialHeading;
     for (; heading != targetHeading; heading = readHeading()) {

@@ -4,9 +4,10 @@ import org.firstinspires.ftc.teamcode.Bot;
 
 public class ParkTask implements Task {
   @Override
-  public void run() throws InterruptedException {
+  public void run() {
     Bot bot = Bot.getInstance();
 
-    bot.drivetrain.driveForwards(10, 0.6);
+    bot.intake.orientToTransit();
+    bot.intake.extend(0.8);
   }
 }

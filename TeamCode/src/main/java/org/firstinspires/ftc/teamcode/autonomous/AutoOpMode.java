@@ -38,7 +38,7 @@ public abstract class AutoOpMode extends LinearOpMode {
   }
 
   private void readCenterMineral() {
-    AutonomousBot.centerMineral = SampleMineralTask.detector.currentRecognition();
+    AutonomousBot.centerMineral = SampleMineralTask.detector.bottomCenterRecognition();
     Log.d("Minerals", "Center: " + AutonomousBot.centerMineral);
   }
 

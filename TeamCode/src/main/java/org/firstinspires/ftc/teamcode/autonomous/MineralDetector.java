@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 import com.vuforia.Vuforia;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -60,6 +61,13 @@ public class MineralDetector {
   public Optional<Mineral> currentRecognition() {
     return detector.getRecognitions().stream()
         .findFirst()
+        .map(Recognition::getLabel)
+        .map(Mineral::byLabel);
+  }
+
+  public Optional<Mineral> bottomCenterRecognition() {
+    return detector.getRecognitions().stream()
+        .max(Comparator.comparingDouble(Recognition::getBottom))
         .map(Recognition::getLabel)
         .map(Mineral::byLabel);
   }

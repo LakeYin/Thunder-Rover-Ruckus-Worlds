@@ -47,7 +47,7 @@ public class SampleMineralTask implements Task {
   }
 
   // Precondition: phone facing minerals
-  // Post-condition: front facing minerals, center
+  // Post-condition: front facing minerals, left
   @Override
   public void run() {
 
@@ -59,14 +59,15 @@ public class SampleMineralTask implements Task {
 
     if (AutonomousBot.centerMineral.orElse(SILVER) == GOLD) {
       knockMineral();
+      switchLeft();
     } else if (AutonomousBot.rightMineral.orElse(SILVER) == GOLD) {
       switchRight();
       knockMineral();
       switchLeft();
+      switchLeft();
     } else {
       switchLeft();
       knockMineral();
-      switchRight();
     }
   }
 
@@ -108,8 +109,8 @@ public class SampleMineralTask implements Task {
     tts.speak("Bueno, yo encontré el mineral correcto.");
     Bot bot = Bot.getInstance();
 
-    bot.drivetrain.driveForwards(15);
-    bot.drivetrain.driveBackwards(15);
+    bot.drivetrain.driveForwards(schema.knockDistance);
+    bot.drivetrain.driveBackwards(schema.knockDistance);
 
   }
 

@@ -1,6 +1,6 @@
 land
 depot_sample_mineral
-move 0 10
-move -50 0
+move -50 4
 rotate -140
-move 0 30
+move 0 20
+park

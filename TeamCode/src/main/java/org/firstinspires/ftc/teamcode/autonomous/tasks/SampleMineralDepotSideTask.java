@@ -5,8 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.Bot;
 import org.firstinspires.ftc.teamcode.autonomous.AutonomousBot;
 
-import static org.firstinspires.ftc.teamcode.autonomous.MineralDetector.Mineral.GOLD;
-import static org.firstinspires.ftc.teamcode.autonomous.MineralDetector.Mineral.SILVER;
+import static org.firstinspires.ftc.teamcode.autonomous.MineralDetector.Mineral.*;
 
 public class SampleMineralDepotSideTask extends SampleMineralTask {
     public SampleMineralDepotSideTask(HardwareMap map) {
@@ -20,11 +19,12 @@ public class SampleMineralDepotSideTask extends SampleMineralTask {
         detectAsNecessary();
         tellemReadMinerals();
 
+        Bot.getInstance().drivetrain.strafeLeft(6);
         Bot.getInstance().drivetrain.rotateCounterClockwise(90);
 
         if (AutonomousBot.centerMineral.orElse(SILVER) == GOLD) {
             knockMineral();
-            new TeamMarkerTask(0.85).run();
+            new TeamMarkerTask(1).run();
             unknockMineral();
         } else if (AutonomousBot.rightMineral.orElse(SILVER) == GOLD) {
             switchRight();
@@ -54,9 +54,9 @@ public class SampleMineralDepotSideTask extends SampleMineralTask {
     }
 
     protected void rotateLeft() {
-        Bot.getInstance().drivetrain.rotateCounterClockwise(20);
+        Bot.getInstance().drivetrain.rotateCounterClockwise(25);
     }
     protected void rotateRight() {
-        Bot.getInstance().drivetrain.rotateClockwise(20);
+        Bot.getInstance().drivetrain.rotateClockwise(25);
     }
 }
