@@ -16,7 +16,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.RevExtensions2;
 
-public class Bot {
+public class Bot extends ChassisBot{
 
   private static Bot instance = null;
 
@@ -27,29 +27,10 @@ public class Bot {
     return instance;
   }
 
-  public static void sleep(long ms) {
-    try {
-      Thread.sleep(ms);
-    } catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-    }
-  }
-
-  public final MecanumDrive drivetrain;
-
-  // Configuration
-  public final Configuration mainConfig;
-
-  // Context
-  public final Context context;
-  public final LinearOpMode opMode;
-  public final Telemetry telemetry;
-
   // Hardware
   public final Intake intake;
   public final DepositSystem deposit;
   public final HookLift hookLift;
-  public final ExpansionHubEx hub2, hub7;
   public final BNO055IMU imu;
 
   protected Bot(HardwareMap hardware,
@@ -57,15 +38,8 @@ public class Bot {
       Context context,
       LinearOpMode opMode) throws IOException {
 
-    mainConfig = Configuration.fromPropertiesFile("mainConfig.properties");
+    super(hardware, telemetry, context, opMode);
 
-    this.context = context;
-    this.opMode = opMode;
-    this.telemetry = telemetry;
-
-    RevExtensions2.init();
-    hub2 = hardware.get(ExpansionHubEx.class, "Expansion Hub 2");
-    hub7 = hardware.get(ExpansionHubEx.class, "Expansion Hub 7");
     imu = hardware.get(BNO055IMU.class, "imu");
     initializeImu();
 
@@ -76,23 +50,6 @@ public class Bot {
 //      new SimulationRelay(mainConfig.getInt("simulationRelayPort"));
 //      drivetrain = new SimDriveTrain(opMode);
 //    } else {
-    DcMotor frontLeft = motorHw.get("motorFL"),
-        backLeft = motorHw.get("motorBL"),
-        frontRight = motorHw.get("motorFR"),
-        backRight = motorHw.get("motorBR");
-
-    frontLeft.setDirection(Direction.REVERSE);
-    backLeft.setDirection(Direction.REVERSE);
-
-    drivetrain = MecanumDrive.fromOctagonalMotors(
-        frontLeft,
-        frontRight,
-        backLeft,
-        backRight,
-        opMode, mainConfig.getInt("ticksPerInch"),
-        mainConfig.getInt("ticksPer360")
-    );
-    drivetrain.setDefaultDrivePower(mainConfig.getDouble("defaultDrivePower"));
 //    }
 
     intake = new Intake(
