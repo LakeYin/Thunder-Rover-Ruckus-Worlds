@@ -22,6 +22,8 @@ public class MoveTask implements Task {
 
   @Override
   public void run() {
+    int startHeading = RotateByIMUTask.readHeading();
+
     if (drivetrain instanceof StrafingDriveTrain)
       ((StrafingDriveTrain)drivetrain).strafeInches(offset, speed);
     else {
@@ -39,5 +41,8 @@ public class MoveTask implements Task {
       else
         drivetrain.rotateClockwise(-degrees, speed);
     }
+
+    int endHeading = RotateByIMUTask.readHeading();
+
   }
 }

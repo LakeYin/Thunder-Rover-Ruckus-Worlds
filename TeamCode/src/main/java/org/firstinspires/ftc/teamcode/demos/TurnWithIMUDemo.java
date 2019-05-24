@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.autonomous.tasks.RotateByIMUTask;
 import org.firstinspires.ftc.teamcode.autonomous.tasks.Task;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 @Autonomous(name = "Turn with IMU", group = "ARC")
 public class TurnWithIMUDemo extends LinearOpMode {
@@ -25,8 +26,12 @@ public class TurnWithIMUDemo extends LinearOpMode {
     }
     waitForStart();
 
-    Task task = new RotateByIMUTask(bot.drivetrain, 90);
-    task.run();
+    for (int degree : Arrays.asList(20, -20, 50, -50, 80, -80, 110, -110, 140, -140)) {
+
+      Task task = new RotateByIMUTask(bot.drivetrain, degree);
+      task.run();
+      sleep(1000);
+    }
 
     while (opModeIsActive());
   }

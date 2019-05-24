@@ -61,6 +61,10 @@ public class MecanumDrive extends StrafingDriveTrain {
 
     this.ticksPerInch = ticksPerInch;
     this.ticksPer360 = ticksPer360;
+
+    for (MotorAdapter motor : allMotors()) {
+      motor.getMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
   }
 
   /**
@@ -187,11 +191,24 @@ public class MecanumDrive extends StrafingDriveTrain {
       motor.startRunToPosition(rightOffset, rightPower);
     }
 
-    while (opModeIsActive() && isBusy()) {
+    double meanVariance;
+    while (opModeIsActive() && maxVarianceFromTargetPosition() > 15) {
+      meanVariance = meanVarianceFromTargetPosition();
+      if (meanVariance < 150) {
+        for (MotorAdapter motor : leftDiagonal) {
+          motor.setPower(meanVariance / 180 * leftPower + 0.15);
+        }
+        for (MotorAdapter motor : rightDiagonal) {
+          motor.setPower(meanVariance / 180 * rightPower + 0.15);
+        }
+      }
     }
 
     stop();
-    setMotorMode(RUN_USING_ENCODER);
+  }
+
+  private double powerByRatioDone(double ratioDone, double givenPower) {
+    return 1 / 0.3273 * (-1.1 * ratioDone*ratioDone + ratioDone + 0.1) * givenPower;
   }
 
   @Override
@@ -216,7 +233,7 @@ public class MecanumDrive extends StrafingDriveTrain {
       motor.startRunToPosition((int) rotationTicks, clippedPower);
     }
 
-    while (opModeIsActive() && isBusy()) {
+    while (opModeIsActive() && maxVarianceFromTargetPosition() > 20) {
     }
 
     stop();
@@ -375,6 +392,14 @@ public class MecanumDrive extends StrafingDriveTrain {
     }
 
     return varianceSum / 4.0;
+  }
+
+  private int maxVarianceFromTargetPosition() {
+    int max = Integer.MIN_VALUE;
+    for (MotorAdapter motor : allMotors()) {
+      max = Math.max(max, Math.abs(motor.getMotor().getTargetPosition() - motor.getMotor().getCurrentPosition()));
+    }
+    return max;
   }
 
   public boolean isRunningToPosition() {

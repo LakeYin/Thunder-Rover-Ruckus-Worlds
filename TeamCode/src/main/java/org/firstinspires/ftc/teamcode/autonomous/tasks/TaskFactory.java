@@ -66,6 +66,10 @@ public class TaskFactory {
           int degrees = Integer.parseInt(tokens[1]);
           return new RotateTask(drivetrain, degrees);
 
+        case "rotateIMU":
+          int deg = Integer.parseInt(tokens[1]);
+          return new RotateByIMUTask(drivetrain, deg);
+
         default:
           if (customTasks.containsKey(trimmedCommand)) {
             return customTasks.get(trimmedCommand);

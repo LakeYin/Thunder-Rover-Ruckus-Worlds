@@ -51,16 +51,18 @@ public class SampleMineralTask implements Task {
   @Override
   public void run() {
 
-    tellemReadMinerals();
     detectAsNecessary();
     tellemReadMinerals();
 
-    Bot.getInstance().drivetrain.rotateCounterClockwise(90);
+    RotateByIMUTask.rotate(-90);
+    Bot.getInstance().drivetrain.driveForwards(5);
 
-    if (AutonomousBot.centerMineral.orElse(SILVER) == GOLD) {
+    MineralDetector.GoldPosition pos = getGoldPosition();
+
+    if (pos == MineralDetector.GoldPosition.CENTER) {
       knockMineral();
       switchLeft();
-    } else if (AutonomousBot.rightMineral.orElse(SILVER) == GOLD) {
+    } else if (pos == MineralDetector.GoldPosition.RIGHT) {
       switchRight();
       knockMineral();
       switchLeft();
@@ -69,6 +71,15 @@ public class SampleMineralTask implements Task {
       switchLeft();
       knockMineral();
     }
+  }
+
+  protected MineralDetector.GoldPosition getGoldPosition() {
+    if (AutonomousBot.rightMineral.orElse(SILVER) == GOLD) {
+      return MineralDetector.GoldPosition.RIGHT;
+    } else if (AutonomousBot.centerMineral.orElse(SILVER) == GOLD) {
+      return MineralDetector.GoldPosition.CENTER;
+    }
+    return MineralDetector.GoldPosition.LEFT;
   }
 
   protected void tellemReadMinerals() {
@@ -80,20 +91,19 @@ public class SampleMineralTask implements Task {
   }
 
   protected void detectAsNecessary() {
-    MecanumDrive drive = Bot.getInstance().drivetrain;
-
     if (!AutonomousBot.centerMineral.isPresent()) {
       detector.activate();
+      Bot.sleep(1000);
       AutonomousBot.centerMineral = Optional.of(detectedGold() ? GOLD : SILVER);
       detector.shutdown();
     }
 
     if (!AutonomousBot.rightMineral.isPresent()) {
       detector.activate();
-      drive.rotateClockwise(40);
+      RotateByIMUTask.rotate(40);
       AutonomousBot.rightMineral = Optional.of(detectedGold() ? GOLD : SILVER);
       detector.shutdown();
-      drive.rotateCounterClockwise(40);
+      RotateByIMUTask.rotate(-40);
     }
   }
 

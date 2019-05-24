@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.selfcheck;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import org.firstinspires.ftc.teamcode.selfcheck.trials.BatteryTrial;
 import org.firstinspires.ftc.teamcode.selfcheck.trials.DrivetrainEncoderTrial;
 import org.firstinspires.ftc.teamcode.selfcheck.trials.GamepadTrial;
 
@@ -10,7 +11,8 @@ public class SelfCheckOpMode extends LinearOpMode {
 
   private static final Trial[] kTrials = {
       new DrivetrainEncoderTrial(),
-      new GamepadTrial()
+      new GamepadTrial(),
+      new BatteryTrial()
   };
 
   @Override

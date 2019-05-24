@@ -25,6 +25,8 @@ public class Intake extends Diagnosable {
     public double orientatorRangeMin, orientatorRangeMax;
     public double orientatorCollectionPos, orientatorTransitPos, orientatorTransferPos,
       orientatorKnockMineralPos;
+
+    public int outsideFrameTicks;
   }
 
   private static final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -109,6 +111,14 @@ public class Intake extends Diagnosable {
       slideMotor.setPower(0);
     else
       slideMotor.setPower(power);
+
+    if (!bucketOutsideFrame() && orientator.getPosition() > 0.5) {
+      orientToTransit();
+    }
+  }
+
+  public boolean bucketOutsideFrame() {
+    return slideMotor.getCurrentPosition() > schema.outsideFrameTicks;
   }
 
   public void runSweeperIn() {

@@ -120,9 +120,9 @@ public class Bot {
   }
 
   private void initializeImu() {
-    /*BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+    BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
     parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
     parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-    imu.initialize(parameters);*/
+    imu.initialize(parameters);
   }
 }

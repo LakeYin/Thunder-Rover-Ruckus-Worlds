@@ -8,6 +8,6 @@ public class ParkTask implements Task {
     Bot bot = Bot.getInstance();
 
     bot.intake.orientToTransit();
-    bot.intake.extend(0.8);
+    bot.intake.extend(0.8).begin();
   }
 }

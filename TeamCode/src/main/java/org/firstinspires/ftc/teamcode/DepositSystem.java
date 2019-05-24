@@ -34,6 +34,7 @@ public class DepositSystem extends Diagnosable {
     this.opMode = opMode;
     loadSchema();
     orientator.scaleRange(schema.orientatorRangeMin, schema.orientatorRangeMax);
+    slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
   }
 
   public void prepareToDeposit() {

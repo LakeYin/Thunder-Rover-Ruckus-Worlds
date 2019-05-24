@@ -22,10 +22,10 @@ public class TeamMarkerTask implements Task {
     bot.intake.orientToTransit();
     RunToPosition intakeOut = bot.intake.extend(0.5 * extension).begin();
     intakeOut.waitUntilDone();
+    bot.intake.orientToCollect();
     bot.intake.runSweeperOut();
     Bot.sleep(1500);
     bot.intake.stopSweeper();
     bot.intake.orientToTransit();
-    bot.intake.retractFully().begin().waitUntilDone();
   }
 }

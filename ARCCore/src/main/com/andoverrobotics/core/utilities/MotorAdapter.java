@@ -51,6 +51,23 @@ public class MotorAdapter implements IMotor {
     setPower(tickOffset > 0 ? Math.abs(absPower) : -Math.abs(absPower));
   }
 
+  public int targetPositionError() {
+    return motor.getTargetPosition() - motor.getCurrentPosition();
+  }
+
+  private int tripStartPosition, tripTargetPosition;
+
+  public void beginTripToTickOffset(int tickOffset) {
+    tripStartPosition = motor.getCurrentPosition();
+    tripTargetPosition = tripStartPosition + tickOffset;
+    setMode(RunMode.RUN_USING_ENCODER);
+  }
+
+  public double ratioDone() {
+    return (motor.getCurrentPosition() - tripStartPosition) /
+            (double) (tripTargetPosition - tripStartPosition);
+  }
+
   @Override
   public void setMode(RunMode mode) {
     motor.setMode(mode);

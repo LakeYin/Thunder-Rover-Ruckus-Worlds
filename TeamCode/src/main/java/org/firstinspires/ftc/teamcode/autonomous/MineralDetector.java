@@ -54,7 +54,6 @@ public class MineralDetector {
   }
 
   public void activate() {
-    VuforiaManager.setFrontFlashlight(true);
     detector.activate();
   }
 
@@ -78,6 +77,14 @@ public class MineralDetector {
         .max((r1, r2) -> Float.compare(r1.getLeft(), r2.getLeft()))
         .map(Recognition::getLabel)
         .map(Mineral::byLabel);
+  }
+
+  public Optional<Mineral> leftmostRecognition() {
+    return detector.getRecognitions()
+            .stream()
+            .min((r1, r2) -> Float.compare(r1.getLeft(), r2.getLeft()))
+            .map(Recognition::getLabel)
+            .map(Mineral::byLabel);
   }
 
   public Optional<GoldPosition> goldPosition() {
@@ -104,7 +111,6 @@ public class MineralDetector {
 
   public void shutdown() {
     detector.shutdown();
-    VuforiaManager.setFrontFlashlight(false);
   }
 
   private void initTensorFlowIfNeeded(HardwareMap hardwareMap) {

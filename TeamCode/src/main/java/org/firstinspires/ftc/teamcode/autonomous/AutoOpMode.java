@@ -38,13 +38,14 @@ public abstract class AutoOpMode extends LinearOpMode {
   }
 
   private void readCenterMineral() {
-    AutonomousBot.centerMineral = SampleMineralTask.detector.bottomCenterRecognition();
+    AutonomousBot.centerMineral = SampleMineralTask.detector.leftmostRecognition();
     Log.d("Minerals", "Center: " + AutonomousBot.centerMineral);
   }
 
   private void spamTelemetryAndWaitForStart() {
     while (!opModeIsActive() && !isStopRequested()) {
       telemetry.addData("Waiting in Init", System.currentTimeMillis());
+      telemetry.addData("Center mineral", SampleMineralTask.detector.leftmostRecognition());
       telemetry.update();
       telemetry.clearAll();
     }
@@ -56,6 +57,7 @@ public abstract class AutoOpMode extends LinearOpMode {
   }
 
   private void initFields() throws IOException {
+    telemetry.setAutoClear(false);
     VuforiaManager.initVuforia(hardwareMap);
     bot = new AutonomousBot(this);
     tasks = new TaskFactory(bot.drivetrain);
@@ -66,6 +68,8 @@ public abstract class AutoOpMode extends LinearOpMode {
     tasks.addCustomTask("drop_team_marker", new TeamMarkerTask());
     tasks.addCustomTask("score_minerals", new ScoreMineralTask());
     tasks.addCustomTask("park", new ParkTask());
+    tasks.addCustomTask("retract_intake", new RetractIntakeTask());
+    tasks.addCustomTask("align_90", new Align90Task());
   }
 
   private void executeCommands(String filename) throws FileNotFoundException, InterruptedException {

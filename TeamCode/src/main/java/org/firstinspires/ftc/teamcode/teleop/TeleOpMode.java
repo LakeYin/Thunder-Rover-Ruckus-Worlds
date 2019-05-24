@@ -163,8 +163,6 @@ public class TeleOpMode extends LinearOpMode {
   }
 
   private void controlManually() {
-    bot.intake.controlSlidesManually(-gamepad2.left_stick_x);
-    bot.intake.orientManually(gamepad2.left_stick_y);
 
     if (gamepad2.left_bumper)
       bot.intake.runSweeperIn();
@@ -193,6 +191,12 @@ public class TeleOpMode extends LinearOpMode {
     }
     if (gamepad2.x) {
       bot.deposit.retract();
+    }
+
+    if (Math.abs(gamepad2.left_stick_y) > Math.abs(gamepad2.left_stick_x)) {
+      bot.intake.orientManually(gamepad2.left_stick_y);
+    } else {
+      bot.intake.controlSlidesManually(-gamepad2.left_stick_x);
     }
 
     bot.hookLift.adjust(-gamepad2.right_stick_y * 0.5);

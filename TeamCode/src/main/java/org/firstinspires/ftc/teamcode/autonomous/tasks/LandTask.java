@@ -28,12 +28,12 @@ public class LandTask implements Task {
   }
 
   private void rotateToReadRightMineral() {
-    bot.drivetrain.rotateClockwise(42);
+    RotateByIMUTask.rotate(30);
     Bot.sleep(1000);
     AutonomousBot.rightMineral = SampleMineralTask.detector.rightmostRecognition();
     Log.d("Minerals", "Right: " + AutonomousBot.rightMineral);
     SampleMineralTask.detector.shutdown();
-    bot.drivetrain.rotateCounterClockwise(42);
+    RotateByIMUTask.rotate(-30);
   }
 
   private void exitHook() throws InterruptedException {
@@ -44,9 +44,9 @@ public class LandTask implements Task {
 
   private void strafeBot() throws InterruptedException {
     bot.drivetrain.setStrafe(-1, 0, 1);
-    Thread.sleep(400);
+    Thread.sleep(550);
     bot.drivetrain.setStrafe(0, -1, 1);
-    Thread.sleep(220);
+    Thread.sleep(130);
     bot.drivetrain.stop();
   }
 

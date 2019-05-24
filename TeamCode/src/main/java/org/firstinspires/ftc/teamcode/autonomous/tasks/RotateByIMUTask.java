@@ -11,6 +11,18 @@ public class RotateByIMUTask extends RotateTask {
     return denormalize(normalize(initialHeading) + turnDegrees);
   }
 
+  /*
+  IMU input unit circle
+     0
+  90   -90
+   +-180
+
+  Normal unit circle
+       180
+    270   90
+        0
+   */
+
   public static int normalize(int imuAngle) {
     int output = imuAngle + 180;
     while (output < 0) {
@@ -29,8 +41,8 @@ public class RotateByIMUTask extends RotateTask {
   // returns diff
   public static int error(int currentReading, int targetHeading) {
     int output = (normalize(targetHeading) - normalize(currentReading)) % 360;
-    if (output < -180) output += 360;
-    if (output > 180) output -= 360;
+    while (output < -180) output += 360;
+    while (output > 180) output -= 360;
     return output;
   }
 
@@ -39,14 +51,13 @@ public class RotateByIMUTask extends RotateTask {
   public RotateByIMUTask(DriveTrain drivetrain, int degrees) {
     super(drivetrain, degrees);
     initialHeading = readHeading();
-    targetHeading = targetHeading(initialHeading, degrees);
+    targetHeading = targetHeading(initialHeading, -degrees);
   }
 
-  private int readHeading() {
+  public static int readHeading() {
     Orientation orientation = Bot.getInstance().imu.getAngularOrientation();
     return (int) orientation.toAngleUnit(AngleUnit.DEGREES).firstAngle;
   }
-
 
   // Start P controller
   public void run() {
@@ -57,19 +68,21 @@ public class RotateByIMUTask extends RotateTask {
 
       drivetrain.setRotationPower(powerByError(error));
 
-    } while (Math.abs(error) > 2);
+    } while (Math.abs(error) > 1 && Bot.getInstance().opMode.opModeIsActive());
+    drivetrain.stop();
   }
 
   private double powerByError(int error) {
-    if (Math.abs(error) > 20) return Math.copySign(0.8, error);
-    double mag = 0.8 * Math.sin(error / (4 * Math.PI));
-    return Math.copySign(mag, error);
+    double rawOut = -error / 90.0;
+    if (rawOut == 0) return 0;
+    rawOut += rawOut / Math.abs(rawOut) * 0.27;
+    return rawOut;
   }
 
   // Start PD controller
   private static final double Kp = 0.8 / 30, Kd = 0.1;
 
-  public void runIMU() {
+  public void runPD() {
     int prevError = error(initialHeading, targetHeading),
         heading = initialHeading;
     for (; heading != targetHeading; heading = readHeading()) {
@@ -79,5 +92,9 @@ public class RotateByIMUTask extends RotateTask {
 
       drivetrain.setRotationPower(pError * Kp + dError * Kd);
     }
+  }
+
+  public static void rotate(int degrees) {
+    new RotateByIMUTask(Bot.getInstance().drivetrain, degrees).run();
   }
 }

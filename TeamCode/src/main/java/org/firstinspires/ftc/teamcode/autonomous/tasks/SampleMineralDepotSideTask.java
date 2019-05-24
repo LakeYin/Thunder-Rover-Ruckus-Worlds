@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.autonomous.tasks;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.Bot;
+import org.firstinspires.ftc.teamcode.RunToPosition;
 import org.firstinspires.ftc.teamcode.autonomous.AutonomousBot;
 
 import static org.firstinspires.ftc.teamcode.autonomous.MineralDetector.Mineral.*;
@@ -19,26 +20,31 @@ public class SampleMineralDepotSideTask extends SampleMineralTask {
         detectAsNecessary();
         tellemReadMinerals();
 
-        Bot.getInstance().drivetrain.strafeLeft(6);
-        Bot.getInstance().drivetrain.rotateCounterClockwise(90);
+        RotateByIMUTask.rotate(-90);
 
-        if (AutonomousBot.centerMineral.orElse(SILVER) == GOLD) {
-            knockMineral();
-            new TeamMarkerTask(1).run();
-            unknockMineral();
-        } else if (AutonomousBot.rightMineral.orElse(SILVER) == GOLD) {
+        if (AutonomousBot.rightMineral.orElse(SILVER) == GOLD) {
             switchRight();
             knockMineral();
             rotateLeft();
-            new TeamMarkerTask(0.8).run();
+            new TeamMarkerTask(1).run();
+            Bot.getInstance().intake.retractFully().begin().waitUntilDone();
             rotateRight();
             unknockMineral();
             switchLeft();
+        } else if (AutonomousBot.centerMineral.orElse(SILVER) == GOLD) {
+            knockMineral();
+            Bot.getInstance().drivetrain.driveForwards(12);
+            new TeamMarkerTask(0.8).run();
+            RunToPosition pos = Bot.getInstance().intake.retractFully().begin();
+            Bot.getInstance().drivetrain.driveBackwards(12);
+            unknockMineral();
+            pos.waitUntilDone();
         } else {
             switchLeft();
             knockMineral();
             rotateRight();
-            new TeamMarkerTask(0.8).run();
+            new TeamMarkerTask(1).run();
+            Bot.getInstance().intake.retractFully().begin().waitUntilDone();
             rotateLeft();
             unknockMineral();
             switchRight();
@@ -54,9 +60,9 @@ public class SampleMineralDepotSideTask extends SampleMineralTask {
     }
 
     protected void rotateLeft() {
-        Bot.getInstance().drivetrain.rotateCounterClockwise(25);
+        RotateByIMUTask.rotate(-25);
     }
     protected void rotateRight() {
-        Bot.getInstance().drivetrain.rotateClockwise(25);
+        RotateByIMUTask.rotate(25);
     }
 }
